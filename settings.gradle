@@ -1,0 +1,7 @@
+include ':app'
+include ':coretools'
+project(':coretools').projectDir = new File(settingsDir, '../base/CoreTools/app')
+include ':adnetworks'
+project(':adnetworks').projectDir = new File(settingsDir, '../base/Ads/AdNetworks/app')
+include ':waveview'
+project(':waveview').projectDir = new File(settingsDir, '../base/ExternalLibraries/WaveView')

@@ -1,0 +1,76 @@
+/*
+buildscript {
+    repositories {
+        mavenCentral()
+        flatDir { dirs '/Users/hexdump/Developing/Android/Tools/Dexguard/lib/' }
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:1.0.0'
+        classpath ':dexguard:'
+    }
+}
+
+
+apply plugin: 'dexguard'*/
+
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion '23.0.2'
+    defaultConfig
+            {
+                applicationId "com.cresan.antivirus"
+                minSdkVersion 11
+                targetSdkVersion 23
+                versionCode 2301
+                versionName "2.31"
+                signingConfigs
+                        {
+                            release
+                                    {
+                                        def console = System.console();
+                                        if (console == null) {
+                                            print("Please execute release compilations from console. Use ./comiple.sh")
+                                        } else {
+                                            def password = System.console().readPassword("\n Enter keystore password: ")
+                                            storeFile file("../../cresan.keystore")
+                                            storePassword = new String(password)
+                                            keyAlias "general"
+                                            keyPassword new String(password)
+                                        }
+                                    }
+                        }
+            }
+    buildTypes
+            {
+                release
+                        {
+                            //Use command line to compile in release
+                            //minifyEnabled false
+                            //proguardFile getDefaultDexGuardFile('dexguard-release.pro')
+                            //proguardFile 'dexguard-project.txt'
+                            //proguardFile 'proguard-project.txt'
+                            signingConfig signingConfigs.release
+
+                        }
+                debug
+                        {
+                            //proguardFile getDefaultDexGuardFile('dexguard-debug.pro')
+                            //proguardFile 'dexguard-project.txt'
+                            //proguardFile 'proguard-project.txt'
+                        }
+            }
+    productFlavors {
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile project(':coretools')
+    compile project(':adnetworks')
+    compile project(':waveview')
+    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile 'com.liulishuo.magicprogresswidget:library:1.0.2'
+    compile 'com.google.android.gms:play-services-ads:8.4.0'
+}

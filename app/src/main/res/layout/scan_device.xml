@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.6"
+            android:background="@color/top_part_backgrond_color"
+            android:orientation="vertical">
+
+
+            <com.gelitenight.waveview.library.WaveView
+                android:id="@+id/wave"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.7"
+                android:layout_gravity="center"
+                android:layout_marginTop="32dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.1"
+                android:gravity="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:text="Charging"
+                android:textColor="@color/info_icon_top_text"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.2"
+                android:orientation="horizontal">
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:text="22º"
+                        android:textColor="@color/info_icon_top_text"
+                        android:id="@+id/temperatureValue"
+                        android:layout_centerInParent="true"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:text="@string/temperature"
+                        android:textColor="@color/info_icon_bottom_text"
+                        android:layout_below="@id/temperatureValue"
+                        android:layout_marginTop="10dp"/>
+
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center|bottom"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:text="1.7v"
+                        android:layout_centerInParent="true"
+                        android:id="@+id/voltageValue"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:text="@string/voltage"
+                        android:textColor="@color/info_icon_bottom_text"
+                        android:layout_below="@+id/voltageValue"
+                        android:layout_marginTop="10dp"
+                        />
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:id="@+id/superContainer"
+            android:layout_height="0dp"
+            android:layout_weight="0.4"
+            android:background="@color/bottom_part_background_color">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/buttonLayout">
+
+                <Button
+                    android:id="@+id/runAntivirusNow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Run"
+                    android:textStyle="bold"
+                    android:typeface="monospace"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/calibrate_button_selector"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/progressPanel">
+
+                <TextView
+                    android:id="@+id/progressPanelTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:text="Trying root privileges"
+                    android:textColor="@color/info_icon_bottom_text"/>
+
+                <ImageView
+                    android:id="@+id/progressPanelIconImageView"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:src="@drawable/gear"
+                    android:layout_centerHorizontal="true"
+                    android:layout_above="@id/progressPanelTextView"/>
+
+                <com.liulishuo.magicprogresswidget.MagicProgressBar
+                    android:id="@+id/progressPanelProgressBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="5dp"
+                    android:layout_below="@id/progressPanelTextView"
+                    android:layout_margin="32dp"
+                    app:mpb_color="#b2dfdb"
+                    app:mpb_default_color="#1AFFFFFF"
+                    app:mpb_percent="0.5"
+                    />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/informationPanel">
+
+                <TextView
+                    android:id="@+id/informationTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:gravity="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:text=""
+                    android:textColor="@color/info_icon_bottom_text"/>
+
+                <ImageView
+                    android:id="@+id/info"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:src="@drawable/information"
+                    android:layout_centerHorizontal="true"
+                    android:layout_above="@id/informationTextView"/>
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <LinearLayout  android:id="@+id/topcontainer"
+                   android:orientation="vertical"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"/>
+
+</LinearLayout>
