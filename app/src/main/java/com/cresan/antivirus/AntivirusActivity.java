@@ -1,14 +1,19 @@
 package com.cresan.antivirus;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -33,6 +38,8 @@ import com.tech.applications.coretools.BatteryData;
 import com.tech.applications.coretools.BatteryTools;
 import com.tech.applications.coretools.NetworkTools;
 import com.tech.applications.coretools.SerializationTools;
+import com.tech.applications.coretools.advertising.IPackageChangesListener;
+import com.tech.applications.coretools.advertising.PackageBroadcastReceiver;
 import com.tech.applications.coretools.time.PausableCountDownTimer;
 
 import com.cresan.androidprotector.R;
@@ -258,25 +265,67 @@ public class AntivirusActivity extends AdvertFragmentActivity
 		df.setMaximumFractionDigits(1);
 		tv.setText(df.format(bd.getTemperature()) + "º");
 
-	    /*
-	    _getBatteryLifeRepair=(Button)findViewById(R.id.get_battery_life_repair);
-	    
-	    //Uncomment this when new battery life is ready
-	    if(ActivityTools.isPackageInstalled(this, _crossPromotionPackage))
-	    	_getBatteryLifeRepair.setVisibility(View.GONE);
-	    
-	    _getBatteryLifeRepair.setOnClickListener(new View.OnClickListener() 
-	    {
-			
-			@Override
-			public void onClick(View v) 
-			{
-				AdvertisingTools.openMarketURL(AntivirusActivity.this, _crossPromotionPackage, _crossPromotionURL);
-			}
-		});*/
+	    List<PackageInfo> allPackages= ActivityTools.getApps(this);
+		List<PackageInfo> packagesInfo= ActivityTools.getNonSystemApps(this,allPackages);
+        //ActivityTools.logPackageNames(allPackages);
 
+
+		ArrayList<PackageInfo> packages= new ArrayList<PackageInfo>();
+		getPackagesByNameFilter(packagesInfo,"com.newagetools.batdoc",packages);
+
+        PackageBroadcastReceiver.setPackageBroadcastListener(new IPackageChangesListener()
+        {
+            @Override
+            public void OnPackageAdded()
+            {
+                Log.d("Yeah", "Escanear el puto paquete!");
+            }
+
+            @Override
+            public void OnPackageRemoved()
+            {
+
+            }
+        });
+
+		ActivityTools.logPackageNames(packages);
         _resetFormLayout();
     }
+
+	List<PackageInfo> getPackagesByNameFilter(List<PackageInfo> packages, String filter, List<PackageInfo> result)
+	{
+		boolean wildcard=false;
+
+		result.clear();
+
+		if(filter.charAt(filter.length()-1)=='*')
+		{
+			wildcard=true;
+			filter=filter.substring(0,filter.length()-2);
+		}
+		else
+			wildcard=false;
+
+		PackageInfo packInfo =null;
+
+		for (int i=0; i < packages.size(); i++)
+		{
+			packInfo=packages.get(i);
+
+			if(packInfo.packageName.startsWith(filter))
+			{
+				result.add(packInfo);
+
+				//Just one package if we were not using a wildcard
+				if (!wildcard)
+					break;
+			}
+		}
+
+        return result;
+	}
+
+
 
 	public void onStart()
 	{
