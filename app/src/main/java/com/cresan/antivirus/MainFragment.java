@@ -1,7 +1,9 @@
 package com.cresan.antivirus;
 
 import android.app.AlertDialog;
+import android.app.NotificationManager;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -19,6 +21,7 @@ import com.liulishuo.magicprogresswidget.MagicProgressBar;
 import com.tech.applications.coretools.BatteryData;
 import com.tech.applications.coretools.BatteryTools;
 import com.tech.applications.coretools.NetworkTools;
+import com.tech.applications.coretools.NotificationTools;
 import com.tech.applications.coretools.time.PausableCountDownTimer;
 
 import java.text.DecimalFormat;
@@ -80,7 +83,8 @@ public class MainFragment extends Fragment
             @Override
             public void onClick(View v)
             {
-                if(!NetworkTools.isNetworkAvailable(getMainActivity()))
+
+                /*if(!NetworkTools.isNetworkAvailable(getMainActivity()))
                 {
                     getMainActivity().showNoInetDialog();
                     return;
@@ -107,7 +111,7 @@ public class MainFragment extends Fragment
                             }
                         })
                         .create()
-                        .show();
+                        .show();*/
             }
         });
 

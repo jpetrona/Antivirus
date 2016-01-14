@@ -1,56 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Calibrador de batería Avanzado</string>
-	<string name="battery_calibrator_explanation">El calibrador de batería se encarga de limpiar el estado de la batería y notificar a android acerca de la capacidad real de carga.
-	    \n\nPasos para calibrar tu batería:
-	    \n\n1) Pulsa sobre el botón para empezar la calibración.
-	    \n2) Cuando finalice el proceso apaga el dispositivo.
-	    \n3) Carga tu batería al 100%
-	    \n4) Enciende el dispositivo. 
-	    \n5) Perfecto! Tu batería ya está calibrada.
-	    \n6) Usa nuestra app Reparar Batería y testea tu batería para encontrar errores y alargar la vida de tu batería mucho más</string>
-	<string name="get_battery_life_repair">Descargar Reparar batería</string>
-    <string name="calibrate_now">Calibrar ahora!</string>
-    <string name="start_battery_calibration_process">Se va a iniciar el proceso de calibración. Después de terminar el proceso el dispositivo se apagará y tendrás que cargar tu bateria al 100% antes de volver a encenderlo.
-        \n\nDeseas continuar?</string>
-   <string name="no_known_phone_no_root">Este dispositivo no se pudo identificar para usar nuestra exclusiva calibración para dispositivos no rooteados y el dispositivo tampoco está rooteado.
-       \n\nEs imposible calibrar este dispositivo en su estado actual. Por favor, haz root al dispositivo e intentalo de nuevo.
-       \n\nEl calibrador de batería recolecta información muy importante que es usada por nuestra aplicación hermana "Reparar batería" haciendo que el proceso de reparación sea aún mejor.
-       </string>
-   <string name="batterystats_not_found">Las estadísticas del uso de batería no existen. Por favor, resetea tu dispositivo y empieza de nuevo..</string>
-   <string name="calibration_finished_shutdown">Felicidades! El proceso de calibración ha terminado con éxito. Recuerda cargar al 100% el dispositivo tras el apagado</string>
-   <string name="shut_down_now">Apagar ahora!</string>
-   <string name="calibration_failed_unknown">Lo sentimos, la calibración falló por una causa desconocida</string>
-   <string name="calibrating_and_backingup">Calibrando y guardando stats</string>
-   <string name="phone_not_identified">No se pudo identificar el dispositivo</string>
-   <string name="phone_identified">Tu teléfono ha sido identificado como un #1.</string>
-   <string name="identifying_phone">Identificando dispositivo...</string>
-   <string name="found_rooted">Se encontró un dispositivo con root!</string>
-   <string name="warning">Atención</string>
-   <string name="information">Informacion</string>
-   <string name="are_you_sure_exit">Estás seguro que quieres salir de la applicación?</string>
-   <string name="get_it_now">Descargar ahora!</string>
-   <string name="yes">Sí</string>
-   <string name="calibrator_item_title">Calibrador Avanzado De Batería</string>
-   <string name="system_id_pro_title">Información de sistema Pro</string>
-   <string name="more_apps_to_como">Más proximamente</string>
-   <string name="closing_application">Cerrando aplicación...</string>
-   <string name="ask_root_privileges">El calibrador de batería avanzado necesita acceso de super usuario para realizar la calibración.</string>
-   <string name="calibration_finished_shutdown_noroot">Felicidades! El proceso de calibración ha terminado con éxito. Apaga el dispositivo y Recuerda cargarlo al 100% antes de volverlo a encender.</string>
-   <!-- <string name="install_application">Estás a solo un paso de finalizar la calibración de tu batería. Hemos invertido mucho tiempo y trabajo en crear esta aplicación. Por favor, instala una de nuestras aplicaciones GRATUITAS para permitirnos poder seguir mejorando.</string>  -->
-   <string name="install_application_vungle">Estas a solo un paso de calibrar tu bateria.\n\n Para mantener esta app gratuita necesitamos mostrar publicadad pero sabemos lo molesto que es para tí instalar
-otras aplicaciones que no quieres.\n\n Para ayudarnos a mejorar esta app y poder calibrar tu batería solo tendrás que ver un pequeño video. Sin instalaciones ni molestias.
-\n\nPor favor contribuye a mejorar esta app y ayudar al equipo de desarrollo viendo este pequeño video.</string>
-   <string name="watch_video">Ver video</string>
-   <string name="install_application">Estás a solo un paso de calibrar tu batería completamente.\n\nHemos invertido mucho tiempo y trabajo en crear esta aplicación. Por favor, para poder continuar, instala una de nuestras aplicaciones GRATUITAS y reconoce el duro trabajo realizado.</string>
-   <string name="finishing_calibrating_and_backingup">Completando la calibración de batería</string>
-   <string name="vote">Puntuanos!</string>
-   <string name="gplay_vote">Tu batería ha sido calibrada.\n\nHemos trabajado muy duro para poder ofrecerte este software gratuitamente. Nos gustaría mucho que nos votaras con 5 estrellas en google play y dejaras un buen comentario. Quieres hacerlo ahora?</string>
-   <string name="no_inet_no_app">La versión gratuita del Calibrador Avanzado de Batería necesita una conexión a internet para funcionar.</string>
-	<string name="quit_app">Salir</string>
-   <string name="detecting_root">Detectando root</string>
-   <string name="no_root_but_hack">Tu dispositivo no está rooteado. Usaremos un metodo custom para el dispositivo detectado.</string>
-   <string name="detecting_calibrating_alternative_method">Buscando método alternativo de root basado en el dispositivo detectado</string>
-
-
+    <string name="app_name">Antivirus</string>
+    <string name="no_inet_no_app">Reparar batería necesita de una conexión a internet para funcionar. Activa el 3G o WIFI y vuelve a intentarlo.</string>
+    <string name="quit_app">Salir</string>
+    <string name="information">Información</string>
+    <string name="vote">Puntuanos!</string>
+   <string name="gplay_vote">Hemos trabajado muy duro para poder ofrecerte este software gratuitamente.
+ \n\nNos encantaría que nos votaras con 5 estrellas en google play y dejaras un buen comentario.
+ \n\nQuieres hacerlo ahora?</string>
 </resources>

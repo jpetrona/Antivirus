@@ -34,7 +34,7 @@ android {
                                             print("Please execute release compilations from console. Use ./comiple.sh")
                                         } else {
                                             def password = System.console().readPassword("\n Enter keystore password: ")
-                                            storeFile file("../../cresan.keystore")
+                                            storeFile file("../cresan.keystore")
                                             storePassword = new String(password)
                                             keyAlias "general"
                                             keyPassword new String(password)

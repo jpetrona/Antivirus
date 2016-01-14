@@ -6,7 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 
 import android.app.AlertDialog;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.os.Bundle;
@@ -15,6 +18,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 
+import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +43,7 @@ import com.tech.applications.coretools.AdvertisingTools;
 import com.tech.applications.coretools.BatteryData;
 import com.tech.applications.coretools.BatteryTools;
 import com.tech.applications.coretools.NetworkTools;
+import com.tech.applications.coretools.NotificationTools;
 import com.tech.applications.coretools.SerializationTools;
 import com.tech.applications.coretools.advertising.IPackageChangesListener;
 import com.tech.applications.coretools.advertising.PackageBroadcastReceiver;
@@ -167,8 +172,6 @@ public class AntivirusActivity extends AdvertFragmentActivity
         adView.loadAd(adRequest);
 
 
-	    getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
 	    _data=_deserializeAppData();
 
 	    List<PackageInfo> allPackages= ActivityTools.getApps(this);
@@ -182,20 +185,25 @@ public class AntivirusActivity extends AdvertFragmentActivity
         PackageBroadcastReceiver.setPackageBroadcastListener(new IPackageChangesListener()
         {
             @Override
-            public void OnPackageAdded()
+            public void OnPackageAdded(Intent intent)
             {
-                Log.d("Yeah", "Escanear el puto paquete!");
+				Intent toExecuteIntent = new Intent(AntivirusActivity.this, AntivirusActivity.class);
+
+				String appName=ActivityTools.getAppNameFromPackage(AntivirusActivity.this, intent.getData().getSchemeSpecificPart());
+
+				NotificationTools.notificatePush(AntivirusActivity.this, 0xFF00, R.drawable.ic_launcher,
+						"Ticker text", appName, "App installed: Click to scan for menaces", toExecuteIntent);
             }
 
             @Override
-            public void OnPackageRemoved()
+            public void OnPackageRemoved(Intent intent)
             {
-
             }
         });
 
 		ActivityTools.logPackageNames(packages);
-        _resetFormLayout();
+
+
     }
 
 	List<PackageInfo> getPackagesByNameFilter(List<PackageInfo> packages, String filter, List<PackageInfo> result)
@@ -239,11 +247,6 @@ public class AntivirusActivity extends AdvertFragmentActivity
 
 	}
 
-    protected void _resetFormLayout()
-    {
-
-    }
-
 	protected AppData _deserializeAppData()
 	{
 		AppData data=SerializationTools.deserializeFromSharedPrefs(this, "bc_data");
@@ -278,13 +281,6 @@ public class AntivirusActivity extends AdvertFragmentActivity
         AlertDialog alert = builder.create();
         alert.show();
     }
-
-
-    void _resetCalibrationProcess()
-    {
-
-    }
-	
 
 	protected void _showTimedDialog(AlertDialog dialog, boolean negative, boolean blockPositive, boolean blockNegative)
 	{
