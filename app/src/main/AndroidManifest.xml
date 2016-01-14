@@ -24,14 +24,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+<!--
         <receiver android:name="com.tech.applications.coretools.advertising.PackageBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_INSTALL" />
                 <action android:name="android.intent.action.PACKAGE_ADDED" />
                 <data android:scheme="package"/>
             </intent-filter>
-        </receiver>
+        </receiver> -->
+        <service android:enabled="true" android:name="com.cresan.antivirus.PackageListenerService" />
     </application>
 
 </manifest>
