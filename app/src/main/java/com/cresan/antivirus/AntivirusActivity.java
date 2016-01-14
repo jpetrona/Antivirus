@@ -11,6 +11,8 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 
 import android.util.Log;
@@ -49,34 +51,10 @@ public class AntivirusActivity extends AdvertFragmentActivity
 	final String bannerAdUnit="";
 	final String interstitialAdUnit="";
 
-
-	Button _runAntivirusNow=null;
-
-	
 	String _logTag=AntivirusActivity.class.getSimpleName();
 
 
-	boolean _isRoot=false;
-	
-	Thread _t=null;
 
-	PausableCountDownTimer cdTimer=null;
-
-	//Scrollable data chunk data
-	ImageView _progressPanelIconImageView;
-	TextView _progressPanelTextView;
-	MagicProgressBar _progressPanelprogressBar;
-    RelativeLayout _progressContainer;
-    RelativeLayout _buttonContainer;
-    RelativeLayout _informationContainer;
-    RelativeLayout _superContainer;
-
-
-    interface IDoAction
-    {
-        public void doAction();
-    }
-	
 	AdvertListener _inMiddleAdListener=new AdvertListener() 
 	{
 		
@@ -146,16 +124,13 @@ public class AntivirusActivity extends AdvertFragmentActivity
 		//Log.i(_logTag, "============= YEAH ACTIVITY RECREATED ============");
 		super.onCreate(paramBundle);
         
-	    setContentView(R.layout.scan_device);
+	    setContentView(R.layout.activity_main);
 
-		_progressPanelIconImageView =(ImageView)findViewById(R.id.progressPanelIconImageView);
-		_progressPanelTextView =(TextView)findViewById(R.id.progressPanelTextView);;
-		_progressPanelprogressBar =(MagicProgressBar)findViewById(R.id.progressPanelProgressBar);
-        _buttonContainer=(RelativeLayout)findViewById(R.id.buttonLayout);
-        _progressContainer=(RelativeLayout)findViewById(R.id.progressPanel);
-        _informationContainer=(RelativeLayout)findViewById(R.id.informationPanel);
-        _superContainer=(RelativeLayout)findViewById(R.id.superContainer);
+        Fragment newFragment = new MainFragment();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.add(R.id.container, newFragment).commit();
 
+        //Configure Ads
 		if(!NetworkTools.isNetworkAvailable(this))
 	    {	
 	    	showNoInetDialog();
@@ -192,78 +167,9 @@ public class AntivirusActivity extends AdvertFragmentActivity
         adView.loadAd(adRequest);
 
 
-		//If we are returning from an activity destruction and was showingAd restore listener
-		/*if(paramBundle!=null && paramBundle.getBoolean("showingad"))
-			ac.setAdvertListener(_inMiddleAdListener);
-	    
-	    
-	    showAdvertisingDialog(true,_isExitAd);*/
-	    
 	    getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
 	    _data=_deserializeAppData();
-
-		_runAntivirusNow=(Button)findViewById(R.id.runAntivirusNow);
-		_runAntivirusNow.setOnClickListener(new View.OnClickListener()
-	    {
-			
-			@Override
-			public void onClick(View v) 
-			{
-				if(!NetworkTools.isNetworkAvailable(AntivirusActivity.this))
-			    {	
-			    	showNoInetDialog();
-			    	return;
-			    }
-
-				new AlertDialog.Builder(AntivirusActivity.this)
-	  			.setTitle(R.string.warning)
-	  			.setMessage(R.string.start_battery_calibration_process)
-	  			.setCancelable(false)
-	  			.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() 
-	  			{
-	  				@Override
-	  				public void onClick(DialogInterface dialog, int which) 
-	  				{
-	  					_startIdentification();
-	  				}
-	  			})
-	  			.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() 
-	  			{
-	  				@Override
-	  				public void onClick(DialogInterface dialog, int which) 
-	  				{
-	  					dialog.dismiss();
-	  				}
-	  			})
-	  			.create()
-	  			.show();
-			}
-		});
-
-		//Set form data
-		BatteryData bd = BatteryTools.getBatteryData(this);
-
-		final WaveView waveView = (WaveView) findViewById(R.id.wave);
-        waveView.setWaterLevelRatio(bd.getLevelPercent() / 100.0f);
-        waveView.setBorder(15, ContextCompat.getColor(this, R.color.wave_widget_stroke));
-        waveView.setText1Color(ContextCompat.getColor(this, android.R.color.white));
-        waveView.setShowWave(true);
-        waveView.setWaveColor(
-                ContextCompat.getColor(this, R.color.wave_starting_wave_color),
-                ContextCompat.getColor(this, R.color.wave_widget_back_wave),
-                ContextCompat.getColor(this, R.color.wave_starting_wave_color),
-                ContextCompat.getColor(this, R.color.wave_widget_front_wave));
-		waveView.startAnimation(1000);
-        waveView.setText1(""+bd.getLevelPercent()+"%");
-        TextView tv = (TextView) findViewById(R.id.voltageValue);
-		DecimalFormat df = new DecimalFormat("0.00");
-		df.setMaximumFractionDigits(2);
-		tv.setText(df.format(bd.getVoltage()) + " v");
-		tv = (TextView) findViewById(R.id.temperatureValue);
-		df = new DecimalFormat("0.0");
-		df.setMaximumFractionDigits(1);
-		tv.setText(df.format(bd.getTemperature()) + "º");
 
 	    List<PackageInfo> allPackages= ActivityTools.getApps(this);
 		List<PackageInfo> packagesInfo= ActivityTools.getNonSystemApps(this,allPackages);
@@ -413,20 +319,6 @@ public class AntivirusActivity extends AdvertFragmentActivity
         }, 20000);
 	}
 
-    void _playStartCalibrationAnimation()
-    {
-
-    }
-
-
-	void _startIdentification()
-	{
-
-    }
-
-
-	
-	
 	public void _continueCalibrationAfterAd()
 	{
 	}
@@ -477,5 +369,19 @@ public class AntivirusActivity extends AdvertFragmentActivity
 			//_showDialogCalibrationFinished(_isRoot);
 		}
 
+	}
+
+	public void slideInFragment(Fragment newFragment)
+	{
+		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+		transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
+
+		// Replace whatever is in the fragment_container view with this fragment,
+		// and add the transaction to the back stack if needed
+		transaction.replace(android.R.id.tabcontent, newFragment);
+		transaction.addToBackStack(null);
+
+		// Commit the transaction
+		transaction.commit();
 	}
 }
