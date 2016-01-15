@@ -1,9 +1,13 @@
 package com.cresan.antivirus;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import android.app.AlertDialog;
 import android.app.NotificationManager;
@@ -52,14 +56,23 @@ import com.tech.applications.coretools.time.PausableCountDownTimer;
 import com.cresan.androidprotector.R;
 import com.tech.applications.coretools.time.ServiceTools;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class AntivirusActivity extends AdvertFragmentActivity
 {
-	final String bannerAdUnit="";
+    Set<PackageData> _whiteListPackages;
+    public Set<PackageData> getWhiteListPackages() { return _whiteListPackages; }
+    Set<PackageData> _blackListPackages;
+    public Set<PackageData> getBlackListPackages(){return _blackListPackages;}
+    Set<PackageData> _blackListActivities;
+    public Set<PackageData> getBlackListActivities() { return _blackListActivities;}
+
+    final String bannerAdUnit="";
 	final String interstitialAdUnit="";
 
 	String _logTag=AntivirusActivity.class.getSimpleName();
-
-
 
 	AdvertListener _inMiddleAdListener=new AdvertListener() 
 	{
@@ -95,7 +108,7 @@ public class AntivirusActivity extends AdvertFragmentActivity
 				@Override
 				public void run() 
 				{
-					_continueCalibrationAfterAd();
+					/*_continueCalibrationAfterAd();*/
 				}
 			});
 		}
@@ -110,7 +123,7 @@ public class AntivirusActivity extends AdvertFragmentActivity
 				@Override
 				public void run() 
 				{
-					_continueCalibrationAfterAd();
+					/*_continueCalibrationAfterAd();*/
 				}
 			});
 		}
@@ -169,89 +182,104 @@ public class AntivirusActivity extends AdvertFragmentActivity
 
         AdRequest.Builder builder = new AdRequest.Builder();
 
-        builder.addTestDevice("E32DC600B700D84F8D3500A209A8178A");
-        builder.addTestDevice("E93538110F76E9BC727AB0CE03F52B21");
-        builder.addTestDevice("6D43AD401E0669BEA5824529ABB34EC2");
-
-        //if(BuildConfig.DEBUG)
-        //{
-        //    builder.addTestDevice("E32DC600B700D84F8D3500A209A8178A");
-        //    builder.addTestDevice("E93538110F76E9BC727AB0CE03F52B21");
-		//	builder.addTestDevice("6D43AD401E0669BEA5824529ABB34EC2");
-        //}
-
         AdRequest adRequest = builder.build();
         adView.loadAd(adRequest);
 
 
 	    _data=_deserializeAppData();
 
-	    List<PackageInfo> allPackages= ActivityTools.getApps(this);
-		List<PackageInfo> packagesInfo= ActivityTools.getNonSystemApps(this,allPackages);
-        //ActivityTools.logPackageNames(allPackages);
-
-
-		ArrayList<PackageInfo> packages= new ArrayList<PackageInfo>();
-		getPackagesByNameFilter(packagesInfo,"com.newagetools.batdoc",packages);
-
-        /*PackageBroadcastReceiver.setPackageBroadcastListener(new IPackageChangesListener()
-        {
-            @Override
-            public void OnPackageAdded(Intent intent)
-            {
-				Intent toExecuteIntent = new Intent(AntivirusActivity.this, AntivirusActivity.class);
-
-				String appName=ActivityTools.getAppNameFromPackage(AntivirusActivity.this, intent.getData().getSchemeSpecificPart());
-
-				NotificationTools.notificatePush(AntivirusActivity.this, 0xFF00, R.drawable.ic_launcher,
-						"Ticker text", appName, "App installed: Click to scan for menaces", toExecuteIntent);
-            }
-
-            @Override
-            public void OnPackageRemoved(Intent intent)
-            {
-            }
-        });*/
-
-		ActivityTools.logPackageNames(packages);
-
-
+        _loadDataFiles();
     }
 
-	List<PackageInfo> getPackagesByNameFilter(List<PackageInfo> packages, String filter, List<PackageInfo> result)
-	{
-		boolean wildcard=false;
+	void _loadDataFiles()
+    {
+        _whiteListPackages=new HashSet<PackageData>();
+        _blackListPackages=new HashSet<PackageData>();
+        _blackListActivities=new HashSet<PackageData>();
 
-		result.clear();
+        //Load WhiteList
+        try
+        {
+            String jsonFile=loadJSONFromAsset("whiteList.json");
+            JSONObject obj = new JSONObject(jsonFile);
 
-		if(filter.charAt(filter.length()-1)=='*')
-		{
-			wildcard=true;
-			filter=filter.substring(0,filter.length()-2);
-		}
-		else
-			wildcard=false;
+            JSONArray m_jArry = obj.getJSONArray("data");
 
-		PackageInfo packInfo =null;
+            for (int i = 0; i < m_jArry.length(); i++)
+            {
+                JSONObject temp = m_jArry.getJSONObject(i);
+                PackageData pd=new PackageData();
+                pd.setPackageName(temp.getString("packageName"));
+                _whiteListPackages.add(pd);
+            }
+        }
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
 
-		for (int i=0; i < packages.size(); i++)
-		{
-			packInfo=packages.get(i);
+        //Load blackPackagesList
+        try
+        {
+            String jsonFile=loadJSONFromAsset("blackListPackages.json");
+            JSONObject obj = new JSONObject(jsonFile);
 
-			if(packInfo.packageName.startsWith(filter))
-			{
-				result.add(packInfo);
+            JSONArray m_jArry = obj.getJSONArray("data");
 
-				//Just one package if we were not using a wildcard
-				if (!wildcard)
-					break;
-			}
-		}
+            for (int i = 0; i < m_jArry.length(); i++)
+            {
+                JSONObject temp = m_jArry.getJSONObject(i);
+                PackageData pd=new PackageData();
+                pd.setPackageName(temp.getString("packageName"));
+                _blackListPackages.add(pd);
+            }
+        }
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
 
-        return result;
-	}
+        //Load blackActivitiesList
+        try
+        {
+            String jsonFile=loadJSONFromAsset("blackListActivities.json");
+            JSONObject obj = new JSONObject(jsonFile);
 
+            JSONArray m_jArry = obj.getJSONArray("data");
 
+            for (int i = 0; i < m_jArry.length(); i++)
+            {
+                JSONObject temp = m_jArry.getJSONObject(i);
+                PackageData pd=new PackageData();
+                pd.setPackageName(temp.getString("packageName"));
+                _blackListActivities.add(pd);
+            }
+        }
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public String loadJSONFromAsset(String file)
+    {
+        String json = null;
+        try
+        {
+            InputStream is = this.getAssets().open(file);
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            json = new String(buffer, "UTF-8");
+        }
+        catch (IOException ex)
+        {
+            ex.printStackTrace();
+            return null;
+        }
+        return json;
+    }
 
 	public void onStart()
 	{
@@ -327,12 +355,7 @@ public class AntivirusActivity extends AdvertFragmentActivity
         }, 20000);
 	}
 
-	public void _continueCalibrationAfterAd()
-	{
-	}
 
-	
-	
 	void _showVoteUs()
 	{
 		if (!_data.getVoted())
