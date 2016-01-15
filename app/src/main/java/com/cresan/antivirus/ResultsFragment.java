@@ -1,10 +1,6 @@
 package com.cresan.antivirus;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,14 +8,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
+
 import com.cresan.androidprotector.R;
+import com.tech.applications.coretools.ActivityTools;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by hexdump on 02/11/15.
@@ -52,23 +48,33 @@ public class ResultsFragment extends Fragment
             @Override
             public void onClick(View v)
             {
-                for(String pck : myArrayAdapter.selectedApps)
+                for (String pck : myArrayAdapter.selectedApps)
                 {
 
 
-                        Uri uri = Uri.fromParts("package", pck, null);
-                        Intent it = new Intent(Intent.ACTION_DELETE, uri);
-                        startActivity(it);
-                        //packagename.remove(pck);
-                        //((BaseAdapter) _listview.getAdapter()).notifyDataSetChanged();
-                        Log.i("LISTA","Lista: " +  pck);
+                    Uri uri = Uri.fromParts("package", pck, null);
+                    Intent it = new Intent(Intent.ACTION_DELETE, uri);
+                    startActivity(it);
+                    //packagename.remove(pck);
+                    //((BaseAdapter) _listview.getAdapter()).notifyDataSetChanged();
+                    Log.i("LISTA", "Lista: " + pck);
                 }
-
 
 
             }
         });
         _setupFragment(rootView);
+
+        if(ActivityTools.checkIfUSBDebugIsEnabled(getContext()))
+        {
+           Log.i("usb","USB ENABLEEEE");
+
+        }else
+
+        {
+            Log.i("usb","USB NOT ENABLEEEE");
+        }
+
 
         return rootView;
     }
