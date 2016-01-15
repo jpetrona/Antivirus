@@ -50,6 +50,7 @@ import com.tech.applications.coretools.advertising.PackageBroadcastReceiver;
 import com.tech.applications.coretools.time.PausableCountDownTimer;
 
 import com.cresan.androidprotector.R;
+import com.tech.applications.coretools.time.ServiceTools;
 
 public class AntivirusActivity extends AdvertFragmentActivity
 {
@@ -131,6 +132,17 @@ public class AntivirusActivity extends AdvertFragmentActivity
         
 	    setContentView(R.layout.activity_main);
 
+		//Start service
+		if(!ServiceTools.isServiceRunning(this,PackageListenerService.class))
+		{
+            Log.d(_logTag,"=====> AntivirusActivity:onCreate: Starting PackageListenerService because it was not running.");
+            Intent i = new Intent(this, PackageListenerService.class);
+			startService(i);
+		}
+        else
+            Log.d(_logTag,"=====> AntivirusActivity:onCreate: No need to start PackageListenerService because it as running previously.");
+
+
         Fragment newFragment = new MainFragment();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(R.id.container, newFragment).commit();
@@ -182,7 +194,7 @@ public class AntivirusActivity extends AdvertFragmentActivity
 		ArrayList<PackageInfo> packages= new ArrayList<PackageInfo>();
 		getPackagesByNameFilter(packagesInfo,"com.newagetools.batdoc",packages);
 
-        PackageBroadcastReceiver.setPackageBroadcastListener(new IPackageChangesListener()
+        /*PackageBroadcastReceiver.setPackageBroadcastListener(new IPackageChangesListener()
         {
             @Override
             public void OnPackageAdded(Intent intent)
@@ -199,7 +211,7 @@ public class AntivirusActivity extends AdvertFragmentActivity
             public void OnPackageRemoved(Intent intent)
             {
             }
-        });
+        });*/
 
 		ActivityTools.logPackageNames(packages);
 
