@@ -85,8 +85,7 @@ public class MainFragment extends Fragment
         _superContainer=(RelativeLayout)ac.findViewById(R.id.superContainer);
 
         _runAntivirusNow=(Button)view.findViewById(R.id.runAntivirusNow);
-        _runAntivirusNow.setOnClickListener(
-                new View.OnClickListener()
+        _runAntivirusNow.setOnClickListener(new View.OnClickListener()
         {
 
             @Override
@@ -173,6 +172,18 @@ public class MainFragment extends Fragment
         }
 
         return result;
+        // Create new fragment and transaction
+        //Fragment newFragment = new ScanningFragment();
+        //getMainActivity().slideInFragment(newFragment);
+    }
+
+
+    void showResultFragment()
+    {
+
+        Fragment newFragment = new ResultsFragment();
+        getMainActivity().slideInFragment(newFragment);
+
     }
 
     Set<PackageResultData> getPackagesByNameFilter(List<PackageInfo> packages, String filter, Set<PackageResultData> result)
