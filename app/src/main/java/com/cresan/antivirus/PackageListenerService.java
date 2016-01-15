@@ -26,7 +26,7 @@ public class PackageListenerService extends Service
     {
         super.onCreate();
 
-        Log.i(_logTag, "===========> Service registerd");
+        Log.i(_logTag, "===========> Service registered");
 
         _packageBroadcastReceiver = new PackageBroadcastReceiver();
         _packageBroadcastReceiver.setPackageBroadcastListener(new IPackageChangesListener()
