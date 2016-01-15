@@ -84,6 +84,7 @@ public class MainFragment extends Fragment
             public void onClick(View v)
             {
 
+                showResultFragment();
                 /*if(!NetworkTools.isNetworkAvailable(getMainActivity()))
                 {
                     getMainActivity().showNoInetDialog();
@@ -147,6 +148,15 @@ public class MainFragment extends Fragment
         // Create new fragment and transaction
         //Fragment newFragment = new ScanningFragment();
         //getMainActivity().slideInFragment(newFragment);
+    }
+
+
+    void showResultFragment()
+    {
+
+        Fragment newFragment = new ResultsFragment();
+        getMainActivity().slideInFragment(newFragment);
+
     }
 
 
