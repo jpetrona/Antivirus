@@ -5,6 +5,9 @@
   "packageName": "com.facebook.*"
   },
   {
+    "packageName": "com.cresan.*"
+  },
+  {
   "packageName": "com.instagram.*"
 
   },

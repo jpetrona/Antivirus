@@ -16,6 +16,14 @@
   {
     "permissionName": "android.permission.WAKE_LOCK",
     "hazard": 1
+  },
+  {
+    "permissionName": "android.permission.READ_SMS",
+    "hazard": 10
+  },
+  {
+    "permissionName": "android.permission.READ_PHONE_STATE",
+    "hazard": 10
   }
 ]
 }
