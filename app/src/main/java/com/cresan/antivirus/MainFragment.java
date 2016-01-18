@@ -131,7 +131,6 @@ public class MainFragment extends Fragment
         List<PackageInfo> allPackages= ActivityTools.getApps(getMainActivity(), PackageManager.GET_ACTIVITIES | PackageManager.GET_PERMISSIONS);
         List<PackageInfo> nonSystemAppsPackages= ActivityTools.getNonSystemApps(getMainActivity(), allPackages);
 
-        List<GoodPackageResultData> goodPackageResultData =new ArrayList<GoodPackageResultData>();
 
         Set<PackageData> whiteListPackages=getMainActivity().getWhiteListPackages();
         Set<PackageData> blackListPackages=getMainActivity().getBlackListPackages();
@@ -152,8 +151,10 @@ public class MainFragment extends Fragment
 
         Log.d(_logTag, " ");
 
-        _scanForBlackListedActivityApps(nonSystemAppsPackages, blackListActivities, tempBadResults);
-        _scanForSuspiciousPermissionsApps(nonSystemAppsPackages, suspiciousPermissions, tempBadResults);
+        List<PackageInfo> potentialBadApps=_removeWhiteListPackagesFromPackageList(nonSystemAppsPackages, whiteListPackages);
+
+        _scanForBlackListedActivityApps(potentialBadApps, blackListActivities, tempBadResults);
+        _scanForSuspiciousPermissionsApps(potentialBadApps, suspiciousPermissions, tempBadResults);
         _fillInstalledFromGooglePlay(tempBadResults);
 
         for (BadPackageResultData p : tempBadResults)
@@ -245,6 +246,36 @@ public class MainFragment extends Fragment
         return result;
     }
 
+    protected List<PackageInfo> _removeWhiteListPackagesFromPackageList(List<PackageInfo> packagesToSearch, Set<PackageData> whiteListPackages)
+    {
+        boolean found=false;
+
+        List<PackageInfo> trimmedPackageList=new ArrayList<PackageInfo>(packagesToSearch);
+
+        //Check against whitelist
+        for(PackageData pd : whiteListPackages)
+        {
+            PackageInfo p = null;
+            int index = 0;
+            String packageName = pd.getPackageName();
+            found = false;
+
+            while (found == false && index < trimmedPackageList.size())
+            {
+                p = trimmedPackageList.get(index);
+                if (_packageNameBelongsToPackageMask(p.packageName,pd.getPackageName()))
+                {
+                    found = true;
+                    trimmedPackageList.remove(index);
+                }
+                else
+                    ++index;
+            }
+        }
+
+        return trimmedPackageList;
+    }
+
     //In setToUpdate we receive a set of BadPackageResultData ready to be update with newly detected menaces
     protected Set<BadPackageResultData> _scanForBlackListedActivityApps(List<PackageInfo> packagesToSearch, Set<PackageData> blackListedActivityPackages,
                                                                      Set<BadPackageResultData> setToUpdate)
@@ -311,6 +342,34 @@ public class MainFragment extends Fragment
         return setToUpdate;
     }
 
+    boolean _packageNameBelongsToPackageMask(String packageName, String mask)
+    {
+        boolean wildcard=false;
+
+        if(mask.charAt(mask.length()-1)=='*')
+        {
+            wildcard=true;
+            mask=mask.substring(0,mask.length()-2);
+        }
+        else
+            wildcard=false;
+
+        if(wildcard==true)
+        {
+            if (packageName.startsWith(mask))
+                return true;
+            else
+                return false;
+        }
+        else
+        {
+            if(packageName.equals(mask))
+                return true;
+            else
+                return false;
+        }
+
+    }
 
     Set<GoodPackageResultData> _getPackagesByNameFilter(List<PackageInfo> packages, String filter, Set<GoodPackageResultData> result)
     {
@@ -319,12 +378,7 @@ public class MainFragment extends Fragment
         result.clear();
 
         if(filter.charAt(filter.length()-1)=='*')
-        {
             wildcard=true;
-            filter=filter.substring(0,filter.length()-2);
-        }
-        else
-            wildcard=false;
 
         PackageInfo packInfo =null;
 
@@ -332,7 +386,7 @@ public class MainFragment extends Fragment
         {
             packInfo=packages.get(i);
 
-            if(packInfo.packageName.startsWith(filter))
+            if(_packageNameBelongsToPackageMask(packInfo.packageName,filter))
             {
                 result.add(new GoodPackageResultData(packInfo));
 
