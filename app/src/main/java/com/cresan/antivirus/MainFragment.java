@@ -180,6 +180,8 @@ public class MainFragment extends Fragment
             Log.d(_logTag," ");
         }
 
+        showResultFragment(new ArrayList<BadPackageResultData>(tempBadResults));
+
         /*Log.d(_logTag, "=====> Showing blacklisted activities");
         _scanForBlackListedActivityApps(nonSystemAppsPackages, blackListActivities, tempBadResults);
         for (BadPackageResultData p : tempBadResults)
@@ -434,10 +436,11 @@ public class MainFragment extends Fragment
 
 
 
-    void showResultFragment()
+    void showResultFragment(List<BadPackageResultData> suspiciousApps)
     {
 
-        Fragment newFragment = new ResultsFragment();
+        ResultsFragment newFragment = new ResultsFragment();
+        newFragment.setData(suspiciousApps);
         getMainActivity().slideInFragment(newFragment);
 
     }

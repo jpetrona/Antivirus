@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -22,31 +23,33 @@ import java.util.List;
  * Created by Magic Frame on 13/01/2016.
  */
 
-public class myArrayAdapter  extends ArrayAdapter<String>
+public class myArrayAdapter  extends ArrayAdapter<BadPackageResultData>
 {
 
     private final Context context;
+    private AntivirusActivity antivirusActivity;
     //private final String[] values;
-    private  ArrayList<String> values = new ArrayList<>();
-    public static ArrayList<String> selectedApps = new ArrayList<>();
+    private  List<BadPackageResultData> values=null;
+    public static List<String> selectedApps = new ArrayList<>();
 
 
-    public myArrayAdapter(Context context, ArrayList<String> values)
+    public myArrayAdapter(Context context, List<BadPackageResultData> values,AntivirusActivity antivirusActivity)
     {
 
         super(context, R.layout.list_apps,values);
         this.context = context;
         this.values = values;
-
+        this.antivirusActivity = antivirusActivity;
 
     }
+
 
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent)
     {
 
-        View rowView;
+        final View rowView;
 
         if(convertView == null)
         {
@@ -57,10 +60,23 @@ public class myArrayAdapter  extends ArrayAdapter<String>
             rowView = convertView;
 
         }
-        final String s = values.get(position);//[position];
+        final BadPackageResultData obj = values.get(position);
         TextView textView = (TextView) rowView.findViewById(R.id.Titlelabel);
         ImageView imageView = (ImageView) rowView.findViewById(R.id.logo);
         CheckBox checkBox = (CheckBox) rowView.findViewById(R.id.checkBox);
+
+        Button button = (Button) rowView.findViewById(R.id.buttonInfo);
+
+        button.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                showInfoAppFragment(obj);
+
+            }
+        });
+
 
         checkBox.setOnCheckedChangeListener(null);
         checkBox.setChecked(false);
@@ -69,17 +85,17 @@ public class myArrayAdapter  extends ArrayAdapter<String>
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
             {
-                if(isChecked)
+                if (isChecked)
                 {
                     // Si marcamos el checkbox cogemos su nombre de paquete y lo metemos en la lista
-                    selectedApps.add(s);
-                    Log.i("MSF","METIDO A LA LISTA: " + s);
+                    selectedApps.add(obj.getPackageName());
+                    Log.i("MSF", "METIDO A LA LISTA: " + obj.getPackageName());
 
-                }else
+                } else
                 {
 
                     // Si desmarcamos el checkbox eliminamos el  nombre del paquete de la lista
-                    selectedApps.remove(s);
+                    selectedApps.remove(obj.getPackageName());
 
                 }
             }
@@ -87,8 +103,8 @@ public class myArrayAdapter  extends ArrayAdapter<String>
 
 
 
-        textView.setText(ActivityTools.getAppNameFromPackage(getContext(), s));
-        imageView.setImageDrawable(ActivityTools.getIconFromPackage(s, getContext()));
+        textView.setText(ActivityTools.getAppNameFromPackage(getContext(), obj.getPackageName()));
+        imageView.setImageDrawable(ActivityTools.getIconFromPackage(obj.getPackageName(), getContext()));
 
 
 
@@ -96,4 +112,16 @@ public class myArrayAdapter  extends ArrayAdapter<String>
         return rowView;
 
     }
+
+
+    void showInfoAppFragment(BadPackageResultData suspiciousAppList)
+    {
+
+        // Cuando pulses el boton de info coger su posicion y pasarselo por la variable pos
+        InfoAppFragment newFragment = new InfoAppFragment();
+        newFragment.setData(suspiciousAppList);
+        antivirusActivity.slideInFragment(newFragment);
+
+    }
+
 }

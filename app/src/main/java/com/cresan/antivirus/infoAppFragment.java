@@ -1,37 +1,68 @@
 package com.cresan.antivirus;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import com.cresan.androidprotector.R;
+import com.tech.applications.coretools.ActivityTools;
 
 /**
  * Created by Magic Frame on 18/01/2016.
  */
-public class infoAppFragment extends Fragment
+public class InfoAppFragment extends Fragment
 {
 
 
+    public static ListView _listview;
+    BadPackageResultData _suspiciousApp =null;
+   
 
     AntivirusActivity getMainActivity()
     {
         return (AntivirusActivity) getActivity();
     }
 
+    public void setData(BadPackageResultData suspiciousAppList)
+    {
+        _suspiciousApp =suspiciousAppList;
 
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View rootView = inflater.inflate(R.layout.app_info_fragment, container, false);
 
-
+        _setupFragment(rootView);
         return rootView;
     }
 
+    protected void _setupFragment(View view)
+    {
+
+        TextView textView = (TextView) view.findViewById(R.id.titleApp);
+        TextView warningLevel = (TextView) view.findViewById(R.id.warningLevel);
+        ImageView iconApp = (ImageView) view.findViewById(R.id.iconGeneral);
+        Drawable s = ActivityTools.getIconFromPackage(_suspiciousApp.getPackageName(),getContext());
+
+        textView.setText(ActivityTools.getAppNameFromPackage(getContext(), _suspiciousApp.getPackageName()));
+        iconApp.setImageDrawable(s);
+        warningLevel.setText("RIESGO MEDIO");
+
+        _listview = (ListView) view.findViewById(R.id.listView);
+
+       _listview.setAdapter(new WarningsAdapter(getMainActivity().getApplicationContext()));
+
+
+
+    }
 
 }
+

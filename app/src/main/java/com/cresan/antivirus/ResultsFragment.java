@@ -16,6 +16,9 @@ import com.cresan.androidprotector.R;
 import com.tech.applications.coretools.ActivityTools;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.transform.Result;
 
 /**
  * Created by hexdump on 02/11/15.
@@ -28,14 +31,23 @@ public class ResultsFragment extends Fragment
     AntivirusActivity getMainActivity() {return (AntivirusActivity) getActivity();}
 
     //String[] packagename = new String[]{"com.magic.sanfulgencio","com.dropbox.android","com.appspot.swisscodemonkeys.detector","com.nolanlawson.logcat"};
+
+    List<BadPackageResultData> _suspiciousAppList=null;
+    /*
     ArrayList<String> packagename = new ArrayList<String>(){{
         add("com.magic.sanfulgencio");
         add("com.dropbox.android");
         add("com.appspot.swisscodemonkeys.detector");
         add("com.nolanlawson.logcat");
-    }};
+    }};*/
     public static ListView _listview;
     private Button _buttonRemove;
+
+
+    public void setData(List<BadPackageResultData> suspiciousAppList)
+    {
+        _suspiciousAppList=suspiciousAppList;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,6 +60,7 @@ public class ResultsFragment extends Fragment
             @Override
             public void onClick(View v)
             {
+
                 for (String pck : myArrayAdapter.selectedApps)
                 {
 
@@ -97,7 +110,7 @@ public class ResultsFragment extends Fragment
     {
         _listview = (ListView) view.findViewById(R.id.list);
 
-        _listview.setAdapter(new myArrayAdapter(getMainActivity().getApplicationContext(), packagename));
+        _listview.setAdapter(new myArrayAdapter(getMainActivity().getApplicationContext(), _suspiciousAppList,getMainActivity()));
     }
 
 
