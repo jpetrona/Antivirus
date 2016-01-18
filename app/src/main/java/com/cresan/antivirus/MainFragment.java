@@ -128,7 +128,7 @@ public class MainFragment extends Fragment
     protected void _scanFileSystem()
     {
         //Scan installed packages
-        List<PackageInfo> allPackages= ActivityTools.getApps(getMainActivity(),PackageManager.GET_ACTIVITIES | PackageManager.GET_PERMISSIONS);
+        List<PackageInfo> allPackages= ActivityTools.getApps(getMainActivity(), PackageManager.GET_ACTIVITIES | PackageManager.GET_PERMISSIONS);
         List<PackageInfo> nonSystemAppsPackages= ActivityTools.getNonSystemApps(getMainActivity(), allPackages);
 
         List<GoodPackageResultData> goodPackageResultData =new ArrayList<GoodPackageResultData>();
@@ -150,13 +150,15 @@ public class MainFragment extends Fragment
             Log.d(_logTag, p.getPackageName());
         }
 
-        Log.d(_logTag," ");
+        Log.d(_logTag, " ");
 
         _scanForBlackListedActivityApps(nonSystemAppsPackages, blackListActivities, tempBadResults);
         _scanForSuspiciousPermissionsApps(nonSystemAppsPackages, suspiciousPermissions, tempBadResults);
+        _fillInstalledFromGooglePlay(tempBadResults);
+
         for (BadPackageResultData p : tempBadResults)
         {
-            Log.d(_logTag, "======PACKAGE "+p.getPackageName());
+            Log.d(_logTag, "======PACKAGE "+p.getPackageName()+" GPlay install: "+p.getInstalledThroughGooglePlay());
             if(p.getActivityData().size()>0)
             {
                 Log.d(_logTag, "=========BLACK-ACTIVITIES>");
@@ -194,6 +196,21 @@ public class MainFragment extends Fragment
                 Log.d(_logTag,"=========> "+ pd.getPermissionName());
             }
         }*/
+    }
+
+    protected Set<BadPackageResultData> _fillInstalledFromGooglePlay(Set<BadPackageResultData> prd)
+    {
+        for (BadPackageResultData p : prd)
+        {
+            if(ActivityTools.checkIfAppWasInstalledThroughGooglePlay(getActivity(),p.getPackageInfo().packageName))
+            {
+                p.setInstalledThroughGooglePlay(true);
+            }
+            else
+                p.setInstalledThroughGooglePlay(false);
+        }
+
+        return prd;
     }
 
     protected BadPackageResultData getBadPackageResultByPackageName(Set<BadPackageResultData> prd, String packageName)

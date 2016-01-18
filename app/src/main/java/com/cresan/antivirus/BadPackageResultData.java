@@ -29,6 +29,10 @@ public class BadPackageResultData
     public void addPermissionData(PermissionData bad) { _permissions.add(bad);  }
     public Set<PermissionData> getPermissionData() { return _permissions; }
 
+    private boolean _installedThroughGooglePlay=false;
+    public boolean getInstalledThroughGooglePlay() { return _installedThroughGooglePlay; }
+    public void setInstalledThroughGooglePlay(boolean installed) { _installedThroughGooglePlay=installed;}
+
     public int hashCode()
     {
         return (int) getPackageName().hashCode();
