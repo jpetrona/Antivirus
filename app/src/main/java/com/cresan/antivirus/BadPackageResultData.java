@@ -21,13 +21,13 @@ public class BadPackageResultData
         _packageInfo=packageInfo;
     }
 
-    private Set<BadActivityData> _badActivities;
-    public void AddBadActivityData(BadActivityData bad)
-    {
-        if(_badActivities==null)
-            _badActivities=new HashSet<BadActivityData>();
-        _badActivities.add(bad);
-    }
+    private Set<ActivityData> _activities=new HashSet<ActivityData>();
+    public void addActivityData(ActivityData bad)  { _activities.add(bad);  }
+    public Set<ActivityData> getActivityData() { return _activities; }
+
+    private Set<PermissionData> _permissions=new HashSet<PermissionData>();
+    public void addPermissionData(PermissionData bad) { _permissions.add(bad);  }
+    public Set<PermissionData> getPermissionData() { return _permissions; }
 
     public int hashCode()
     {

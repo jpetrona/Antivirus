@@ -5,14 +5,14 @@ import android.content.pm.ActivityInfo;
 /**
  * Created by hexdump on 15/01/16.
  */
-public class BadActivityData
+public class ActivityData
 {
     private ActivityInfo _activityInfo;
     public ActivityInfo getActivityInfo() {return _activityInfo;}
     private int _reasonId;
     public int getReasorId() {return _reasonId;}
 
-    public BadActivityData(ActivityInfo activityInfo, int reasonId)
+    public ActivityData(ActivityInfo activityInfo, int reasonId)
     {
         _activityInfo=activityInfo;
         _reasonId=reasonId;
@@ -28,7 +28,7 @@ public class BadActivityData
         if(o == null)
             return false;
 
-        BadActivityData other = (BadActivityData) o;
+        ActivityData other = (ActivityData) o;
         return  _activityInfo.packageName.equals(other._activityInfo.packageName);
     }
 }

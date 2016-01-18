@@ -2,6 +2,7 @@ package com.cresan.antivirus;
 
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -127,7 +128,7 @@ public class MainFragment extends Fragment
     protected void _scanFileSystem()
     {
         //Scan installed packages
-        List<PackageInfo> allPackages= ActivityTools.getApps(getMainActivity(),true);
+        List<PackageInfo> allPackages= ActivityTools.getApps(getMainActivity(),PackageManager.GET_ACTIVITIES | PackageManager.GET_PERMISSIONS);
         List<PackageInfo> nonSystemAppsPackages= ActivityTools.getNonSystemApps(getMainActivity(), allPackages);
 
         List<GoodPackageResultData> goodPackageResultData =new ArrayList<GoodPackageResultData>();
@@ -135,6 +136,7 @@ public class MainFragment extends Fragment
         Set<PackageData> whiteListPackages=getMainActivity().getWhiteListPackages();
         Set<PackageData> blackListPackages=getMainActivity().getBlackListPackages();
         Set<PackageData> blackListActivities=getMainActivity().getBlackListActivities();
+        Set<PermissionData> suspiciousPermissions=getMainActivity().getSuspiciousPermissions();
 
         //Packages with problems will be stored here
         Set<GoodPackageResultData> tempGoodResults=new HashSet<GoodPackageResultData>();
@@ -148,12 +150,50 @@ public class MainFragment extends Fragment
             Log.d(_logTag, p.getPackageName());
         }
 
-        Log.d(_logTag, "=====> Showing blacklisted activities");
+        Log.d(_logTag," ");
+
+        _scanForBlackListedActivityApps(nonSystemAppsPackages, blackListActivities, tempBadResults);
+        _scanForSuspiciousPermissionsApps(nonSystemAppsPackages, suspiciousPermissions, tempBadResults);
+        for (BadPackageResultData p : tempBadResults)
+        {
+            Log.d(_logTag, "======PACKAGE "+p.getPackageName());
+            if(p.getActivityData().size()>0)
+            {
+                Log.d(_logTag, "=========BLACK-ACTIVITIES>");
+                for (ActivityData ad : p.getActivityData())
+                {
+                    Log.d(_logTag, "=============> " + ad.getActivityInfo().name);
+                }
+            }
+            if(p.getPermissionData().size()>0)
+            {
+                Log.d(_logTag,"=========BAD-PERMISSIONS>");
+                for(PermissionData pd : p.getPermissionData())
+                {
+                    Log.d(_logTag,"=============> "+ pd.getPermissionName());
+                }
+            }
+
+            Log.d(_logTag," ");
+        }
+
+        /*Log.d(_logTag, "=====> Showing blacklisted activities");
         _scanForBlackListedActivityApps(nonSystemAppsPackages, blackListActivities, tempBadResults);
         for (BadPackageResultData p : tempBadResults)
         {
             Log.d(_logTag, p.getPackageName());
         }
+
+        Log.d(_logTag, "=====> Showing activities with suspicious permissions");
+        _scanForSuspiciousPermissionsApps(nonSystemAppsPackages, suspiciousPermissions, tempBadResults);
+        for (BadPackageResultData p : tempBadResults)
+        {
+            Log.d(_logTag,"=====> "+ p.getPackageName());
+            for(PermissionData pd : p.getPermissionData())
+            {
+                Log.d(_logTag,"=========> "+ pd.getPermissionName());
+            }
+        }*/
     }
 
     protected BadPackageResultData getBadPackageResultByPackageName(Set<BadPackageResultData> prd, String packageName)
@@ -175,8 +215,6 @@ public class MainFragment extends Fragment
     protected Set<GoodPackageResultData> _scanForWhiteListedApps(List<PackageInfo> packagesToSearch, Set<PackageData> whiteListPackages,
                                                               Set<GoodPackageResultData> result)
     {
-        result.clear();
-
         Set<GoodPackageResultData> subResult=new HashSet<GoodPackageResultData>();
 
         //Check against whitelist
@@ -206,7 +244,10 @@ public class MainFragment extends Fragment
                 //Update or create new if it does not exist
                 BadPackageResultData bprd=getBadPackageResultByPackageName(setToUpdate, pi.packageName);
                 if(bprd==null)
-                    bprd=new BadPackageResultData(pi);
+                {
+                    bprd = new BadPackageResultData(pi);
+                    setToUpdate.add(bprd);
+                }
 
                 //In subResult we have now all the ActivityInfo entries resulting in a menace
                 _getActivitiesByNameFilter(pi, pd.getPackageName(), subResult);
@@ -216,10 +257,8 @@ public class MainFragment extends Fragment
                 {
                     for(ActivityInfo ai: subResult)
                     {
-                        bprd.AddBadActivityData(new BadActivityData(ai,0));
+                        bprd.addActivityData(new ActivityData(ai, 0));
                     }
-
-                    setToUpdate.add(bprd);
                 }
 
             }
@@ -229,9 +268,29 @@ public class MainFragment extends Fragment
     }
 
     //In setToUpdate we receive a set of BadPackageResultData ready to be update with newly detected menaces
-    protected Set<BadPackageResultData> _scanForBadPermissionsApps(List<PackageInfo> packagesToSearch, Set<PackageData> blackListedActivityPackages,
+    protected Set<BadPackageResultData> _scanForSuspiciousPermissionsApps(List<PackageInfo> packagesToSearch, Set<PermissionData> suspiciousPermissions,
                                                                         Set<BadPackageResultData> setToUpdate)
     {
+        //Check against whitelist
+        for(PackageInfo pi : packagesToSearch)
+        {
+            //Update or create new if it does not exist
+            BadPackageResultData bprd=getBadPackageResultByPackageName(setToUpdate, pi.packageName);
+            if(bprd==null)
+            {
+                bprd = new BadPackageResultData(pi);
+                setToUpdate.add(bprd);
+            }
+
+            for(PermissionData permData : suspiciousPermissions)
+            {
+                if(ActivityTools.packageInfoHasPermission(pi, permData.getPermissionName()))
+                {
+                    bprd.addPermissionData(permData);
+                }
+            }
+        }
+
         return setToUpdate;
     }
 
