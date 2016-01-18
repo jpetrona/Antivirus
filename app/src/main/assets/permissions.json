@@ -1,0 +1,21 @@
+{
+  "data":
+[
+  {
+    "permissionName": "android.permission.ACCESS_GPS",
+    "hazard": 5
+  },
+  {
+    "permissionName": "com.android.browser.permission.READ_HISTORY_BOOKMARKS",
+    "hazard": 7
+  },
+  {
+    "permissionName": "com.android.browser.permission.WRITE_HISTORY_BOOKMARKS",
+    "hazard": 7
+  },
+  {
+    "permissionName": "android.permission.WAKE_LOCK",
+    "hazard": 1
+  }
+]
+}

@@ -68,6 +68,8 @@ public class AntivirusActivity extends AdvertFragmentActivity
     public Set<PackageData> getBlackListPackages(){return _blackListPackages;}
     Set<PackageData> _blackListActivities;
     public Set<PackageData> getBlackListActivities() { return _blackListActivities;}
+	Set<PermissionData> _suspiciousPermissions;
+	public Set<PermissionData> getSuspiciousPermissions() { return _suspiciousPermissions;}
 
     final String bannerAdUnit="";
 	final String interstitialAdUnit="";
@@ -196,6 +198,7 @@ public class AntivirusActivity extends AdvertFragmentActivity
         _whiteListPackages=new HashSet<PackageData>();
         _blackListPackages=new HashSet<PackageData>();
         _blackListActivities=new HashSet<PackageData>();
+		_suspiciousPermissions= new HashSet<PermissionData>();
 
         //Load WhiteList
         try
@@ -253,6 +256,26 @@ public class AntivirusActivity extends AdvertFragmentActivity
                 PackageData pd=new PackageData();
                 pd.setPackageName(temp.getString("packageName"));
                 _blackListActivities.add(pd);
+            }
+        }
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+
+        //Load permissions data
+        try
+        {
+            String jsonFile=loadJSONFromAsset("permissions.json");
+            JSONObject obj = new JSONObject(jsonFile);
+
+            JSONArray m_jArry = obj.getJSONArray("data");
+
+            for (int i = 0; i < m_jArry.length(); i++)
+            {
+                JSONObject temp = m_jArry.getJSONObject(i);
+                PermissionData pd=new PermissionData(temp.getString("permissionName"),temp.getInt("hazard"));
+                _suspiciousPermissions.add(pd);
             }
         }
         catch (JSONException e)

@@ -1,10 +1,8 @@
 package com.cresan.antivirus;
 
-import android.app.AlertDialog;
-import android.app.NotificationManager;
-import android.content.DialogInterface;
-import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -24,13 +22,11 @@ import com.tech.applications.coretools.ActivityTools;
 import com.tech.applications.coretools.BatteryData;
 import com.tech.applications.coretools.BatteryTools;
 import com.tech.applications.coretools.NetworkTools;
-import com.tech.applications.coretools.NotificationTools;
 import com.tech.applications.coretools.time.PausableCountDownTimer;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -128,65 +124,178 @@ public class MainFragment extends Fragment
         tv.setText(df.format(bd.getTemperature()) + "º");
     }
 
-    private void _logSearchResult(Set<PackageResultData> prd)
-    {
-        for (PackageResultData p : prd)
-        {
-            Log.d(_logTag, p.getPackageName());
-        }
-    }
+
     protected void _scanFileSystem()
     {
         //Scan installed packages
-        List<PackageInfo> allPackages= ActivityTools.getApps(getMainActivity());
+        List<PackageInfo> allPackages= ActivityTools.getApps(getMainActivity(),PackageManager.GET_ACTIVITIES | PackageManager.GET_PERMISSIONS);
         List<PackageInfo> nonSystemAppsPackages= ActivityTools.getNonSystemApps(getMainActivity(), allPackages);
 
-        List<PackageResultData> packageResultData=new ArrayList<PackageResultData>();
+        List<GoodPackageResultData> goodPackageResultData =new ArrayList<GoodPackageResultData>();
 
         Set<PackageData> whiteListPackages=getMainActivity().getWhiteListPackages();
         Set<PackageData> blackListPackages=getMainActivity().getBlackListPackages();
         Set<PackageData> blackListActivities=getMainActivity().getBlackListActivities();
+        Set<PermissionData> suspiciousPermissions=getMainActivity().getSuspiciousPermissions();
 
         //Packages with problems will be stored here
-        Set<PackageResultData> tempResults=new HashSet<PackageResultData>();
+        Set<GoodPackageResultData> tempGoodResults=new HashSet<GoodPackageResultData>();
+        Set<BadPackageResultData> tempBadResults=new HashSet<BadPackageResultData>();
 
-        _scanForWhiteListedApps(nonSystemAppsPackages,whiteListPackages,tempResults);
+        _scanForWhiteListedApps(nonSystemAppsPackages, whiteListPackages, tempGoodResults);
 
-        Log.d(_logTag,"=====> Showing whitelisted apps");
-        _logSearchResult(tempResults);
+        Log.d(_logTag, "=====> Showing whitelisted apps");
+        for (GoodPackageResultData p : tempGoodResults)
+        {
+            Log.d(_logTag, p.getPackageName());
+        }
+
+        Log.d(_logTag," ");
+
+        _scanForBlackListedActivityApps(nonSystemAppsPackages, blackListActivities, tempBadResults);
+        _scanForSuspiciousPermissionsApps(nonSystemAppsPackages, suspiciousPermissions, tempBadResults);
+        for (BadPackageResultData p : tempBadResults)
+        {
+            Log.d(_logTag, "======PACKAGE "+p.getPackageName());
+            if(p.getActivityData().size()>0)
+            {
+                Log.d(_logTag, "=========BLACK-ACTIVITIES>");
+                for (ActivityData ad : p.getActivityData())
+                {
+                    Log.d(_logTag, "=============> " + ad.getActivityInfo().name);
+                }
+            }
+            if(p.getPermissionData().size()>0)
+            {
+                Log.d(_logTag,"=========BAD-PERMISSIONS>");
+                for(PermissionData pd : p.getPermissionData())
+                {
+                    Log.d(_logTag,"=============> "+ pd.getPermissionName());
+                }
+            }
+
+            Log.d(_logTag," ");
+        }
+
+        /*Log.d(_logTag, "=====> Showing blacklisted activities");
+        _scanForBlackListedActivityApps(nonSystemAppsPackages, blackListActivities, tempBadResults);
+        for (BadPackageResultData p : tempBadResults)
+        {
+            Log.d(_logTag, p.getPackageName());
+        }
+
+        Log.d(_logTag, "=====> Showing activities with suspicious permissions");
+        _scanForSuspiciousPermissionsApps(nonSystemAppsPackages, suspiciousPermissions, tempBadResults);
+        for (BadPackageResultData p : tempBadResults)
+        {
+            Log.d(_logTag,"=====> "+ p.getPackageName());
+            for(PermissionData pd : p.getPermissionData())
+            {
+                Log.d(_logTag,"=========> "+ pd.getPermissionName());
+            }
+        }*/
     }
 
-    protected Set<PackageResultData> _scanForWhiteListedApps(List<PackageInfo> packagesToSearch, Set<PackageData> whiteListPackages,
-                                                              Set<PackageResultData> result)
+    protected BadPackageResultData getBadPackageResultByPackageName(Set<BadPackageResultData> prd, String packageName)
     {
-        result.clear();
+        BadPackageResultData result=null;
 
-        Set<PackageResultData> subResult=new HashSet<PackageResultData>();
+        for (BadPackageResultData p : prd)
+        {
+            if(p.getPackageName().equals(packageName))
+            {
+                result=p;
+                break;
+            }
+        }
+
+        return result;
+    }
+
+    protected Set<GoodPackageResultData> _scanForWhiteListedApps(List<PackageInfo> packagesToSearch, Set<PackageData> whiteListPackages,
+                                                              Set<GoodPackageResultData> result)
+    {
+        Set<GoodPackageResultData> subResult=new HashSet<GoodPackageResultData>();
 
         //Check against whitelist
         for(PackageData pd : whiteListPackages)
         {
-            getPackagesByNameFilter(packagesToSearch, pd.getPackageName(), subResult);
+            _getPackagesByNameFilter(packagesToSearch, pd.getPackageName(), subResult);
 
             result.addAll(subResult);
         }
 
         return result;
-        // Create new fragment and transaction
-        //Fragment newFragment = new ScanningFragment();
-        //getMainActivity().slideInFragment(newFragment);
     }
 
-
-    void showResultFragment()
+    //In setToUpdate we receive a set of BadPackageResultData ready to be update with newly detected menaces
+    protected Set<BadPackageResultData> _scanForBlackListedActivityApps(List<PackageInfo> packagesToSearch, Set<PackageData> blackListedActivityPackages,
+                                                                     Set<BadPackageResultData> setToUpdate)
     {
+        List<ActivityInfo> subResult=new ArrayList<ActivityInfo>();
 
-        Fragment newFragment = new ResultsFragment();
-        getMainActivity().slideInFragment(newFragment);
+        ActivityInfo[] activities;
 
+        //Check against black listed activity apps
+        for(PackageData pd : blackListedActivityPackages)
+        {
+            for(PackageInfo pi: packagesToSearch)
+            {
+                //Update or create new if it does not exist
+                BadPackageResultData bprd=getBadPackageResultByPackageName(setToUpdate, pi.packageName);
+                if(bprd==null)
+                {
+                    bprd = new BadPackageResultData(pi);
+                    setToUpdate.add(bprd);
+                }
+
+                //In subResult we have now all the ActivityInfo entries resulting in a menace
+                _getActivitiesByNameFilter(pi, pd.getPackageName(), subResult);
+
+                //If we found bad activities in the package fill the bad package information into result
+                if(subResult.size()>0)
+                {
+                    for(ActivityInfo ai: subResult)
+                    {
+                        bprd.addActivityData(new ActivityData(ai, 0));
+                    }
+                }
+
+            }
+        }
+
+        return setToUpdate;
     }
 
-    Set<PackageResultData> getPackagesByNameFilter(List<PackageInfo> packages, String filter, Set<PackageResultData> result)
+    //In setToUpdate we receive a set of BadPackageResultData ready to be update with newly detected menaces
+    protected Set<BadPackageResultData> _scanForSuspiciousPermissionsApps(List<PackageInfo> packagesToSearch, Set<PermissionData> suspiciousPermissions,
+                                                                        Set<BadPackageResultData> setToUpdate)
+    {
+        //Check against whitelist
+        for(PackageInfo pi : packagesToSearch)
+        {
+            //Update or create new if it does not exist
+            BadPackageResultData bprd=getBadPackageResultByPackageName(setToUpdate, pi.packageName);
+            if(bprd==null)
+            {
+                bprd = new BadPackageResultData(pi);
+                setToUpdate.add(bprd);
+            }
+
+            for(PermissionData permData : suspiciousPermissions)
+            {
+                if(ActivityTools.packageInfoHasPermission(pi, permData.getPermissionName()))
+                {
+                    bprd.addPermissionData(permData);
+                }
+            }
+        }
+
+        return setToUpdate;
+    }
+
+
+    Set<GoodPackageResultData> _getPackagesByNameFilter(List<PackageInfo> packages, String filter, Set<GoodPackageResultData> result)
     {
         boolean wildcard=false;
 
@@ -208,7 +317,7 @@ public class MainFragment extends Fragment
 
             if(packInfo.packageName.startsWith(filter))
             {
-                result.add(new PackageResultData(packInfo));
+                result.add(new GoodPackageResultData(packInfo));
 
                 //Just one package if we were not using a wildcard
                 if (!wildcard)
@@ -219,4 +328,46 @@ public class MainFragment extends Fragment
         return result;
     }
 
+    //We will return a list of uniquely named ActivityInfo becase we can't have 2 same activities in a manifeset with same name
+    List<ActivityInfo> _getActivitiesByNameFilter(PackageInfo pi, String filter, List<ActivityInfo> result)
+    {
+        result.clear();
+
+        if(pi.activities==null)
+            return result;
+
+        boolean wildcard=false;
+
+        if(filter.charAt(filter.length()-1)=='*')
+        {
+            wildcard=true;
+            filter=filter.substring(0,filter.length()-2);
+        }
+        else
+            wildcard=false;
+
+        ActivityInfo activityInfo =null;
+
+        for (int i=0; i < pi.activities.length; i++)
+        {
+            activityInfo=pi.activities[i];
+
+            if(activityInfo.name.startsWith(filter))
+            {
+                result.add(activityInfo);
+            }
+        }
+
+        return result;
+    }
+
+
+
+    void showResultFragment()
+    {
+
+        Fragment newFragment = new ResultsFragment();
+        getMainActivity().slideInFragment(newFragment);
+
+    }
 }
