@@ -44,6 +44,6 @@ public class BadPackageResultData
             return false;
 
         BadPackageResultData other = (BadPackageResultData) o;
-        return _packageInfo.packageName.equals(other._packageInfo);
+        return _packageInfo.packageName.equals(other._packageInfo.packageName);
     }
 }

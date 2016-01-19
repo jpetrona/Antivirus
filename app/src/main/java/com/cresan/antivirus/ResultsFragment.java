@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -19,7 +20,7 @@ import com.tech.applications.coretools.ActivityTools;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.transform.Result;
+import javax.crypto.BadPaddingException;
 
 /**
  * Created by hexdump on 02/11/15.
@@ -44,6 +45,9 @@ public class ResultsFragment extends Fragment
     public static ListView _listview;
     private Button _buttonRemove;
 
+    List<BadPackageResultData> _selectedApps = new ArrayList<>();
+
+    ResultsAdapter _resultAdapter=null;
 
     public void setData(List<BadPackageResultData> suspiciousAppList)
     {
@@ -65,18 +69,18 @@ public class ResultsFragment extends Fragment
             public void onClick(View v)
             {
 
-                for (String pck : myArrayAdapter.selectedApps)
+                for (BadPackageResultData pck : _selectedApps)
                 {
-
-
-                    Uri uri = Uri.fromParts("package", pck, null);
+                    Uri uri = Uri.fromParts("package", pck.getPackageName(), null);
                     Intent it = new Intent(Intent.ACTION_DELETE, uri);
                     startActivity(it);
-                    //packagename.remove(pck);
-                    //((BaseAdapter) _listview.getAdapter()).notifyDataSetChanged();
+
+
                     Log.i("LISTA", "Lista: " + pck);
                 }
 
+
+                _selectedApps.clear();
 
             }
         });
@@ -96,25 +100,38 @@ public class ResultsFragment extends Fragment
         return rootView;
     }
 
-    @Override
-    public void onPause()
-    {
-        super.onPause();
-        Log.i("PARA","ENTRO EN PAUSEEEEEE");
-    }
 
-    @Override
-    public void onResume()
-    {
-        super.onResume();
-        Log.i("resume","RESUMEEEEEEEEE");
-    }
 
     protected void _setupFragment(View view)
     {
         _listview = (ListView) view.findViewById(R.id.list);
+        _resultAdapter=new ResultsAdapter(getMainActivity(), _suspiciousAppList, getMainActivity());
 
-        _listview.setAdapter(new myArrayAdapter(getMainActivity().getApplicationContext(), _suspiciousAppList,getMainActivity()));
+        _resultAdapter.setResultItemSelectedStateChangedListener(new IResultItemSelecteStateChanged()
+        {
+            @Override
+            public void onItemSelectedStateChanged(boolean isChecked, BadPackageResultData bpd)
+            {
+                if (isChecked)
+                {
+                    // Si marcamos el checkbox cogemos su nombre de paquete y lo metemos en la lista
+                    _selectedApps.add(bpd);
+                    Log.i("MSF", "METIDO A LA LISTA: " + bpd.getPackageName());
+
+                }
+                else
+                {
+
+                    // Si desmarcamos el checkbox eliminamos el  nombre del paquete de la lista
+                    _selectedApps.remove(bpd);
+                    Log.i("MSF", "SACADO DE A LA LISTA: " + bpd.getPackageName());
+                }
+            }
+        });
+
+
+
+        _listview.setAdapter(_resultAdapter);
     }
 
 

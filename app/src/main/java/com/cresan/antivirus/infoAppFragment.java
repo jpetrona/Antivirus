@@ -25,6 +25,15 @@ public class InfoAppFragment extends Fragment
 
     public static ListView _listview;
     BadPackageResultData _suspiciousApp = null;
+    boolean _isUninstalling = false;
+    IOnAppEvent _appEventListener = null;
+
+    public void setAppEventListener(IOnAppEvent appEventListener)
+    {
+
+        _appEventListener = appEventListener;
+
+    }
 
 
     AntivirusActivity getMainActivity()
@@ -55,27 +64,50 @@ public class InfoAppFragment extends Fragment
         ImageView iconApp = (ImageView) view.findViewById(R.id.iconGeneral);
         Drawable s = ActivityTools.getIconFromPackage(_suspiciousApp.getPackageName(), getContext());
         Button button = (Button) view.findViewById(R.id.buttonUninstall);
+
+
         button.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
+                _isUninstalling = true;
                 Uri uri = Uri.fromParts("package", _suspiciousApp.getPackageName(), null);
                 Intent it = new Intent(Intent.ACTION_DELETE, uri);
                 startActivity(it);
 
             }
         });
+
+
         textView.setText(ActivityTools.getAppNameFromPackage(getContext(), _suspiciousApp.getPackageName()));
         iconApp.setImageDrawable(s);
         warningLevel.setText("RIESGO MEDIO");
 
         _listview = (ListView) view.findViewById(R.id.listView);
 
-        _listview.setAdapter(new WarningsAdapter(getMainActivity(),_suspiciousApp));
+        _listview.setAdapter(new WarningsAdapter(getMainActivity(), _suspiciousApp));
 
 
     }
 
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+
+        if(_isUninstalling)
+        {
+            _isUninstalling = false;
+            getMainActivity().goBack();
+
+            if(_appEventListener!=null)
+            {
+                _appEventListener.onAppUninstalled(_suspiciousApp);
+            }
+
+        }
+
+    }
 }
 

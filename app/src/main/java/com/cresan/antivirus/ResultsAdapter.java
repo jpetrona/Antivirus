@@ -1,11 +1,11 @@
 package com.cresan.antivirus;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.cresan.androidprotector.R;
 import com.tech.applications.coretools.ActivityTools;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -23,22 +22,30 @@ import java.util.List;
  * Created by Magic Frame on 13/01/2016.
  */
 
-public class myArrayAdapter  extends ArrayAdapter<BadPackageResultData>
+public class ResultsAdapter extends ArrayAdapter<BadPackageResultData>
 {
 
     private final Context context;
     private AntivirusActivity antivirusActivity;
-    //private final String[] values;
-    private  List<BadPackageResultData> values=null;
-    public static List<String> selectedApps = new ArrayList<>();
+    //private final String[] _values;
+    private List<BadPackageResultData> _values =null;
 
+    private IResultItemSelecteStateChanged _onItemChanedStateListener=null;
 
-    public myArrayAdapter(Context context, List<BadPackageResultData> values,AntivirusActivity antivirusActivity)
+    public void setResultItemSelectedStateChangedListener(IResultItemSelecteStateChanged listemer) { _onItemChanedStateListener=listemer; }
+
+    public void removeApps(List<BadPackageResultData> appsToRemove)
+    {
+        _values.removeAll(appsToRemove);
+        notifyDataSetChanged();
+    }
+
+    public ResultsAdapter(Context context, List<BadPackageResultData> values, AntivirusActivity antivirusActivity)
     {
 
         super(context, R.layout.list_apps,values);
         this.context = context;
-        this.values = values;
+        this._values = values;
         this.antivirusActivity = antivirusActivity;
 
     }
@@ -60,7 +67,7 @@ public class myArrayAdapter  extends ArrayAdapter<BadPackageResultData>
             rowView = convertView;
 
         }
-        final BadPackageResultData obj = values.get(position);
+        final BadPackageResultData obj = _values.get(position);
         TextView textView = (TextView) rowView.findViewById(R.id.Titlelabel);
         ImageView imageView = (ImageView) rowView.findViewById(R.id.logo);
         CheckBox checkBox = (CheckBox) rowView.findViewById(R.id.checkBox);
@@ -85,17 +92,9 @@ public class myArrayAdapter  extends ArrayAdapter<BadPackageResultData>
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
             {
-                if (isChecked)
+                if(_onItemChanedStateListener != null)
                 {
-                    // Si marcamos el checkbox cogemos su nombre de paquete y lo metemos en la lista
-                    selectedApps.add(obj.getPackageName());
-                    Log.i("MSF", "METIDO A LA LISTA: " + obj.getPackageName());
-
-                } else
-                {
-
-                    // Si desmarcamos el checkbox eliminamos el  nombre del paquete de la lista
-                    selectedApps.remove(obj.getPackageName());
+                    _onItemChanedStateListener.onItemSelectedStateChanged(isChecked,obj);
 
                 }
             }
@@ -106,9 +105,6 @@ public class myArrayAdapter  extends ArrayAdapter<BadPackageResultData>
         textView.setText(ActivityTools.getAppNameFromPackage(getContext(), obj.getPackageName()));
         imageView.setImageDrawable(ActivityTools.getIconFromPackage(obj.getPackageName(), getContext()));
 
-
-
-
         return rowView;
 
     }
@@ -116,9 +112,19 @@ public class myArrayAdapter  extends ArrayAdapter<BadPackageResultData>
 
     void showInfoAppFragment(BadPackageResultData suspiciousAppList)
     {
-
         // Cuando pulses el boton de info coger su posicion y pasarselo por la variable pos
         InfoAppFragment newFragment = new InfoAppFragment();
+        newFragment.setAppEventListener(new IOnAppEvent()
+        {
+            @Override
+            public void onAppUninstalled(BadPackageResultData uninstalledApp)
+            {
+                _values.remove(uninstalledApp);
+
+                notifyDataSetChanged();
+
+            }
+        });
         newFragment.setData(suspiciousAppList);
         antivirusActivity.slideInFragment(newFragment);
 
