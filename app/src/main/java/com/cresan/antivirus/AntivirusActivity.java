@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -19,11 +20,13 @@ import android.content.pm.PackageInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -158,9 +161,14 @@ public class AntivirusActivity extends AdvertFragmentActivity
             Log.d(_logTag,"=====> AntivirusActivity:onCreate: No need to start PackageListenerService because it as running previously.");
 
 
-        Fragment newFragment = new MainFragment();
+        android.support.v7.app.ActionBar bar=getSupportActionBar();
+        bar.setDisplayHomeAsUpEnabled(true);
+
+
+        /*Fragment newFragment = new MainFragment();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.add(R.id.container, newFragment).commit();
+        ft.add(R.id.container, newFragment).commit();*/
+        slideInFragment(new MainFragment());
 
         //Configure Ads
 		if(!NetworkTools.isNetworkAvailable(this))
@@ -191,6 +199,35 @@ public class AntivirusActivity extends AdvertFragmentActivity
 	    _data=_deserializeAppData();
 
         _loadDataFiles();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId())
+        {
+            case android.R.id.home:
+                _handleBackButton();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    void _handleBackButton()
+    {
+        FragmentManager fm = getSupportFragmentManager();
+        if (fm.getBackStackEntryCount() > 1)
+        {
+            fm.popBackStack();
+
+        }
+        else
+        {   //No tenemos fragments en el stack asi qeu a tomar por culo la app
+            //super.onBackPressed();
+            finish();
+
+        }
     }
 
 	void _loadDataFiles()
@@ -428,7 +465,7 @@ public class AntivirusActivity extends AdvertFragmentActivity
 	public void slideInFragment(Fragment newFragment)
 	{
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-		transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
+		transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,R.anim.slide_in_left,R.anim.slide_out_right);
 
 		// Replace whatever is in the fragment_container view with this fragment,
 		// and add the transaction to the back stack if needed
