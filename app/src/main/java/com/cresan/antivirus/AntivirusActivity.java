@@ -214,6 +214,12 @@ public class AntivirusActivity extends AdvertFragmentActivity
         }
     }
 
+    @Override
+    public void onBackPressed()
+    {
+        _handleBackButton();
+    }
+
     void _handleBackButton()
     {
         goBack();
