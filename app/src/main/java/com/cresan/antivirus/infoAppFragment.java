@@ -21,8 +21,8 @@ public class InfoAppFragment extends Fragment
 
 
     public static ListView _listview;
-    BadPackageResultData _suspiciousApp =null;
-   
+    BadPackageResultData _suspiciousApp = null;
+
 
     AntivirusActivity getMainActivity()
     {
@@ -31,7 +31,7 @@ public class InfoAppFragment extends Fragment
 
     public void setData(BadPackageResultData suspiciousAppList)
     {
-        _suspiciousApp =suspiciousAppList;
+        _suspiciousApp = suspiciousAppList;
 
     }
 
@@ -50,7 +50,7 @@ public class InfoAppFragment extends Fragment
         TextView textView = (TextView) view.findViewById(R.id.titleApp);
         TextView warningLevel = (TextView) view.findViewById(R.id.warningLevel);
         ImageView iconApp = (ImageView) view.findViewById(R.id.iconGeneral);
-        Drawable s = ActivityTools.getIconFromPackage(_suspiciousApp.getPackageName(),getContext());
+        Drawable s = ActivityTools.getIconFromPackage(_suspiciousApp.getPackageName(), getContext());
 
         textView.setText(ActivityTools.getAppNameFromPackage(getContext(), _suspiciousApp.getPackageName()));
         iconApp.setImageDrawable(s);
@@ -58,8 +58,7 @@ public class InfoAppFragment extends Fragment
 
         _listview = (ListView) view.findViewById(R.id.listView);
 
-       _listview.setAdapter(new WarningsAdapter(getMainActivity().getApplicationContext()));
-
+        _listview.setAdapter(new WarningsAdapter(getMainActivity(),_suspiciousApp));
 
 
     }
