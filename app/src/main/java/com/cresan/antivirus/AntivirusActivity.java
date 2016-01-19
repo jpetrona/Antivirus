@@ -216,18 +216,7 @@ public class AntivirusActivity extends AdvertFragmentActivity
 
     void _handleBackButton()
     {
-        FragmentManager fm = getSupportFragmentManager();
-        if (fm.getBackStackEntryCount() > 1)
-        {
-            fm.popBackStack();
-
-        }
-        else
-        {   //No tenemos fragments en el stack asi qeu a tomar por culo la app
-            //super.onBackPressed();
-            finish();
-
-        }
+        goBack();
     }
 
 	void _loadDataFiles()
@@ -475,4 +464,20 @@ public class AntivirusActivity extends AdvertFragmentActivity
 		// Commit the transaction
 		transaction.commit();
 	}
+
+    public void goBack()
+    {
+        FragmentManager fm = getSupportFragmentManager();
+        if (fm.getBackStackEntryCount() > 1)
+        {
+            fm.popBackStack();
+
+        }
+        else
+        {   //No tenemos fragments en el stack asi qeu a tomar por culo la app
+            //super.onBackPressed();
+            finish();
+
+        }
+    }
 }
