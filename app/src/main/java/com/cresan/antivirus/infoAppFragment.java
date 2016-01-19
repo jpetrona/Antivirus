@@ -1,11 +1,14 @@
 package com.cresan.antivirus;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -51,7 +54,18 @@ public class InfoAppFragment extends Fragment
         TextView warningLevel = (TextView) view.findViewById(R.id.warningLevel);
         ImageView iconApp = (ImageView) view.findViewById(R.id.iconGeneral);
         Drawable s = ActivityTools.getIconFromPackage(_suspiciousApp.getPackageName(), getContext());
+        Button button = (Button) view.findViewById(R.id.buttonUninstall);
+        button.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                Uri uri = Uri.fromParts("package", _suspiciousApp.getPackageName(), null);
+                Intent it = new Intent(Intent.ACTION_DELETE, uri);
+                startActivity(it);
 
+            }
+        });
         textView.setText(ActivityTools.getAppNameFromPackage(getContext(), _suspiciousApp.getPackageName()));
         iconApp.setImageDrawable(s);
         warningLevel.setText("RIESGO MEDIO");

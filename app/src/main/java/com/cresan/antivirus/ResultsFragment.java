@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 
 import com.cresan.androidprotector.R;
@@ -55,6 +56,9 @@ public class ResultsFragment extends Fragment
     {
         View rootView = inflater.inflate(R.layout.results_fragment, container, false);
         _buttonRemove = (Button) rootView.findViewById(R.id.btnKill);
+        TextView textView = (TextView) rootView.findViewById(R.id.counterApps);
+        textView.setText("Amenazas encontradas: " + _suspiciousAppList.size());
+
         _buttonRemove.setOnClickListener(new View.OnClickListener()
         {
             @Override
