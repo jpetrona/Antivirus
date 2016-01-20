@@ -486,9 +486,9 @@ public class AntivirusActivity extends AdvertFragmentActivity
             //super.onBackPressed();
 
             new AlertDialog.Builder(this)
-                    .setTitle("Warning")
-                    .setMessage("Are you sure exit?")
-                    .setPositiveButton("yes", new DialogInterface.OnClickListener()
+                    .setTitle(getString(R.string.warning))
+                    .setMessage(getString(R.string.dialog_message_exit))
+                    .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener()
                     {
                         @Override
                         public void onClick(DialogInterface dialog, int which)

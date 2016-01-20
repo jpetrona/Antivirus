@@ -1,5 +1,7 @@
 package com.cresan.antivirus;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -64,14 +66,36 @@ public class ResultsFragment extends Fragment
             @Override
             public void onClick(View v)
             {
-
-                for (BadPackageResultData pck : _selectedApps)
+                if(_selectedApps.size() > 0)
                 {
-                    Uri uri = Uri.fromParts("package", pck.getPackageName(), null);
-                    Intent it = new Intent(Intent.ACTION_DELETE, uri);
-                    startActivity(it);
 
-                    Log.i("LISTA", "Lista: " + pck);
+                    for (BadPackageResultData pck : _selectedApps)
+                    {
+                        Uri uri = Uri.fromParts("package", pck.getPackageName(), null);
+                        Intent it = new Intent(Intent.ACTION_DELETE, uri);
+                        startActivity(it);
+
+                        Log.i("LISTA", "Lista: " + pck);
+                    }
+                }else
+                {
+
+                    new AlertDialog.Builder(getContext())
+                            .setTitle(getString(R.string.warning))
+                            .setMessage(getString(R.string.dialog_message_no_app_selected))
+                            .setPositiveButton("Ok", new DialogInterface.OnClickListener()
+                            {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which)
+                                {
+
+
+                                }
+                            }).show();
+
+
+
+
                 }
             }
         });

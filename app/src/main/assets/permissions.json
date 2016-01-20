@@ -14,7 +14,7 @@
     "hazard": 7
   },
   {
-    "permissionName": "android.permission.WAKE_LOCK",
+    "permissionName": "android.permission.SEND_SMS",
     "hazard": 1
   },
   {
