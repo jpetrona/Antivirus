@@ -22,10 +22,11 @@ import com.tech.applications.coretools.ActivityTools;
 public class InfoAppFragment extends Fragment
 {
 
-
     public static ListView _listview;
+
     BadPackageResultData _suspiciousApp = null;
-    boolean _isUninstalling = false;
+    String  _uninstallIngPackage = null;
+
     IOnAppEvent _appEventListener = null;
 
     public void setAppEventListener(IOnAppEvent appEventListener)
@@ -71,11 +72,10 @@ public class InfoAppFragment extends Fragment
             @Override
             public void onClick(View v)
             {
-                _isUninstalling = true;
+                _uninstallIngPackage = _suspiciousApp.getPackageName();
                 Uri uri = Uri.fromParts("package", _suspiciousApp.getPackageName(), null);
                 Intent it = new Intent(Intent.ACTION_DELETE, uri);
                 startActivity(it);
-
             }
         });
 
@@ -96,18 +96,16 @@ public class InfoAppFragment extends Fragment
     {
         super.onResume();
 
-        if(_isUninstalling)
+        if( _uninstallIngPackage!=null)
         {
-            _isUninstalling = false;
-            getMainActivity().goBack();
-
-            if(_appEventListener!=null)
+            if(_appEventListener!=null && !ActivityTools.isPackageInstalled(getMainActivity(),_uninstallIngPackage))
             {
                 _appEventListener.onAppUninstalled(_suspiciousApp);
             }
 
+            _uninstallIngPackage=null;
+            getMainActivity().goBack();
         }
-
     }
 }
 
