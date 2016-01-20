@@ -63,7 +63,7 @@ public class WarningsAdapter extends ArrayAdapter<WarningData>
         {
 
             WarningData wd=new WarningData();
-            wd.iconId=R.drawable.privacy_icon;
+            wd.iconId=setPermissionIcon(ad.getPermissionName());
             wd.title=getContext().getResources().getString(R.string.title_permission);
             wd.text=setPermissionMessage(ad.getPermissionName());
             wdl.add(wd);
@@ -153,6 +153,54 @@ public class WarningsAdapter extends ArrayAdapter<WarningData>
         }
 
         return message;
+
+
+
+    }
+
+
+    public int setPermissionIcon (String permissionName)
+    {
+        int icon = 0;
+
+
+        if(permissionName.contains("READ_PHONE_STATE"))
+        {
+
+            icon = R.drawable.privacy_icon;
+
+        }else if (permissionName.contains("ACCESS_FINE_LOCATION"))
+        {
+
+            icon = R.drawable.privacy_icon;
+
+        }else if (permissionName.contains("READ_SMS"))
+        {
+
+            icon = R.drawable.privacy_icon;
+
+        }else if (permissionName.contains("WRITE_SMS"))
+        {
+
+            icon = R.drawable.privacy_icon;
+
+        }else if (permissionName.contains("SEND_SMS"))
+        {
+
+            icon = R.drawable.privacy_icon;
+
+        }else if (permissionName.contains("READ_HISTORY_BOOKMARKS"))
+        {
+
+            icon = R.drawable.privacy_icon;
+
+        }else if (permissionName.contains("WRITE_HISTORY_BOOKMARKS"))
+        {
+
+            icon = R.drawable.privacy_icon;
+        }
+
+        return icon;
 
 
 
