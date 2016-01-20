@@ -25,7 +25,7 @@ public class InfoAppFragment extends Fragment
     public static ListView _listview;
 
     BadPackageResultData _suspiciousApp = null;
-    String  _uninstallIngPackage = null;
+    boolean  _uninstallingPackage = false;
 
     IOnAppEvent _appEventListener = null;
 
@@ -72,7 +72,7 @@ public class InfoAppFragment extends Fragment
             @Override
             public void onClick(View v)
             {
-                _uninstallIngPackage = _suspiciousApp.getPackageName();
+                _uninstallingPackage = true;
                 Uri uri = Uri.fromParts("package", _suspiciousApp.getPackageName(), null);
                 Intent it = new Intent(Intent.ACTION_DELETE, uri);
                 startActivity(it);
@@ -96,14 +96,14 @@ public class InfoAppFragment extends Fragment
     {
         super.onResume();
 
-        if( _uninstallIngPackage!=null)
+        if( _uninstallingPackage==true && _suspiciousApp!=null )
         {
-            if(_appEventListener!=null && !ActivityTools.isPackageInstalled(getMainActivity(),_uninstallIngPackage))
+            if(_appEventListener!=null && !ActivityTools.isPackageInstalled(getMainActivity(),_suspiciousApp.getPackageName()))
             {
                 _appEventListener.onAppUninstalled(_suspiciousApp);
             }
 
-            _uninstallIngPackage=null;
+            _uninstallingPackage=false;
             getMainActivity().goBack();
         }
     }

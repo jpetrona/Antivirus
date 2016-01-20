@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.cresan.androidprotector.R;
 import com.tech.applications.coretools.ActivityTools;
+import com.tech.applications.coretools.StringTools;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +44,8 @@ public class ResultsFragment extends Fragment
 
     ResultsAdapter _resultAdapter=null;
 
+    TextView _threatsFoundSummary=null;
+
     public void setData(List<BadPackageResultData> suspiciousAppList)
     {
         _suspiciousAppList=suspiciousAppList;
@@ -54,8 +57,7 @@ public class ResultsFragment extends Fragment
     {
         View rootView = inflater.inflate(R.layout.results_fragment, container, false);
         _buttonRemove = (Button) rootView.findViewById(R.id.btnKill);
-        TextView textView = (TextView) rootView.findViewById(R.id.counterApps);
-        textView.setText("Amenazas encontradas: " + _suspiciousAppList.size());
+        _threatsFoundSummary = (TextView) rootView.findViewById(R.id.counterApps);
 
         _buttonRemove.setOnClickListener(new View.OnClickListener()
         {
@@ -69,13 +71,8 @@ public class ResultsFragment extends Fragment
                     Intent it = new Intent(Intent.ACTION_DELETE, uri);
                     startActivity(it);
 
-
                     Log.i("LISTA", "Lista: " + pck);
                 }
-
-
-                _selectedApps.clear();
-
             }
         });
         _setupFragment(rootView);
@@ -112,8 +109,7 @@ public class ResultsFragment extends Fragment
                     _selectedApps.add(bpd);
                     Log.i("MSF", "METIDO A LA LISTA: " + bpd.getPackageName());
 
-                }
-                else
+                } else
                 {
 
                     // Si desmarcamos el checkbox eliminamos el  nombre del paquete de la lista
@@ -129,7 +125,29 @@ public class ResultsFragment extends Fragment
     }
 
 
+    @Override
+    public void onResume()
+    {
+        super.onResume();
 
 
+        for (BadPackageResultData pd : _selectedApps )
+        {
+            if(!ActivityTools.isPackageInstalled(getMainActivity(),pd.getPackageName()))
+            {
+                _resultAdapter.remove(pd);
+            }
+        }
+
+        _updateFoundThreatsText(_threatsFoundSummary,_resultAdapter.getCount());
+        _selectedApps.clear();
+    }
+
+    void _updateFoundThreatsText(TextView textView, int appCount)
+    {
+        String finalStr=getString(R.string.threats_found);
+        finalStr=StringTools.fillParams(finalStr, "#", Integer.toString(appCount));
+        textView.setText(finalStr);
+    }
 }
 

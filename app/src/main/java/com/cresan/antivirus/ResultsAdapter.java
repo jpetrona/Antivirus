@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -30,9 +29,9 @@ public class ResultsAdapter extends ArrayAdapter<BadPackageResultData>
     //private final String[] _values;
     private List<BadPackageResultData> _values =null;
 
-    private IResultItemSelecteStateChanged _onItemChanedStateListener=null;
+    private IResultItemSelecteStateChanged _onItemChangedStateListener =null;
 
-    public void setResultItemSelectedStateChangedListener(IResultItemSelecteStateChanged listemer) { _onItemChanedStateListener=listemer; }
+    public void setResultItemSelectedStateChangedListener(IResultItemSelecteStateChanged listemer) { _onItemChangedStateListener =listemer; }
 
     public void removeApps(List<BadPackageResultData> appsToRemove)
     {
@@ -85,16 +84,15 @@ public class ResultsAdapter extends ArrayAdapter<BadPackageResultData>
         });
 
 
-        checkBox.setOnCheckedChangeListener(null);
         checkBox.setChecked(false);
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
         {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
             {
-                if(_onItemChanedStateListener != null)
+                if(_onItemChangedStateListener != null)
                 {
-                    _onItemChanedStateListener.onItemSelectedStateChanged(isChecked,obj);
+                    _onItemChangedStateListener.onItemSelectedStateChanged(isChecked,obj);
 
                 }
             }
@@ -129,5 +127,7 @@ public class ResultsAdapter extends ArrayAdapter<BadPackageResultData>
         antivirusActivity.slideInFragment(newFragment);
 
     }
+
+
 
 }
