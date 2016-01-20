@@ -42,7 +42,7 @@ public class ResultsFragment extends Fragment
         add("com.appspot.swisscodemonkeys.detector");
         add("com.nolanlawson.logcat");
     }};*/
-    public static ListView _listview;
+    private ListView _listview;
     private Button _buttonRemove;
 
     List<BadPackageResultData> _selectedApps = new ArrayList<>();
