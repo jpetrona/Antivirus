@@ -223,7 +223,9 @@ public class AntivirusActivity extends AdvertFragmentActivity
     void _handleBackButton()
     {
         goBack();
+
     }
+
 
 	void _loadDataFiles()
     {
@@ -482,7 +484,28 @@ public class AntivirusActivity extends AdvertFragmentActivity
         else
         {   //No tenemos fragments en el stack asi qeu a tomar por culo la app
             //super.onBackPressed();
-            finish();
+
+            new AlertDialog.Builder(this)
+                    .setTitle("Warning")
+                    .setMessage("Are you sure exit?")
+                    .setPositiveButton("yes", new DialogInterface.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which)
+                        {
+                            finish();
+
+                        }
+                    }).setNegativeButton("no", new DialogInterface.OnClickListener()
+            {
+
+                @Override
+                public void onClick(DialogInterface dialog, int which)
+                {
+
+                }
+            }).show();
+
 
         }
     }
