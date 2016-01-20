@@ -155,7 +155,7 @@ public class MainFragment extends Fragment
 
         _scanForBlackListedActivityApps(potentialBadApps, blackListActivities, tempBadResults);
         _scanForSuspiciousPermissionsApps(potentialBadApps, suspiciousPermissions, tempBadResults);
-        _fillInstalledFromGooglePlay(tempBadResults);
+        _fillInstalledFromGooglePlay(potentialBadApps, tempBadResults);
 
         for (BadPackageResultData p : tempBadResults)
         {
@@ -201,20 +201,35 @@ public class MainFragment extends Fragment
         }*/
     }
 
-    protected Set<BadPackageResultData> _fillInstalledFromGooglePlay(Set<BadPackageResultData> prd)
+    protected Set<BadPackageResultData> _fillInstalledFromGooglePlay(List<PackageInfo> packagesToSearch, Set<BadPackageResultData> setToUpdate)
     {
-        for (BadPackageResultData p : prd)
+
+        //Check against whitelist
+        for(PackageInfo pi : packagesToSearch)
         {
-            if(ActivityTools.checkIfAppWasInstalledThroughGooglePlay(getActivity(),p.getPackageInfo().packageName))
+            if(!ActivityTools.checkIfAppWasInstalledThroughGooglePlay(getActivity(),pi.packageName))
             {
-                p.setInstalledThroughGooglePlay(true);
+                //Update or create new if it does not exist
+                BadPackageResultData bprd=getBadPackageResultByPackageName(setToUpdate, pi.packageName);
+                if(bprd==null)
+                {
+                    bprd = new BadPackageResultData(pi);
+                    setToUpdate.add(bprd);
+                }
+
+                bprd.setInstalledThroughGooglePlay(false);
             }
             else
-                p.setInstalledThroughGooglePlay(false);
+            {
+                BadPackageResultData bprd=getBadPackageResultByPackageName(setToUpdate, pi.packageName);
+                if(bprd!=null)
+                    bprd.setInstalledThroughGooglePlay(true);
+            }
         }
 
-        return prd;
+        return setToUpdate;
     }
+
 
     protected BadPackageResultData getBadPackageResultByPackageName(Set<BadPackageResultData> prd, String packageName)
     {
@@ -291,20 +306,20 @@ public class MainFragment extends Fragment
         {
             for(PackageInfo pi: packagesToSearch)
             {
-                //Update or create new if it does not exist
-                BadPackageResultData bprd=getBadPackageResultByPackageName(setToUpdate, pi.packageName);
-                if(bprd==null)
-                {
-                    bprd = new BadPackageResultData(pi);
-                    setToUpdate.add(bprd);
-                }
-
                 //In subResult we have now all the ActivityInfo entries resulting in a menace
                 _getActivitiesByNameFilter(pi, pd.getPackageName(), subResult);
 
                 //If we found bad activities in the package fill the bad package information into result
                 if(subResult.size()>0)
                 {
+                    //Update or create new if it does not exist
+                    BadPackageResultData bprd=getBadPackageResultByPackageName(setToUpdate, pi.packageName);
+                    if(bprd==null)
+                    {
+                        bprd = new BadPackageResultData(pi);
+                        setToUpdate.add(bprd);
+                    }
+
                     for(ActivityInfo ai: subResult)
                     {
                         bprd.addActivityData(new ActivityData(ai, 0));
@@ -324,18 +339,19 @@ public class MainFragment extends Fragment
         //Check against whitelist
         for(PackageInfo pi : packagesToSearch)
         {
-            //Update or create new if it does not exist
-            BadPackageResultData bprd=getBadPackageResultByPackageName(setToUpdate, pi.packageName);
-            if(bprd==null)
-            {
-                bprd = new BadPackageResultData(pi);
-                setToUpdate.add(bprd);
-            }
-
             for(PermissionData permData : suspiciousPermissions)
             {
                 if(ActivityTools.packageInfoHasPermission(pi, permData.getPermissionName()))
                 {
+                    //Update or create new if it does not exist
+                    BadPackageResultData bprd=getBadPackageResultByPackageName(setToUpdate, pi.packageName);
+                    if(bprd==null)
+                    {
+                        bprd = new BadPackageResultData(pi);
+                        setToUpdate.add(bprd);
+                    }
+
+
                     bprd.addPermissionData(permData);
                 }
             }
