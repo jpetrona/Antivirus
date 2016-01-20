@@ -35,13 +35,7 @@ public class ResultsFragment extends Fragment
     //String[] packagename = new String[]{"com.magic.sanfulgencio","com.dropbox.android","com.appspot.swisscodemonkeys.detector","com.nolanlawson.logcat"};
 
     List<BadPackageResultData> _suspiciousAppList=null;
-    /*
-    ArrayList<String> packagename = new ArrayList<String>(){{
-        add("com.magic.sanfulgencio");
-        add("com.dropbox.android");
-        add("com.appspot.swisscodemonkeys.detector");
-        add("com.nolanlawson.logcat");
-    }};*/
+
     public static ListView _listview;
     private Button _buttonRemove;
 
