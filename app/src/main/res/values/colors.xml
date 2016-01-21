@@ -24,4 +24,11 @@
 	<color name="info_icon_top_text">#D3D2D1</color>
 	<color name="info_icon_bottom_text">#726D6C</color>
 
+	<color name="actionbar_background">#AD1457</color>
+	<color name="actionbar_text">#ffffff</color>
+	<color name="PrimaryTextColor">#726D6C</color>
+	<color name="SecondaryTextColor">#ffffff</color>
+	<color name="PrimaryColor">#AD1457</color>
+	<color name="SecondaryColor">#D3D2D1</color>
+	<color name="DividerColor">#E91E63</color>
 </resources>

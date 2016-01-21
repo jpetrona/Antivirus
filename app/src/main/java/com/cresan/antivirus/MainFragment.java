@@ -108,7 +108,7 @@ public class MainFragment extends Fragment
         //Set form data
         BatteryData bd = BatteryTools.getBatteryData(getMainActivity());
 
-        final WaveView waveView = (WaveView) root.findViewById(R.id.wave);
+      /*  final WaveView waveView = (WaveView) root.findViewById(R.id.wave);
         waveView.setWaterLevelRatio(bd.getLevelPercent() / 100.0f);
         waveView.setBorder(15, ContextCompat.getColor(getMainActivity(), R.color.wave_widget_stroke));
         waveView.setText1Color(ContextCompat.getColor(getMainActivity(), android.R.color.white));
@@ -127,7 +127,7 @@ public class MainFragment extends Fragment
         tv = (TextView) root.findViewById(R.id.temperatureValue);
         df = new DecimalFormat("0.0");
         df.setMaximumFractionDigits(1);
-        tv.setText(df.format(bd.getTemperature()) + "º");
+        tv.setText(df.format(bd.getTemperature()) + "º");*/
 
         _resetFormLayout();
     }

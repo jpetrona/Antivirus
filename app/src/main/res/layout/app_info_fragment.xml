@@ -3,14 +3,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="#182839"
+              android:background="@color/SecondaryColor"
               android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="#4a5663"
+        android:background="@color/SecondaryColor"
         android:layout_weight="0.15">
 
         <ImageView
@@ -36,7 +36,7 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/info_icon_bottom_text"
                 android:textSize="30sp"
                 android:textStyle="bold"
                 android:text="NAME APP"
@@ -53,13 +53,32 @@
                 android:text="RIESGO ALTO"
                 android:layout_weight="0.5"/>
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/uninstall"
-                android:id="@+id/buttonUninstall"
-                android:layout_gravity="right"
-                android:background="#00ffffff"/>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="end">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/trust"
+                    android:id="@+id/buttonTrust"
+                    android:layout_gravity="right"
+                    android:background="#00ffffff"
+                    android:textColor="@color/PrimaryColor"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/uninstall"
+                    android:id="@+id/buttonUninstall"
+                    android:layout_gravity="right"
+                    android:background="#00ffffff"
+                    android:textColor="@color/PrimaryColor"/>
+            </LinearLayout>
+
         </LinearLayout>
 
     </LinearLayout>

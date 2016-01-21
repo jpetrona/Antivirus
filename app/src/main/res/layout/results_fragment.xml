@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="#182839"
+              android:background="@color/SecondaryColor"
               android:orientation="vertical">
 
 
@@ -11,7 +11,8 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        android:background="@color/SecondaryColor">
 
         <TextView
             android:layout_width="wrap_content"
@@ -19,7 +20,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Medium Textgdgdgd"
             android:id="@+id/counterApps"
-            />
+            android:textColor="@color/info_icon_bottom_text"/>
 
     </LinearLayout>
 
@@ -29,15 +30,17 @@
         android:layout_height="0dp"
         android:layout_margin="3dp"
         android:layout_weight="8.5"
-        android:divider="@null"
-        android:dividerHeight="5dp"
-        android:drawSelectorOnTop="true" />
+        android:divider="@color/DividerColor"
+        android:dividerHeight="0.5dp"
+        android:drawSelectorOnTop="true"
+        android:background="@color/SecondaryColor"/>
 
     <!-- Kill Button Container -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1.5">
+        android:layout_weight="1.5"
+        android:background="@color/SecondaryColor">
 
         <Button
             android:id="@+id/btnKill"
@@ -46,9 +49,9 @@
             android:layout_marginLeft="40dp"
             android:layout_marginRight="40dp"
             android:layout_marginTop="3dp"
-            android:background="#FFFFFF"
+            android:background="@drawable/calibrate_button_selector"
             android:text="@string/resolve_problems"
-            android:textColor="@android:color/black"
+            android:textColor="@color/SecondaryTextColor"
             android:textSize="18sp"
             android:textStyle="bold" />
     </LinearLayout>

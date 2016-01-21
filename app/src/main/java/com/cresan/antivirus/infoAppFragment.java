@@ -65,6 +65,7 @@ public class InfoAppFragment extends Fragment
         ImageView iconApp = (ImageView) view.findViewById(R.id.iconGeneral);
         Drawable s = ActivityTools.getIconFromPackage(_suspiciousApp.getPackageName(), getContext());
         Button button = (Button) view.findViewById(R.id.buttonUninstall);
+        Button buttonTrust = (Button) view.findViewById(R.id.buttonTrust);
 
 
         button.setOnClickListener(new View.OnClickListener()
@@ -79,6 +80,14 @@ public class InfoAppFragment extends Fragment
             }
         });
 
+        buttonTrust.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                //_suspiciousApp.getPackageName
+            }
+        });
 
         textView.setText(ActivityTools.getAppNameFromPackage(getContext(), _suspiciousApp.getPackageName()));
         iconApp.setImageDrawable(s);

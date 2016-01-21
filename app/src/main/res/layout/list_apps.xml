@@ -3,13 +3,15 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:padding="5dp"
-              android:background="#182839">
+              android:background="@color/SecondaryColor">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="#1A314A">
+        android:background="@color/SecondaryColor"
+        android:divider="@color/DividerColor"
+        android:showDividers="middle">
 
         <ImageView
             android:id="@+id/logo"
@@ -24,7 +26,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingLeft="10dp">
 
             <TextView
                 android:id="@+id/Titlelabel"
@@ -34,7 +37,7 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/info_icon_bottom_text"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
