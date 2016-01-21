@@ -9,7 +9,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +21,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.cresan.androidprotector.R;
-import com.gelitenight.waveview.library.WaveView;
 import com.liulishuo.magicprogresswidget.MagicProgressBar;
 import com.tech.applications.coretools.ActivityTools;
 import com.tech.applications.coretools.BatteryData;
@@ -61,7 +59,7 @@ public class MainFragment extends Fragment
 
     final int kProgressBarRefressTime=50;
 
-    PausableCountDownTimer cdTimer=null;
+    PausableCountDownTimer _cdTimer =null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -108,7 +106,7 @@ public class MainFragment extends Fragment
         //Set form data
         BatteryData bd = BatteryTools.getBatteryData(getMainActivity());
 
-      /*  final WaveView waveView = (WaveView) root.findViewById(R.id.wave);
+        /*final WaveView waveView = (WaveView) root.findViewById(R.id.wave);
         waveView.setWaterLevelRatio(bd.getLevelPercent() / 100.0f);
         waveView.setBorder(15, ContextCompat.getColor(getMainActivity(), R.color.wave_widget_stroke));
         waveView.setText1Color(ContextCompat.getColor(getMainActivity(), android.R.color.white));
@@ -119,7 +117,7 @@ public class MainFragment extends Fragment
                 ContextCompat.getColor(getMainActivity(), R.color.wave_starting_wave_color),
                 ContextCompat.getColor(getMainActivity(), R.color.wave_widget_front_wave));
         waveView.startAnimation(1000);
-        waveView.setText1(""+bd.getLevelPercent()+"%");
+        waveView.setText1(""+bd.getLevelPercent()+"%");*/
         TextView tv = (TextView) root.findViewById(R.id.voltageValue);
         DecimalFormat df = new DecimalFormat("0.00");
         df.setMaximumFractionDigits(2);
@@ -127,7 +125,7 @@ public class MainFragment extends Fragment
         tv = (TextView) root.findViewById(R.id.temperatureValue);
         df = new DecimalFormat("0.0");
         df.setMaximumFractionDigits(1);
-        tv.setText(df.format(bd.getTemperature()) + "º");*/
+        tv.setText(df.format(bd.getTemperature()) + "º");
 
         _resetFormLayout();
     }
@@ -283,7 +281,8 @@ public class MainFragment extends Fragment
         //_progressDialog=_getProgressDialog();
         //_progressDialog.show();
 
-        cdTimer=new PausableCountDownTimer(miliseconds,kProgressBarRefressTime)
+
+        _cdTimer =new PausableCountDownTimer(miliseconds,kProgressBarRefressTime)
         {
             @Override
             public void onTick(long millisUntilFinished)
@@ -294,8 +293,8 @@ public class MainFragment extends Fragment
             @Override
             public void onFinish()
             {
-                cdTimer=null;
-
+                _cdTimer =null;
+                _progressPanelprogressBar.setPercent(1.0f);
                 _convertStageIconInto(true, 2000, new IOnActionFinished()
                 {
                     @Override
@@ -307,7 +306,7 @@ public class MainFragment extends Fragment
             }
         };
 
-        cdTimer.start();
+        _cdTimer.start();
     }
 
     private void _convertStageIconInto(final boolean isOkIcon,final int waitTimeToEnd, final IOnActionFinished finishedAction)
@@ -367,24 +366,28 @@ public class MainFragment extends Fragment
         //_progressContainer.setVisibility(View.VISIBLE);
         ObjectAnimator oa1 = ObjectAnimator.ofFloat(_progressContainer, "translationX",
                 _superContainer.getWidth()/2.0f+_progressContainer.getWidth(), 0.0f);
-        oa1.addListener(new Animator.AnimatorListener() {
+        oa1.addListener(new Animator.AnimatorListener()
+        {
             @Override
-            public void onAnimationStart(Animator animation) {
+            public void onAnimationStart(Animator animation)
+            {
                 _progressContainer.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onAnimationEnd(Animator animation)
             {
-                _doWaitToScanPackage(3000,packagesToScan,currentPackageIndex,onActionFinished);
+                _doWaitToScanPackage(3000, packagesToScan, currentPackageIndex, onActionFinished);
             }
 
             @Override
-            public void onAnimationCancel(Animator animation) {
+            public void onAnimationCancel(Animator animation)
+            {
             }
 
             @Override
-            public void onAnimationRepeat(Animator animation) {
+            public void onAnimationRepeat(Animator animation)
+            {
             }
         });
 
@@ -649,5 +652,21 @@ public class MainFragment extends Fragment
         newFragment.setData(suspiciousApps);
         getMainActivity().slideInFragment(newFragment);
 
+    }
+
+    @Override
+    public void onPause()
+    {
+        super.onResume();
+        if(_cdTimer!=null)
+            _cdTimer.pause();
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        if(_cdTimer!=null)
+            _cdTimer.start();
     }
 }
