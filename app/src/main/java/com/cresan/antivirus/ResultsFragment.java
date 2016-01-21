@@ -160,11 +160,11 @@ public class ResultsFragment extends Fragment
             if(!ActivityTools.isPackageInstalled(getMainActivity(),pd.getPackageName()))
             {
                 _resultAdapter.remove(pd);
+                _selectedApps.remove(pd);
             }
         }
 
-        _updateFoundThreatsText(_threatsFoundSummary,_resultAdapter.getCount());
-        _selectedApps.clear();
+        _updateFoundThreatsText(_threatsFoundSummary, _resultAdapter.getCount());
     }
 
     void _updateFoundThreatsText(TextView textView, int appCount)

@@ -1,15 +1,21 @@
 package com.cresan.antivirus;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -51,8 +57,9 @@ public class MainFragment extends Fragment
     MagicProgressBar _progressPanelprogressBar;
     RelativeLayout _progressContainer;
     RelativeLayout _buttonContainer;
-    RelativeLayout _informationContainer;
     RelativeLayout _superContainer;
+
+    final int kProgressBarRefressTime=50;
 
     PausableCountDownTimer cdTimer=null;
 
@@ -69,18 +76,17 @@ public class MainFragment extends Fragment
 
 
 
-    protected void _setupFragment(View view)
+    protected void _setupFragment(View root)
     {
-        AntivirusActivity ac=getMainActivity();
-        _progressPanelIconImageView =(ImageView)ac.findViewById(R.id.progressPanelIconImageView);
-        _progressPanelTextView =(TextView)ac.findViewById(R.id.progressPanelTextView);;
-        _progressPanelprogressBar =(MagicProgressBar)ac.findViewById(R.id.progressPanelProgressBar);
-        _buttonContainer=(RelativeLayout)ac.findViewById(R.id.buttonLayout);
-        _progressContainer=(RelativeLayout)ac.findViewById(R.id.progressPanel);
-        _informationContainer=(RelativeLayout)ac.findViewById(R.id.informationPanel);
-        _superContainer=(RelativeLayout)ac.findViewById(R.id.superContainer);
 
-        _runAntivirusNow=(Button)view.findViewById(R.id.runAntivirusNow);
+        _progressPanelIconImageView =(ImageView)root.findViewById(R.id.progressPanelIconImageView);
+        _progressPanelTextView =(TextView)root.findViewById(R.id.progressPanelTextView);;
+        _progressPanelprogressBar =(MagicProgressBar)root.findViewById(R.id.progressPanelProgressBar);
+        _buttonContainer=(RelativeLayout)root.findViewById(R.id.buttonLayout);
+        _progressContainer=(RelativeLayout)root.findViewById(R.id.progressPanel);
+        _superContainer=(RelativeLayout)root.findViewById(R.id.superContainer);
+
+        _runAntivirusNow=(Button)root.findViewById(R.id.runAntivirusNow);
         _runAntivirusNow.setOnClickListener(new View.OnClickListener()
         {
 
@@ -102,7 +108,7 @@ public class MainFragment extends Fragment
         //Set form data
         BatteryData bd = BatteryTools.getBatteryData(getMainActivity());
 
-        final WaveView waveView = (WaveView) view.findViewById(R.id.wave);
+        final WaveView waveView = (WaveView) root.findViewById(R.id.wave);
         waveView.setWaterLevelRatio(bd.getLevelPercent() / 100.0f);
         waveView.setBorder(15, ContextCompat.getColor(getMainActivity(), R.color.wave_widget_stroke));
         waveView.setText1Color(ContextCompat.getColor(getMainActivity(), android.R.color.white));
@@ -114,16 +120,27 @@ public class MainFragment extends Fragment
                 ContextCompat.getColor(getMainActivity(), R.color.wave_widget_front_wave));
         waveView.startAnimation(1000);
         waveView.setText1(""+bd.getLevelPercent()+"%");
-        TextView tv = (TextView) view.findViewById(R.id.voltageValue);
+        TextView tv = (TextView) root.findViewById(R.id.voltageValue);
         DecimalFormat df = new DecimalFormat("0.00");
         df.setMaximumFractionDigits(2);
         tv.setText(df.format(bd.getVoltage()) + " v");
-        tv = (TextView) view.findViewById(R.id.temperatureValue);
+        tv = (TextView) root.findViewById(R.id.temperatureValue);
         df = new DecimalFormat("0.0");
         df.setMaximumFractionDigits(1);
         tv.setText(df.format(bd.getTemperature()) + "º");
+
+        _resetFormLayout();
     }
 
+    private void _resetFormLayout()
+    {
+        _progressContainer.setVisibility(View.INVISIBLE);
+
+        _buttonContainer.setVisibility(View.VISIBLE);
+        _buttonContainer.setTranslationX(0);
+
+        _runAntivirusNow.setEnabled(true);
+    }
 
     protected void _scanFileSystem()
     {
@@ -157,7 +174,7 @@ public class MainFragment extends Fragment
         _scanForSuspiciousPermissionsApps(potentialBadApps, suspiciousPermissions, tempBadResults);
         _fillInstalledFromGooglePlay(potentialBadApps, tempBadResults);
 
-        for (BadPackageResultData p : tempBadResults)
+        /*for (BadPackageResultData p : tempBadResults)
         {
             Log.d(_logTag, "======PACKAGE "+p.getPackageName()+" GPlay install: "+p.getInstalledThroughGooglePlay());
             if(p.getActivityData().size()>0)
@@ -180,25 +197,198 @@ public class MainFragment extends Fragment
             Log.d(_logTag," ");
         }
 
-        showResultFragment(new ArrayList<BadPackageResultData>(tempBadResults));
+        showResultFragment(new ArrayList<BadPackageResultData>(tempBadResults));*/
 
-        /*Log.d(_logTag, "=====> Showing blacklisted activities");
-        _scanForBlackListedActivityApps(nonSystemAppsPackages, blackListActivities, tempBadResults);
-        for (BadPackageResultData p : tempBadResults)
-        {
-            Log.d(_logTag, p.getPackageName());
-        }
+        List<PackageInfo> _packageInfo=new ArrayList<PackageInfo>();
+        _packageInfo.add(allPackages.get(0));
+        _packageInfo.add(allPackages.get(1));
+        _packageInfo.add(allPackages.get(2));
 
-        Log.d(_logTag, "=====> Showing activities with suspicious permissions");
-        _scanForSuspiciousPermissionsApps(nonSystemAppsPackages, suspiciousPermissions, tempBadResults);
-        for (BadPackageResultData p : tempBadResults)
+        _startScanningAnimation(_packageInfo,tempBadResults);
+
+    }
+
+    private void _startScanningAnimation(final List<PackageInfo> packagesToScan, final Set<BadPackageResultData> tempBadResults)
+    {
+        ObjectAnimator oa1=new ObjectAnimator();
+        oa1.setDuration(500);
+        oa1.setInterpolator(new AccelerateInterpolator());
+
+        oa1 = ObjectAnimator.ofFloat(_buttonContainer, "translationX",
+                0,
+                -_superContainer.getWidth()/2.0f-_buttonContainer.getWidth());
+        oa1.setDuration(500);
+        oa1.setInterpolator(new LinearInterpolator());
+        oa1.start();
+        oa1.addListener(new Animator.AnimatorListener()
         {
-            Log.d(_logTag,"=====> "+ p.getPackageName());
-            for(PermissionData pd : p.getPermissionData())
+            @Override
+            public void onAnimationStart(Animator animation)
             {
-                Log.d(_logTag,"=========> "+ pd.getPermissionName());
             }
-        }*/
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                //_buttonContainer.setVisibility(View.INVISIBLE);
+                //whenFinishedAction.doAction();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+            }
+        });
+        oa1.start();
+
+        final IOnActionFinished _scanFinished= new IOnActionFinished()
+        {
+            @Override
+            public void onFinished()
+            {
+                showResultFragment(new ArrayList<BadPackageResultData>(tempBadResults));
+            }
+        };
+
+        _onScanFileListener=new IOnFileScanFinished()
+        {
+            @Override
+            public void onFinished(int scannedIndex)
+            {
+                _continueScanning(packagesToScan,scannedIndex,_scanFinished);
+            }
+        };
+
+        _scanPackage(packagesToScan,0, _onScanFileListener);
+    }
+
+    IOnFileScanFinished _onScanFileListener=null;
+
+    void _continueScanning(List<PackageInfo> packagesToScan,int scannedIndex, IOnActionFinished scanFinishedListener)
+    {
+        ++scannedIndex;
+        if(scannedIndex<packagesToScan.size())
+            _scanPackage(packagesToScan,scannedIndex,_onScanFileListener);
+        else
+            scanFinishedListener.onFinished();
+    }
+
+    void _doWaitToScanPackage(final int miliseconds, List<PackageInfo> packagesToScan, final int currentPackage, final IOnFileScanFinished listener)
+    {
+        //_progressDialog=_getProgressDialog();
+        //_progressDialog.show();
+
+        cdTimer=new PausableCountDownTimer(miliseconds,kProgressBarRefressTime)
+        {
+            @Override
+            public void onTick(long millisUntilFinished)
+            {
+                _progressPanelprogressBar.setPercent((miliseconds - millisUntilFinished) / (float) miliseconds);
+            }
+
+            @Override
+            public void onFinish()
+            {
+                cdTimer=null;
+
+                _convertStageIconInto(true, 2000, new IOnActionFinished()
+                {
+                    @Override
+                    public void onFinished()
+                    {
+                        listener.onFinished(currentPackage);
+                    }
+                });
+            }
+        };
+
+        cdTimer.start();
+    }
+
+    private void _convertStageIconInto(final boolean isOkIcon,final int waitTimeToEnd, final IOnActionFinished finishedAction)
+    {
+        ObjectAnimator oa2 = ObjectAnimator.ofFloat(_progressPanelIconImageView, "rotationY", 0f, 90.0f);
+
+        oa2.addListener(new AnimatorListenerAdapter()
+        {
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                super.onAnimationEnd(animation);
+                if (isOkIcon)
+                    _progressPanelIconImageView.setImageResource(R.drawable.ok_100);
+                else
+                    _progressPanelIconImageView.setImageResource(R.drawable.cancel);
+
+                ObjectAnimator oa1 = ObjectAnimator.ofFloat(_progressPanelIconImageView, "rotationY", -90.0f, 0.0f);
+                oa1.setInterpolator(new LinearInterpolator());
+                oa1.setDuration(100);
+                oa1.start();
+                oa1.addListener(new AnimatorListenerAdapter()
+                {
+                    @Override
+                    public void onAnimationEnd(Animator animation)
+                    {
+                        Handler handler = new Handler();
+
+                        // Post the task to set it visible in 5000ms
+                        handler.postDelayed(
+                                new Runnable()
+                                {
+                                    @Override
+                                    public void run()
+                                    {
+                                        finishedAction.onFinished();
+                                    }
+                                }, waitTimeToEnd);
+                    }
+                });
+            }
+        });
+
+        oa2.setDuration(100);
+        oa2.setInterpolator(new LinearInterpolator());
+        oa2.start();
+    }
+
+    private void _scanPackage(final List<PackageInfo> packagesToScan, final int currentPackageIndex, final IOnFileScanFinished onActionFinished)
+    {
+        PackageInfo packageToScan=packagesToScan.get(currentPackageIndex);
+
+        _progressPanelIconImageView.setImageDrawable(ActivityTools.getIconFromPackage(packageToScan.packageName, getMainActivity()));
+        _progressPanelTextView.setText(packageToScan.packageName);
+        _progressPanelprogressBar.setPercent(0);
+
+        //_progressContainer.setVisibility(View.VISIBLE);
+        ObjectAnimator oa1 = ObjectAnimator.ofFloat(_progressContainer, "translationX",
+                _superContainer.getWidth()/2.0f+_progressContainer.getWidth(), 0.0f);
+        oa1.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                _progressContainer.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                _doWaitToScanPackage(3000,packagesToScan,currentPackageIndex,onActionFinished);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+            }
+        });
+
+        oa1.start();
     }
 
     protected Set<BadPackageResultData> _fillInstalledFromGooglePlay(List<PackageInfo> packagesToSearch, Set<BadPackageResultData> setToUpdate)
