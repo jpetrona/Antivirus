@@ -1,6 +1,7 @@
 package com.cresan.antivirus;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
@@ -49,20 +50,22 @@ public class WarningsAdapter extends ArrayAdapter<WarningData>
         Set<ActivityData> activityData=bp.getActivityData();
         for(ActivityData ad : activityData)
         {
+
             WarningData wd=new WarningData();
-            wd.iconId=R.drawable.gear;
-            wd.title=ad.getActivityInfo().name;
-            wd.text="Activity: Aquí viene el tronchaco de texto dependiendo de de lo que queramos poner";
+            wd.iconId=R.drawable.adware_icon;
+            wd.title=getContext().getResources().getString(R.string.title_ads);
+            wd.text=getContext().getResources().getString(R.string.ads_message);
             wdl.add(wd);
         }
 
         Set<PermissionData> permissionDataList=bp.getPermissionData();
         for(PermissionData ad : permissionDataList)
         {
+
             WarningData wd=new WarningData();
-            wd.iconId=R.drawable.information;
-            wd.title=ad.getPermissionName();
-            wd.text="Permiso: Aquí viene el tronchaco de texto dependiendo de de lo que queramos poner";
+            wd.iconId=setPermissionIcon(ad.getPermissionName());
+            wd.title=getContext().getResources().getString(R.string.title_permission);
+            wd.text=setPermissionMessage(ad.getPermissionName());
             wdl.add(wd);
         }
 
@@ -71,8 +74,8 @@ public class WarningsAdapter extends ArrayAdapter<WarningData>
         {
             WarningData wd=new WarningData();
             wd.iconId=R.drawable.information;
-            wd.title="Unknown sources";
-            wd.text="Aplicación instalada fuera de google play";
+            wd.title=getContext().getResources().getString(R.string.title_installedGPlay);
+            wd.text=getContext().getResources().getString(R.string.installedGPlay_message);
             wdl.add(wd);
         }
 
@@ -105,5 +108,101 @@ public class WarningsAdapter extends ArrayAdapter<WarningData>
 
 
         return rowView;
+    }
+
+
+    public String setPermissionMessage (String permissionName)
+    {
+        String message = "";
+        Resources resources = getContext().getResources();
+
+        if(permissionName.contains("READ_PHONE_STATE"))
+        {
+
+            message = resources.getString(R.string.read_phone_message);
+
+        }else if (permissionName.contains("ACCESS_FINE_LOCATION"))
+        {
+
+            message = resources.getString(R.string.access_fine_message);
+
+        }else if (permissionName.contains("READ_SMS"))
+        {
+
+            message = resources.getString(R.string.read_sms_message);
+
+        }else if (permissionName.contains("WRITE_SMS"))
+        {
+
+            message = resources.getString(R.string.write_sms_message);
+
+        }else if (permissionName.contains("SEND_SMS"))
+        {
+
+            message = resources.getString(R.string.send_sms_message);
+
+        }else if (permissionName.contains("READ_HISTORY_BOOKMARKS"))
+        {
+
+            message = resources.getString(R.string.read_history_message);
+
+        }else if (permissionName.contains("WRITE_HISTORY_BOOKMARKS"))
+        {
+
+            message = resources.getString(R.string.write_history_message);
+        }
+
+        return message;
+
+
+
+    }
+
+
+    public int setPermissionIcon (String permissionName)
+    {
+        int icon = 0;
+
+
+        if(permissionName.contains("READ_PHONE_STATE"))
+        {
+
+            icon = R.drawable.privacy_icon;
+
+        }else if (permissionName.contains("ACCESS_FINE_LOCATION"))
+        {
+
+            icon = R.drawable.privacy_icon;
+
+        }else if (permissionName.contains("READ_SMS"))
+        {
+
+            icon = R.drawable.privacy_icon;
+
+        }else if (permissionName.contains("WRITE_SMS"))
+        {
+
+            icon = R.drawable.privacy_icon;
+
+        }else if (permissionName.contains("SEND_SMS"))
+        {
+
+            icon = R.drawable.privacy_icon;
+
+        }else if (permissionName.contains("READ_HISTORY_BOOKMARKS"))
+        {
+
+            icon = R.drawable.privacy_icon;
+
+        }else if (permissionName.contains("WRITE_HISTORY_BOOKMARKS"))
+        {
+
+            icon = R.drawable.privacy_icon;
+        }
+
+        return icon;
+
+
+
     }
 }
