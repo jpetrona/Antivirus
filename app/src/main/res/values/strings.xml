@@ -26,5 +26,6 @@
     <string name="yes">yes</string>
     <string name="dialog_message_exit">Are you sure exit?</string>
     <string name="uninstall">Uninstall</string>
+    <string name="trust">Trust</string>
     <string name="resolve_problems">Resolve problems</string>
 </resources>

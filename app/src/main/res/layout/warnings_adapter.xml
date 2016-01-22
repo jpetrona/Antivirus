@@ -2,13 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="#182839">
+              android:background="@color/SecondaryColor">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="#1A314A"
+        android:background="@color/SecondaryColor"
         android:layout_weight="1">
 
         <LinearLayout
@@ -22,6 +22,7 @@
                 android:layout_weight="0.15"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="Uso de la bateria en segundo plano"
+                android:textColor="@color/info_icon_bottom_text"
                 android:id="@+id/titleWarning"
                 android:textStyle="bold"
                 android:paddingLeft="8dp"/>
@@ -47,6 +48,7 @@
                     android:text="Bajo nivel de uso"
                     android:id="@+id/messageWarning"
                     android:gravity="center_vertical"
+                    android:textColor="@color/info_icon_bottom_text"
                     android:layout_gravity="center_vertical"/>
             </LinearLayout>
         </LinearLayout>

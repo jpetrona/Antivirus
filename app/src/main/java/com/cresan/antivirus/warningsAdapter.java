@@ -167,37 +167,37 @@ public class WarningsAdapter extends ArrayAdapter<WarningData>
         if(permissionName.contains("READ_PHONE_STATE"))
         {
 
-            icon = R.drawable.privacy_icon;
+            icon = R.drawable.phone_icon;
 
         }else if (permissionName.contains("ACCESS_FINE_LOCATION"))
         {
 
-            icon = R.drawable.privacy_icon;
+            icon = R.drawable.fine_location_icon;
 
         }else if (permissionName.contains("READ_SMS"))
         {
 
-            icon = R.drawable.privacy_icon;
+            icon = R.drawable.read_sms;
 
         }else if (permissionName.contains("WRITE_SMS"))
         {
 
-            icon = R.drawable.privacy_icon;
+            icon = R.drawable.send_sms;
 
         }else if (permissionName.contains("SEND_SMS"))
         {
 
-            icon = R.drawable.privacy_icon;
+            icon = R.drawable.send_sms;
 
         }else if (permissionName.contains("READ_HISTORY_BOOKMARKS"))
         {
 
-            icon = R.drawable.privacy_icon;
+            icon = R.drawable.history_icon;
 
         }else if (permissionName.contains("WRITE_HISTORY_BOOKMARKS"))
         {
 
-            icon = R.drawable.privacy_icon;
+            icon = R.drawable.history_icon;
         }
 
         return icon;
