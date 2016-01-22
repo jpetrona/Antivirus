@@ -1,5 +1,6 @@
 package com.cresan.antivirus;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
@@ -49,11 +50,13 @@ import com.tech.applications.coretools.ActivityTools;
 import com.tech.applications.coretools.AdvertisingTools;
 import com.tech.applications.coretools.BatteryData;
 import com.tech.applications.coretools.BatteryTools;
+import com.tech.applications.coretools.MediaTools;
 import com.tech.applications.coretools.NetworkTools;
 import com.tech.applications.coretools.NotificationTools;
 import com.tech.applications.coretools.SerializationTools;
 import com.tech.applications.coretools.advertising.IPackageChangesListener;
 import com.tech.applications.coretools.advertising.PackageBroadcastReceiver;
+import com.tech.applications.coretools.time.JSonTools;
 import com.tech.applications.coretools.time.PausableCountDownTimer;
 
 import com.cresan.androidprotector.R;
@@ -153,9 +156,11 @@ public class AntivirusActivity extends AdvertFragmentActivity
 		//Start service
 		if(!ServiceTools.isServiceRunning(this,PackageListenerService.class))
 		{
+            String jsonFile=JSonTools.loadJSONFromAsset(this, "whiteList.json");
             Log.d(_logTag,"=====> AntivirusActivity:onCreate: Starting PackageListenerService because it was not running.");
             Intent i = new Intent(this, PackageListenerService.class);
-			startService(i);
+			i.putExtra("whitelist",jsonFile);
+            startService(i);
 		}
         else
             Log.d(_logTag,"=====> AntivirusActivity:onCreate: No need to start PackageListenerService because it as running previously.");
@@ -165,14 +170,11 @@ public class AntivirusActivity extends AdvertFragmentActivity
         bar.setDisplayHomeAsUpEnabled(true);
 
 
-        /*Fragment newFragment = new MainFragment();
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.add(R.id.container, newFragment).commit();*/
         slideInFragment(new MainFragment());
 
         //Configure Ads
 		if(!NetworkTools.isNetworkAvailable(this))
-	    {	
+	    {
 	    	showNoInetDialog();
 	    	return;
 	    }
@@ -237,7 +239,7 @@ public class AntivirusActivity extends AdvertFragmentActivity
         //Load WhiteList
         try
         {
-            String jsonFile=loadJSONFromAsset("whiteList.json");
+            String jsonFile=JSonTools.loadJSONFromAsset(this,"whiteList.json");
             JSONObject obj = new JSONObject(jsonFile);
 
             JSONArray m_jArry = obj.getJSONArray("data");
@@ -258,7 +260,7 @@ public class AntivirusActivity extends AdvertFragmentActivity
         //Load blackPackagesList
         try
         {
-            String jsonFile=loadJSONFromAsset("blackListPackages.json");
+            String jsonFile=JSonTools.loadJSONFromAsset(this,"blackListPackages.json");
             JSONObject obj = new JSONObject(jsonFile);
 
             JSONArray m_jArry = obj.getJSONArray("data");
@@ -279,7 +281,7 @@ public class AntivirusActivity extends AdvertFragmentActivity
         //Load blackActivitiesList
         try
         {
-            String jsonFile=loadJSONFromAsset("blackListActivities.json");
+            String jsonFile=JSonTools.loadJSONFromAsset(this,"blackListActivities.json");
             JSONObject obj = new JSONObject(jsonFile);
 
             JSONArray m_jArry = obj.getJSONArray("data");
@@ -300,7 +302,7 @@ public class AntivirusActivity extends AdvertFragmentActivity
         //Load permissions data
         try
         {
-            String jsonFile=loadJSONFromAsset("permissions.json");
+            String jsonFile= JSonTools.loadJSONFromAsset(this, "permissions.json");
             JSONObject obj = new JSONObject(jsonFile);
 
             JSONArray m_jArry = obj.getJSONArray("data");
@@ -316,26 +318,6 @@ public class AntivirusActivity extends AdvertFragmentActivity
         {
             e.printStackTrace();
         }
-    }
-
-    public String loadJSONFromAsset(String file)
-    {
-        String json = null;
-        try
-        {
-            InputStream is = this.getAssets().open(file);
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-            json = new String(buffer, "UTF-8");
-        }
-        catch (IOException ex)
-        {
-            ex.printStackTrace();
-            return null;
-        }
-        return json;
     }
 
 	public void onStart()

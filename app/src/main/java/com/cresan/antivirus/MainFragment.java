@@ -146,7 +146,6 @@ public class MainFragment extends Fragment
         List<PackageInfo> allPackages= ActivityTools.getApps(getMainActivity(), PackageManager.GET_ACTIVITIES | PackageManager.GET_PERMISSIONS);
         List<PackageInfo> nonSystemAppsPackages= ActivityTools.getNonSystemApps(getMainActivity(), allPackages);
 
-
         Set<PackageData> whiteListPackages=getMainActivity().getWhiteListPackages();
         Set<PackageData> blackListPackages=getMainActivity().getBlackListPackages();
         Set<PackageData> blackListActivities=getMainActivity().getBlackListActivities();
@@ -473,7 +472,7 @@ public class MainFragment extends Fragment
             while (found == false && index < trimmedPackageList.size())
             {
                 p = trimmedPackageList.get(index);
-                if (_packageNameBelongsToPackageMask(p.packageName,pd.getPackageName()))
+                if (packageNameBelongsToPackageMask(p.packageName,pd.getPackageName()))
                 {
                     found = true;
                     trimmedPackageList.remove(index);
@@ -553,7 +552,7 @@ public class MainFragment extends Fragment
         return setToUpdate;
     }
 
-    boolean _packageNameBelongsToPackageMask(String packageName, String mask)
+    static public boolean packageNameBelongsToPackageMask(String packageName, String mask)
     {
         boolean wildcard=false;
 
@@ -597,7 +596,7 @@ public class MainFragment extends Fragment
         {
             packInfo=packages.get(i);
 
-            if(_packageNameBelongsToPackageMask(packInfo.packageName,filter))
+            if(packageNameBelongsToPackageMask(packInfo.packageName,filter))
             {
                 result.add(new GoodPackageResultData(packInfo));
 
