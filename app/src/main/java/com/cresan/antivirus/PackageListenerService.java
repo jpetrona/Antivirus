@@ -40,7 +40,7 @@ public class PackageListenerService extends Service
     {
         super.onCreate();
 
-        Log.i("CRESAN","################## Service OnCreateCommand called");
+        Log.i("CRESAN","################## Service OnCreate called");
 
         _packageBroadcastReceiver = new PackageBroadcastReceiver();
         _packageBroadcastReceiver.setPackageBroadcastListener(new IPackageChangesListener()
@@ -93,11 +93,24 @@ public class PackageListenerService extends Service
 
     private void _loadDataFiles()
     {
-        Log.d("CRESAN", "################# LOADING WHITELIST FILE FROM SERVICE");
+
         if(_whiteListPackages==null)
             _whiteListPackages=new HashSet<PackageData>();
         else
-        _whiteListPackages.clear();
+        {
+            if(_whiteListPackages.size()>0)
+            {
+                Log.d("CRESAN", "################# NO NEED TO LOAD WHITELIST...");
+                return;
+            }
+            else
+            {
+                Log.d("CRESAN", "################# SOMETHING ODD HAPPENED. WHITELISTPACKAGES IS INSTANTIATED BUT NOT HAS ITEMS ?????????...");
+            }
+
+        }
+
+        Log.d("CRESAN", "################# LOADING WHITELIST FILE FROM SERVICE");
 
         //Load WhiteList
         try
@@ -132,19 +145,5 @@ public class PackageListenerService extends Service
 
         return false;
 
-        /*//Check against whitelist
-        for(PackageData pd : whiteListPackages)
-        {
-            Log.d("CRESAN","################## Comparisons...");
-            Log.d("CRESAN","################>>>> "+"Comparing "+pd.getPackageName()+" vs "+packageName);
-            if(pd.getPackageName().equals(packageName))
-            {
-                Log.d("CRESAN", "##################>>>> "+"Are the same!");
-                return true;
-            }
-
-        }
-
-        return false;*/
     }
 }
