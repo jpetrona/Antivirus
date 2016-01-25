@@ -39,7 +39,7 @@ public class ResultsFragment extends Fragment
 
     List<BadPackageResultData> _suspiciousAppList=null;
 
-    public static ListView _listview;
+    private ListView _listview;
     private Button _buttonRemove;
 
     List<BadPackageResultData> _selectedApps = new ArrayList<>();

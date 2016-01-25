@@ -27,7 +27,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:paddingLeft="10dp">
+            android:paddingLeft="10dp"
+            android:id="@+id/linearLayout">
 
             <TextView
                 android:id="@+id/Titlelabel"
@@ -62,18 +63,14 @@
             </LinearLayout>
         </LinearLayout>
 
-        <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="i"
-            android:id="@+id/buttonInfo" />
+
 
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/checkBox"
             android:checked="false"
-            />
+            android:focusable="false"
+            android:layout_gravity="center_vertical"/>
     </LinearLayout>
 </LinearLayout>

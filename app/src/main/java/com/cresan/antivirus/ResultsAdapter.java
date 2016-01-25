@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.cresan.androidprotector.R;
@@ -70,8 +72,25 @@ public class ResultsAdapter extends ArrayAdapter<BadPackageResultData>
         TextView textView = (TextView) rowView.findViewById(R.id.Titlelabel);
         ImageView imageView = (ImageView) rowView.findViewById(R.id.logo);
         CheckBox checkBox = (CheckBox) rowView.findViewById(R.id.checkBox);
+        LinearLayout linearLayout = (LinearLayout) rowView.findViewById(R.id.linearLayout);
+        linearLayout.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                showInfoAppFragment(obj);
+            }
+        });
+        imageView.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                showInfoAppFragment(obj);
+            }
+        });
 
-        Button button = (Button) rowView.findViewById(R.id.buttonInfo);
+       /* Button button = (Button) rowView.findViewById(R.id.buttonInfo);
 
         button.setOnClickListener(new View.OnClickListener()
         {
@@ -81,8 +100,7 @@ public class ResultsAdapter extends ArrayAdapter<BadPackageResultData>
                 showInfoAppFragment(obj);
 
             }
-        });
-
+        });*/
 
         checkBox.setChecked(false);
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
