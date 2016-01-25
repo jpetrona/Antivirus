@@ -1,63 +1,37 @@
 package com.cresan.antivirus;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-import android.app.ActionBar;
 import android.app.AlertDialog;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 
-import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 
-import com.gelitenight.waveview.library.WaveView;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
-import com.liulishuo.magicprogresswidget.MagicProgressBar;
 import com.tech.applications.advertising.adnetworks.AdsCore;
 import com.tech.applications.advertising.adnetworks.AdvertFragmentActivity;
 import com.tech.applications.advertising.adnetworks.AdvertListener;
 import com.tech.applications.coretools.ActivityTools;
 import com.tech.applications.coretools.AdvertisingTools;
-import com.tech.applications.coretools.BatteryData;
-import com.tech.applications.coretools.BatteryTools;
-import com.tech.applications.coretools.MediaTools;
 import com.tech.applications.coretools.NetworkTools;
-import com.tech.applications.coretools.NotificationTools;
 import com.tech.applications.coretools.SerializationTools;
-import com.tech.applications.coretools.advertising.IPackageChangesListener;
-import com.tech.applications.coretools.advertising.PackageBroadcastReceiver;
-import com.tech.applications.coretools.time.JSonTools;
-import com.tech.applications.coretools.time.PausableCountDownTimer;
+
+import com.tech.applications.coretools.JSonTools;
 
 import com.cresan.androidprotector.R;
 import com.tech.applications.coretools.time.ServiceTools;
@@ -76,6 +50,9 @@ public class AntivirusActivity extends AdvertFragmentActivity
     public Set<PackageData> getBlackListActivities() { return _blackListActivities;}
 	Set<PermissionData> _suspiciousPermissions;
 	public Set<PermissionData> getSuspiciousPermissions() { return _suspiciousPermissions;}
+
+    UserWhiteList _userWhiteList=null;
+    public UserWhiteList getUserWhiteList() { return _userWhiteList;}
 
     final String bannerAdUnit="";
 	final String interstitialAdUnit="";
@@ -156,7 +133,7 @@ public class AntivirusActivity extends AdvertFragmentActivity
 		//Start service
 		if(!ServiceTools.isServiceRunning(this,PackageListenerService.class))
 		{
-            String jsonFile=JSonTools.loadJSONFromAsset(this, "whiteList.json");
+            String jsonFile= JSonTools.loadJSONFromAsset(this, "whiteList.json");
             Log.d(_logTag,"=====> AntivirusActivity:onCreate: Starting PackageListenerService because it was not running.");
             Intent i = new Intent(this, PackageListenerService.class);
 			i.putExtra("whitelist",jsonFile);
@@ -236,10 +213,13 @@ public class AntivirusActivity extends AdvertFragmentActivity
         _blackListActivities=new HashSet<PackageData>();
 		_suspiciousPermissions= new HashSet<PermissionData>();
 
+        //Build user list
+        _userWhiteList=new UserWhiteList(this);
+
         //Load WhiteList
         try
         {
-            String jsonFile=JSonTools.loadJSONFromAsset(this,"whiteList.json");
+            String jsonFile= JSonTools.loadJSONFromAsset(this, "whiteList.json");
             JSONObject obj = new JSONObject(jsonFile);
 
             JSONArray m_jArry = obj.getJSONArray("data");
@@ -260,7 +240,7 @@ public class AntivirusActivity extends AdvertFragmentActivity
         //Load blackPackagesList
         try
         {
-            String jsonFile=JSonTools.loadJSONFromAsset(this,"blackListPackages.json");
+            String jsonFile= JSonTools.loadJSONFromAsset(this, "blackListPackages.json");
             JSONObject obj = new JSONObject(jsonFile);
 
             JSONArray m_jArry = obj.getJSONArray("data");
@@ -281,7 +261,7 @@ public class AntivirusActivity extends AdvertFragmentActivity
         //Load blackActivitiesList
         try
         {
-            String jsonFile=JSonTools.loadJSONFromAsset(this,"blackListActivities.json");
+            String jsonFile= JSonTools.loadJSONFromAsset(this, "blackListActivities.json");
             JSONObject obj = new JSONObject(jsonFile);
 
             JSONArray m_jArry = obj.getJSONArray("data");
@@ -320,7 +300,7 @@ public class AntivirusActivity extends AdvertFragmentActivity
         }
     }
 
-	public void onStart()
+    public void onStart()
 	{
 		super.onStart();
 

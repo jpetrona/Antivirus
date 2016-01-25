@@ -85,7 +85,12 @@ public class InfoAppFragment extends Fragment
             @Override
             public void onClick(View v)
             {
-                //_suspiciousApp.getPackageName
+                UserWhiteList userWhiteList=getMainActivity().getUserWhiteList();
+
+                PackageData pdo=new PackageData();
+                pdo.setPackageName(_suspiciousApp.getPackageName());
+                userWhiteList.addPackage(pdo);
+                userWhiteList.writeData();
             }
         });
 

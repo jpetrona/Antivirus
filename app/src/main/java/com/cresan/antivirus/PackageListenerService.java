@@ -3,25 +3,22 @@ package com.cresan.antivirus;
 import android.app.Service;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageInfo;
 import android.os.IBinder;
 import android.util.Log;
 
 import com.tech.applications.coretools.ActivityTools;
-import com.tech.applications.coretools.MediaTools;
 import com.tech.applications.coretools.NotificationTools;
 import com.tech.applications.coretools.advertising.IPackageChangesListener;
 import com.tech.applications.coretools.advertising.PackageBroadcastReceiver;
 
 import com.cresan.androidprotector.R;
-import com.tech.applications.coretools.time.JSonTools;
+import com.tech.applications.coretools.JSonTools;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -115,7 +112,7 @@ public class PackageListenerService extends Service
         //Load WhiteList
         try
         {
-            String jsonFile=JSonTools.loadJSONFromAsset(this,"whiteList.json");
+            String jsonFile= JSonTools.loadJSONFromAsset(this, "whiteList.json");
             JSONObject obj = new JSONObject(jsonFile);
 
             JSONArray m_jArry = obj.getJSONArray("data");

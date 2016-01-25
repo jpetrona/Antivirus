@@ -166,6 +166,7 @@ public class MainFragment extends Fragment
         Log.d(_logTag, " ");
 
         List<PackageInfo> potentialBadApps=_removeWhiteListPackagesFromPackageList(nonSystemAppsPackages, whiteListPackages);
+        potentialBadApps=getMainActivity().getUserWhiteList().removePackagesFromPackageList(potentialBadApps);
 
         _scanForBlackListedActivityApps(potentialBadApps, blackListActivities, tempBadResults);
         _scanForSuspiciousPermissionsApps(potentialBadApps, suspiciousPermissions, tempBadResults);

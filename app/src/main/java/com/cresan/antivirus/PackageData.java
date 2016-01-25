@@ -2,11 +2,16 @@ package com.cresan.antivirus;
 
 import android.content.pm.PackageInfo;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashSet;
 import java.util.List;
 
 /**
  * Created by hexdump on 15/01/16.
  */
+
 public class PackageData
 {
     private String _packageName;
@@ -27,7 +32,14 @@ public class PackageData
         return _packageName.equals(other._packageName);
     }
 
-    public List<PackageData> getPackagesByName(List<PackageData> packages, String filter, List<PackageData> result)
+    public JSONObject buildJSONObject() throws JSONException
+    {
+        JSONObject jsonObj=new JSONObject();
+        jsonObj.put("packageName",_packageName);
+        return jsonObj;
+    }
+
+    public static List<PackageData> getPackagesByName(HashSet<PackageData> packages, String filter, List<PackageData> result)
     {
         boolean wildcard=false;
 
@@ -41,12 +53,8 @@ public class PackageData
         else
             wildcard=false;
 
-        PackageData packInfo =null;
-
-        for (int i=0; i < packages.size(); i++)
+        for (PackageData packInfo : packages)
         {
-            packInfo=packages.get(i);
-
             if(packInfo._packageName.startsWith(filter))
             {
                 result.add(packInfo);
@@ -59,4 +67,27 @@ public class PackageData
 
         return result;
     }
+
+    public static boolean isPackageInListByName(HashSet<PackageData> packages, String filter)
+    {
+        boolean wildcard=false;
+
+        if(filter.charAt(filter.length()-1)=='*')
+        {
+            wildcard=true;
+            filter=filter.substring(0,filter.length()-2);
+        }
+        else
+            wildcard=false;
+
+        for (PackageData packInfo : packages)
+        {
+            if(packInfo._packageName.startsWith(filter))
+                return true;
+        }
+
+        return false;
+    }
+
+
 }
