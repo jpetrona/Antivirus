@@ -61,6 +61,8 @@ public class MainFragment extends Fragment
 
     PausableCountDownTimer _cdTimer =null;
 
+    Set<BadPackageResultData> _foundMenaces=null;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
@@ -202,7 +204,9 @@ public class MainFragment extends Fragment
         _packageInfo.add(allPackages.get(1));
         _packageInfo.add(allPackages.get(2));
 
-        _startScanningAnimation(_packageInfo,tempBadResults);
+        _foundMenaces=tempBadResults;
+
+        _startScanningAnimation(_packageInfo,_foundMenaces);
 
     }
 
