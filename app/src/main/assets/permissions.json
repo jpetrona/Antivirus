@@ -3,27 +3,27 @@
 [
   {
     "permissionName": "android.permission.ACCESS_GPS",
-    "hazard": 5
+    "dangerous": 1
   },
   {
     "permissionName": "com.android.browser.permission.READ_HISTORY_BOOKMARKS",
-    "hazard": 7
+    "dangerous": 1
   },
   {
     "permissionName": "com.android.browser.permission.WRITE_HISTORY_BOOKMARKS",
-    "hazard": 7
+    "dangerous": 1
   },
   {
     "permissionName": "android.permission.SEND_SMS",
-    "hazard": 1
+    "dangerous": 1
   },
   {
     "permissionName": "android.permission.READ_SMS",
-    "hazard": 10
+    "dangerous": 1
   },
   {
     "permissionName": "android.permission.READ_PHONE_STATE",
-    "hazard": 10
+    "dangerous": 1
   }
 ]
 }
