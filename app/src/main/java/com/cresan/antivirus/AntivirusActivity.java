@@ -65,6 +65,7 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
     {
         return _serviceInstance.getUserWhiteList();
     }
+    public Set<BadPackageResultData> getBadResultPackageDataFromMenaceSet() { return _serviceInstance.getBadResultPackageDataFromMenaceSet(); }
 
     final String bannerAdUnit="";
 	final String interstitialAdUnit="";

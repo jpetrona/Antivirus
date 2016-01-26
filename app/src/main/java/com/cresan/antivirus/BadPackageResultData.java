@@ -53,4 +53,15 @@ public class BadPackageResultData
     {
         return !getInstalledThroughGooglePlay() || getActivityData().size()>0 || getPermissionData().size()>0;
     }
+
+    public boolean isDangerousMenace()
+    {
+        for(PermissionData pd : _permissions)
+        {
+            if(pd.getDangerous()==1)
+                return true;
+        }
+
+        return false;
+    }
 }

@@ -3,17 +3,12 @@ package com.cresan.antivirus;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
@@ -33,9 +28,7 @@ import com.tech.applications.coretools.NetworkTools;
 import com.tech.applications.coretools.StringTools;
 import com.tech.applications.coretools.time.PausableCountDownTimer;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -65,7 +58,7 @@ public class MainFragment extends Fragment
     ImageView _riskIcon;
     LinearLayout _backgroundRisk;
     TextView _menacesCounterText;
-    private boolean _firstUse = false;
+    private boolean firstScan = false;
     final int kProgressBarRefressTime=50;
 
 
@@ -80,7 +73,7 @@ public class MainFragment extends Fragment
         View rootView = inflater.inflate(R.layout.main_fragment, container, false);
 
         _setupFragment(rootView);
-        //controlInitialStates();
+        controlInitialStates();
         return rootView;
     }
 
@@ -103,12 +96,14 @@ public class MainFragment extends Fragment
             @Override
             public void onClick(View v)
             {
-                /*if (_foundMenaces !=null && _foundMenaces.size() !=0)
+                Set<BadPackageResultData> foundMenaces=getMainActivity().getBadResultPackageDataFromMenaceSet();
+
+                if (foundMenaces !=null && foundMenaces.size() !=0)
                 {
 
-                    showResultFragment(new ArrayList<BadPackageResultData>(_foundMenaces));
+                    showResultFragment(new ArrayList<BadPackageResultData>(foundMenaces));
 
-                }*/
+                }
             }
         });
 
@@ -183,7 +178,11 @@ public class MainFragment extends Fragment
             @Override
             public void onScanResult(List<PackageInfo> allPacakgesToScan, Set<BadPackageResultData> scanResult)
             {
-                _startScanningAnimation(allPacakgesToScan,scanResult);
+                AppData appData=getMainActivity().getAppData();
+                appData.setFirstScan(true);
+                appData.serialize(getMainActivity());
+
+                _startScanningAnimation(allPacakgesToScan, scanResult);
             }
         });
     }
@@ -702,11 +701,15 @@ public class MainFragment extends Fragment
             _cdTimer.start();
     }
 
-/*
+
     void controlInitialStates()
     {
 
-        if(_foundMenaces == null && !_firstUse)
+        boolean firstScan=getMainActivity().getAppData().getFirstScan();
+        Set<BadPackageResultData> foundMenaces = getMainActivity().getBadResultPackageDataFromMenaceSet();
+        boolean _isDangerous = _isDangerousAppInSet(foundMenaces);
+
+        if(foundMenaces == null && !firstScan)
         {
 
             _riskIcon.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.shield_medium_risk_icon));
@@ -714,21 +717,38 @@ public class MainFragment extends Fragment
             _backgroundRisk.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.MediumRiskColor));
            _resolvePersistProblems.setVisibility(View.GONE);
 
-        }else if(_foundMenaces.size() == 0 && _firstUse)
+        }else if(foundMenaces.isEmpty() && firstScan)
         {
 
             activateProtectedState();
 
-        }else if(_foundMenaces.size() !=0) // hay que meter comprobacion de peligrosidad por permiso de este estilo: else if(_foundMenaces.size() !=0 && existDangerous) entonces sacar riesgo alto
+        }
+        else if(!foundMenaces.isEmpty() && _isDangerous)
         {
 
-            activateHighRiskState(_foundMenaces.size());
+            activateHighRiskState(foundMenaces.size());
 
 
-        }// hay que meter comprobacion de peligrosidad por permiso de este estilo: else if(_foundMenaces.size() !=0 && !existDangerous) entonces sacar riesgo medio
+        }else if(!foundMenaces.isEmpty() && !_isDangerous)
+        {
 
-    }*/
+            activateMediumRiskState(foundMenaces.size());
 
+
+        }
+
+    }
+
+    private boolean _isDangerousAppInSet(Set<BadPackageResultData> set)
+    {
+        for(BadPackageResultData bprd : set)
+        {
+            if(bprd.isDangerousMenace())
+                return true;
+        }
+
+        return false;
+    }
 
     void activateProtectedState()
     {

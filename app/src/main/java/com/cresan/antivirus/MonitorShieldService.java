@@ -405,7 +405,7 @@ public class MonitorShieldService extends Service
         }
     }
 
-    public Set<BadPackageResultData> getBadPackageResultDataList()
+    public Set<BadPackageResultData> getBadResultPackageDataFromMenaceSet()
     {
         //Convert menaces found to BadPackageResultDataList
         return null;
