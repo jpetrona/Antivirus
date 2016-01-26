@@ -2,6 +2,7 @@ package com.cresan.antivirus;
 
 import android.content.pm.PackageInfo;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -38,6 +39,7 @@ public class BadPackageResultData
         return (int) getPackageName().hashCode();
     }
 
+
     public boolean equals(Object o)
     {
         if(o == null)
@@ -45,5 +47,10 @@ public class BadPackageResultData
 
         BadPackageResultData other = (BadPackageResultData) o;
         return _packageInfo.packageName.equals(other._packageInfo.packageName);
+    }
+
+    public boolean isMenace()
+    {
+        return !getInstalledThroughGooglePlay() || getActivityData().size()>0 || getPermissionData().size()>0;
     }
 }

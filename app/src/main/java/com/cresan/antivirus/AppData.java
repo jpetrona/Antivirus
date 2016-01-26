@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 
 import android.content.Context;
@@ -17,11 +20,23 @@ import com.tech.applications.coretools.SerializationTools;
 
 public class AppData implements Serializable
 {
-	private boolean _voted;
+    transient static String filePath="state.data";
+
+    private boolean _voted;
 	public boolean getVoted() { return _voted; }
 	public void setVoted(boolean voted) { _voted=voted; }
-	
-	
+
+    /*List<String> _pendingMenaces=null;
+    public List<String> getPendingMenaces() { return _pendingMenaces; }
+    public void setPendingMenaces(Set<BadPackageResultData> bprdl)
+	{
+		_pendingMenaces=new ArrayList<String>();
+		for(BadPackageResultData bprd : bprdl)
+		{
+			_pendingMenaces.add(bprd.getPackageName());
+		}
+	}*/
+
 	public AppData() 
 	{
 		
@@ -32,7 +47,7 @@ public class AppData implements Serializable
 	{
 		try
 		{
-			SerializationTools.serializeToSharedPrefs(ctx,"bc_data",this);
+			SerializationTools.serializeToDataFolder(ctx, this, filePath);
 		}
 		catch(IOException ex)
 		{

@@ -41,7 +41,7 @@
             </intent-filter>
         </receiver>
 
-        <service android:enabled="true" android:name="com.cresan.antivirus.PackageListenerService" />
+        <service android:enabled="true" android:name="com.cresan.antivirus.MonitorShieldService" />
     </application>
 
 </manifest>

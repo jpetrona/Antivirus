@@ -2,6 +2,8 @@ package com.cresan.antivirus;
 
 import android.content.pm.ActivityInfo;
 
+import java.io.Serializable;
+
 /**
  * Created by hexdump on 15/01/16.
  */

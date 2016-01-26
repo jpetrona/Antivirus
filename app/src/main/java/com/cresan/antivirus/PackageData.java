@@ -1,12 +1,17 @@
 package com.cresan.antivirus;
 
+import android.content.Context;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+
+import com.tech.applications.coretools.ActivityTools;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by hexdump on 15/01/16.
@@ -39,6 +44,25 @@ public class PackageData
         return jsonObj;
     }
 
+    public BadPackageResultData createBadPackageResultData(Context context)
+    {
+        try
+        {
+            PackageInfo pi = ActivityTools.getPackageInfo(context,getPackageName(),PackageManager.GET_ACTIVITIES | PackageManager.GET_PERMISSIONS);
+            if(pi!=null)
+            {
+                BadPackageResultData bprd = new BadPackageResultData(pi);
+                return bprd;
+            }
+            else
+                return null;
+        }
+        catch(PackageManager.NameNotFoundException ex)
+        {
+            return null;
+        }
+    }
+
     public static List<PackageData> getPackagesByName(HashSet<PackageData> packages, String filter, List<PackageData> result)
     {
         boolean wildcard=false;
@@ -68,7 +92,7 @@ public class PackageData
         return result;
     }
 
-    public static boolean isPackageInListByName(HashSet<PackageData> packages, String filter)
+    public static boolean isPackageInListByName(Set<PackageData> packages, String filter)
     {
         boolean wildcard=false;
 

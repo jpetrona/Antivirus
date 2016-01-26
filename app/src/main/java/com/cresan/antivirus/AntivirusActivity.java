@@ -1,18 +1,24 @@
 package com.cresan.antivirus;
 
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import android.app.AlertDialog;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.content.pm.PackageInfo;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.ViewGroup;
@@ -34,15 +40,11 @@ import com.tech.applications.coretools.SerializationTools;
 import com.tech.applications.coretools.JSonTools;
 
 import com.cresan.androidprotector.R;
-import com.tech.applications.coretools.time.ServiceTools;
+import com.tech.applications.coretools.ServiceTools;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-public class AntivirusActivity extends AdvertFragmentActivity
+public class AntivirusActivity extends AdvertFragmentActivity implements MonitorShieldService.IClientInterface
 {
-    Set<PackageData> _whiteListPackages;
+/*    Set<PackageData> _whiteListPackages;
     public Set<PackageData> getWhiteListPackages() { return _whiteListPackages; }
     Set<PackageData> _blackListPackages;
     public Set<PackageData> getBlackListPackages(){return _blackListPackages;}
@@ -50,14 +52,21 @@ public class AntivirusActivity extends AdvertFragmentActivity
     public Set<PackageData> getBlackListActivities() { return _blackListActivities;}
 	Set<PermissionData> _suspiciousPermissions;
 	public Set<PermissionData> getSuspiciousPermissions() { return _suspiciousPermissions;}
+    PackageDataSet _userWhiteList=null;
+    public PackageDataSet getUserWhiteList() { return _userWhiteList;}*/
 
-    UserWhiteList _userWhiteList=null;
-    public UserWhiteList getUserWhiteList() { return _userWhiteList;}
+    public UserWhiteList getUserWhiteList()
+    {
+        return _serviceInstance.getUserWhiteList();
+    }
 
     final String bannerAdUnit="";
 	final String interstitialAdUnit="";
 
 	String _logTag=AntivirusActivity.class.getSimpleName();
+
+    MonitorShieldService _serviceInstance=null;
+
 
 	AdvertListener _inMiddleAdListener=new AdvertListener() 
 	{
@@ -102,15 +111,15 @@ public class AntivirusActivity extends AdvertFragmentActivity
 		public void returnedToAppAfterShoingAd(HashMap<String,Object> appData)
 		{
 			android.util.Log.i(_logTag,"Returned to the ap after showing ad....");
-			runOnUiThread(new Runnable() 
-			{
-				
-				@Override
-				public void run() 
-				{
+			runOnUiThread(new Runnable()
+            {
+
+                @Override
+                public void run()
+                {
 					/*_continueCalibrationAfterAd();*/
-				}
-			});
+                }
+            });
 		}
 
 		@Override
@@ -119,9 +128,53 @@ public class AntivirusActivity extends AdvertFragmentActivity
 			
 		}
 	};
-	
-	
+
+    private ServiceConnection _serviceConnection = new ServiceConnection()
+    {
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder service)
+        {
+            Log.d(_logTag, "OOOOOOOOOOOOOOOOOO> onServiceConnected called");
+
+            MonitorShieldService.MonitorShieldLocalBinder binder = (MonitorShieldService.MonitorShieldLocalBinder) service;
+            _serviceInstance = binder.getServiceInstance(); //Get instance of your service!
+            _serviceInstance.registerClient(AntivirusActivity.this); //Activity register in the service as client for callabcks!
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0)
+        {
+            Log.d(_logTag, "OOOOOOOOOOOOOOOOOO> onServiceDisconnected called");
+            _serviceInstance=null;
+        }
+    };
+
+
+    //Registration for any activity inside our app to listen to service calls
+    MonitorShieldService.IClientInterface _appMonitorServiceListener=null;
+    public void setMonitorServiceListener(MonitorShieldService.IClientInterface listener) { _appMonitorServiceListener=listener;}
+
+    //Called when a menace is found by the watchdog
+    public void onMonitorFoundMenace(BadPackageResultData menace)
+    {
+        if(_appMonitorServiceListener!=null)
+            _appMonitorServiceListener.onMonitorFoundMenace(menace);
+    }
+    public void onScanResult(List<PackageInfo> allPacakgesToScan,Set<BadPackageResultData> scanResult)
+    {
+        if(_appMonitorServiceListener!=null)
+            _appMonitorServiceListener.onScanResult(allPacakgesToScan,scanResult);
+    }
+
+    public void startMonitorScan(MonitorShieldService.IClientInterface listener)
+    {
+        _appMonitorServiceListener=listener;
+        if(_serviceInstance!=null)
+            _serviceInstance.scanFileSystem();
+    }
+
 	AppData _data=null;
+    public AppData getAppData() {return _data;}
 	
 	public void onCreate(Bundle paramBundle)
     {
@@ -131,16 +184,17 @@ public class AntivirusActivity extends AdvertFragmentActivity
 	    setContentView(R.layout.activity_main);
 
 		//Start service
-		if(!ServiceTools.isServiceRunning(this,PackageListenerService.class))
+		if(!ServiceTools.isServiceRunning(this,MonitorShieldService.class))
 		{
-            String jsonFile= JSonTools.loadJSONFromAsset(this, "whiteList.json");
-            Log.d(_logTag,"=====> AntivirusActivity:onCreate: Starting PackageListenerService because it was not running.");
-            Intent i = new Intent(this, PackageListenerService.class);
-			i.putExtra("whitelist",jsonFile);
+            Log.d(_logTag, "=====> AntivirusActivity:onCreate: Starting MonitorShieldService because it was not running.");
+            Intent i = new Intent(this, MonitorShieldService.class);
             startService(i);
+
+            //Bind to service
+            bindService(i,_serviceConnection, Context.BIND_AUTO_CREATE);
 		}
         else
-            Log.d(_logTag,"=====> AntivirusActivity:onCreate: No need to start PackageListenerService because it as running previously.");
+            Log.d(_logTag,"=====> AntivirusActivity:onCreate: No need to start MonitorShieldService because it as running previously.");
 
 
         android.support.v7.app.ActionBar bar=getSupportActionBar();
@@ -176,8 +230,6 @@ public class AntivirusActivity extends AdvertFragmentActivity
 
 
 	    _data=_deserializeAppData();
-
-        _loadDataFiles();
     }
 
     @Override
@@ -205,101 +257,6 @@ public class AntivirusActivity extends AdvertFragmentActivity
 
     }
 
-
-	void _loadDataFiles()
-    {
-        _whiteListPackages=new HashSet<PackageData>();
-        _blackListPackages=new HashSet<PackageData>();
-        _blackListActivities=new HashSet<PackageData>();
-		_suspiciousPermissions= new HashSet<PermissionData>();
-
-        //Build user list
-        _userWhiteList=new UserWhiteList(this);
-
-        //Load WhiteList
-        try
-        {
-            String jsonFile= JSonTools.loadJSONFromAsset(this, "whiteList.json");
-            JSONObject obj = new JSONObject(jsonFile);
-
-            JSONArray m_jArry = obj.getJSONArray("data");
-
-            for (int i = 0; i < m_jArry.length(); i++)
-            {
-                JSONObject temp = m_jArry.getJSONObject(i);
-                PackageData pd=new PackageData();
-                pd.setPackageName(temp.getString("packageName"));
-                _whiteListPackages.add(pd);
-            }
-        }
-        catch (JSONException e)
-        {
-            e.printStackTrace();
-        }
-
-        //Load blackPackagesList
-        try
-        {
-            String jsonFile= JSonTools.loadJSONFromAsset(this, "blackListPackages.json");
-            JSONObject obj = new JSONObject(jsonFile);
-
-            JSONArray m_jArry = obj.getJSONArray("data");
-
-            for (int i = 0; i < m_jArry.length(); i++)
-            {
-                JSONObject temp = m_jArry.getJSONObject(i);
-                PackageData pd=new PackageData();
-                pd.setPackageName(temp.getString("packageName"));
-                _blackListPackages.add(pd);
-            }
-        }
-        catch (JSONException e)
-        {
-            e.printStackTrace();
-        }
-
-        //Load blackActivitiesList
-        try
-        {
-            String jsonFile= JSonTools.loadJSONFromAsset(this, "blackListActivities.json");
-            JSONObject obj = new JSONObject(jsonFile);
-
-            JSONArray m_jArry = obj.getJSONArray("data");
-
-            for (int i = 0; i < m_jArry.length(); i++)
-            {
-                JSONObject temp = m_jArry.getJSONObject(i);
-                PackageData pd=new PackageData();
-                pd.setPackageName(temp.getString("packageName"));
-                _blackListActivities.add(pd);
-            }
-        }
-        catch (JSONException e)
-        {
-            e.printStackTrace();
-        }
-
-        //Load permissions data
-        try
-        {
-            String jsonFile= JSonTools.loadJSONFromAsset(this, "permissions.json");
-            JSONObject obj = new JSONObject(jsonFile);
-
-            JSONArray m_jArry = obj.getJSONArray("data");
-
-            for (int i = 0; i < m_jArry.length(); i++)
-            {
-                JSONObject temp = m_jArry.getJSONObject(i);
-                PermissionData pd=new PermissionData(temp.getString("permissionName"),temp.getInt("hazard"));
-                _suspiciousPermissions.add(pd);
-            }
-        }
-        catch (JSONException e)
-        {
-            e.printStackTrace();
-        }
-    }
-
     public void onStart()
 	{
 		super.onStart();
@@ -308,7 +265,7 @@ public class AntivirusActivity extends AdvertFragmentActivity
 
 	protected AppData _deserializeAppData()
 	{
-		AppData data=SerializationTools.deserializeFromSharedPrefs(this, "bc_data");
+		AppData data=SerializationTools.deserializeFromDataFolder(this,_data.filePath);
 		
 		if(data==null)
 			data=new AppData();

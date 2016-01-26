@@ -121,5 +121,6 @@ public class InfoAppFragment extends Fragment
             getMainActivity().goBack();
         }
     }
+
 }
 

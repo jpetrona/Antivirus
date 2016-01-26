@@ -61,7 +61,7 @@ public class MainFragment extends Fragment
 
     PausableCountDownTimer _cdTimer =null;
 
-    Set<BadPackageResultData> _foundMenaces=null;
+    /*Set<BadPackageResultData> _foundMenaces=null;*/
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -144,6 +144,25 @@ public class MainFragment extends Fragment
 
     protected void _scanFileSystem()
     {
+
+        getMainActivity().startMonitorScan(new MonitorShieldService.IClientInterface()
+        {
+            @Override
+            public void onMonitorFoundMenace(BadPackageResultData menace)
+            {
+            }
+
+            @Override
+            public void onScanResult(List<PackageInfo> allPacakgesToScan, Set<BadPackageResultData> scanResult)
+            {
+                _startScanningAnimation(allPacakgesToScan,scanResult);
+            }
+        });
+    }
+
+/*
+    protected void _scanFileSystem()
+    {
         //Scan installed packages
         List<PackageInfo> allPackages= ActivityTools.getApps(getMainActivity(), PackageManager.GET_ACTIVITIES | PackageManager.GET_PERMISSIONS);
         List<PackageInfo> nonSystemAppsPackages= ActivityTools.getNonSystemApps(getMainActivity(), allPackages);
@@ -168,13 +187,13 @@ public class MainFragment extends Fragment
         Log.d(_logTag, " ");
 
         List<PackageInfo> potentialBadApps=_removeWhiteListPackagesFromPackageList(nonSystemAppsPackages, whiteListPackages);
-        potentialBadApps=getMainActivity().getUserWhiteList().removePackagesFromPackageList(potentialBadApps);
+        potentialBadApps=getMainActivity().getUserWhiteList().removeMyPackagesFromPackageList(potentialBadApps);
 
         _scanForBlackListedActivityApps(potentialBadApps, blackListActivities, tempBadResults);
         _scanForSuspiciousPermissionsApps(potentialBadApps, suspiciousPermissions, tempBadResults);
         _fillInstalledFromGooglePlay(potentialBadApps, tempBadResults);
 
-        /*for (BadPackageResultData p : tempBadResults)
+        for (BadPackageResultData p : tempBadResults)
         {
             Log.d(_logTag, "======PACKAGE "+p.getPackageName()+" GPlay install: "+p.getInstalledThroughGooglePlay());
             if(p.getActivityData().size()>0)
@@ -197,7 +216,7 @@ public class MainFragment extends Fragment
             Log.d(_logTag," ");
         }
 
-        showResultFragment(new ArrayList<BadPackageResultData>(tempBadResults));*/
+        showResultFragment(new ArrayList<BadPackageResultData>(tempBadResults));
 
         List<PackageInfo> _packageInfo=new ArrayList<PackageInfo>();
         _packageInfo.add(allPackages.get(0));
@@ -209,7 +228,7 @@ public class MainFragment extends Fragment
         _startScanningAnimation(_packageInfo,_foundMenaces);
 
     }
-
+*/
     private void _startScanningAnimation(final List<PackageInfo> packagesToScan, final Set<BadPackageResultData> tempBadResults)
     {
         ObjectAnimator oa1=new ObjectAnimator();
@@ -253,6 +272,7 @@ public class MainFragment extends Fragment
             @Override
             public void onFinished()
             {
+                AntivirusActivity ma=getMainActivity();
                 showResultFragment(new ArrayList<BadPackageResultData>(tempBadResults));
             }
         };
@@ -398,36 +418,9 @@ public class MainFragment extends Fragment
         oa1.start();
     }
 
-    protected Set<BadPackageResultData> _fillInstalledFromGooglePlay(List<PackageInfo> packagesToSearch, Set<BadPackageResultData> setToUpdate)
-    {
-
-        //Check against whitelist
-        for(PackageInfo pi : packagesToSearch)
-        {
-            if(!ActivityTools.checkIfAppWasInstalledThroughGooglePlay(getActivity(),pi.packageName))
-            {
-                //Update or create new if it does not exist
-                BadPackageResultData bprd=getBadPackageResultByPackageName(setToUpdate, pi.packageName);
-                if(bprd==null)
-                {
-                    bprd = new BadPackageResultData(pi);
-                    setToUpdate.add(bprd);
-                }
-
-                bprd.setInstalledThroughGooglePlay(false);
-            }
-            else
-            {
-                BadPackageResultData bprd=getBadPackageResultByPackageName(setToUpdate, pi.packageName);
-                if(bprd!=null)
-                    bprd.setInstalledThroughGooglePlay(true);
-            }
-        }
-
-        return setToUpdate;
-    }
 
 
+/*
     protected BadPackageResultData getBadPackageResultByPackageName(Set<BadPackageResultData> prd, String packageName)
     {
         BadPackageResultData result=null;
@@ -646,7 +639,7 @@ public class MainFragment extends Fragment
 
         return result;
     }
-
+*/
 
 
     void showResultFragment(List<BadPackageResultData> suspiciousApps)
