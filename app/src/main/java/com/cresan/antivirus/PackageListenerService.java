@@ -46,7 +46,7 @@ public class PackageListenerService extends Service
             public void OnPackageAdded(Intent i)
             {
                 Intent toExecuteIntent = new Intent(PackageListenerService.this, AntivirusActivity.class);
-
+                Intent intentTest = getPackageManager().getLaunchIntentForPackage(i.getData().getSchemeSpecificPart());
                 String packageName = i.getData().getSchemeSpecificPart();
 
                 String appName = ActivityTools.getAppNameFromPackage(PackageListenerService.this, packageName);
@@ -55,10 +55,10 @@ public class PackageListenerService extends Service
 
                 if (_checkIfPackageInWhiteList(packageName, _whiteListPackages))
                     NotificationTools.notificatePush(PackageListenerService.this, 0xFF00, R.drawable.ic_launcher,
-                            "Ticker text", appName, "App " + appName + " is a trusted application verified by antivirus.", toExecuteIntent);
+                            appName + " is a trusted application.", appName, "App " + appName + " is a trusted application verified by antivirus.", intentTest);
                 else
                     NotificationTools.notificatePush(PackageListenerService.this, 0xFF00, R.drawable.ic_launcher,
-                            "Ticker text", appName, "App installed: Click to scan for menaces", toExecuteIntent);
+                            appName + " needs to be scanned.", appName, "App installed: Click to scan for menaces", toExecuteIntent);
             }
 
             public void OnPackageRemoved(Intent intent)

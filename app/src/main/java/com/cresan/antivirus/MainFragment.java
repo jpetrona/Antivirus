@@ -9,14 +9,18 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -26,6 +30,7 @@ import com.tech.applications.coretools.ActivityTools;
 import com.tech.applications.coretools.BatteryData;
 import com.tech.applications.coretools.BatteryTools;
 import com.tech.applications.coretools.NetworkTools;
+import com.tech.applications.coretools.StringTools;
 import com.tech.applications.coretools.time.PausableCountDownTimer;
 
 import java.text.DecimalFormat;
@@ -48,6 +53,7 @@ public class MainFragment extends Fragment
     //AppData getAppData() { return getMainActivity().getAppData();}
 
     Button _runAntivirusNow=null;
+    Button _resolvePersistProblems = null;
 
     //Scrollable data chunk data
     ImageView _progressPanelIconImageView;
@@ -56,8 +62,12 @@ public class MainFragment extends Fragment
     RelativeLayout _progressContainer;
     RelativeLayout _buttonContainer;
     RelativeLayout _superContainer;
-
+    ImageView _riskIcon;
+    LinearLayout _backgroundRisk;
+    TextView _menacesCounterText;
+    private boolean _firstUse = false;
     final int kProgressBarRefressTime=50;
+
 
     PausableCountDownTimer _cdTimer =null;
 
@@ -70,7 +80,7 @@ public class MainFragment extends Fragment
         View rootView = inflater.inflate(R.layout.main_fragment, container, false);
 
         _setupFragment(rootView);
-
+        controlInitialStates();
         return rootView;
     }
 
@@ -85,7 +95,25 @@ public class MainFragment extends Fragment
         _buttonContainer=(RelativeLayout)root.findViewById(R.id.buttonLayout);
         _progressContainer=(RelativeLayout)root.findViewById(R.id.progressPanel);
         _superContainer=(RelativeLayout)root.findViewById(R.id.superContainer);
+        _riskIcon = (ImageView) root.findViewById(R.id.iconRisk);
+        _backgroundRisk = (LinearLayout) root.findViewById(R.id.BackgroundColorRisk);
+        _resolvePersistProblems = (Button) root.findViewById(R.id.button_resolve_problems);
+        _resolvePersistProblems.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                if (_foundMenaces !=null && _foundMenaces.size() !=0)
+                {
 
+                    showResultFragment(new ArrayList<BadPackageResultData>(_foundMenaces));
+
+                }
+            }
+        });
+
+
+        _menacesCounterText = (TextView)root.findViewById(R.id.menacesCounter);
         _runAntivirusNow=(Button)root.findViewById(R.id.runAntivirusNow);
         _runAntivirusNow.setOnClickListener(new View.OnClickListener()
         {
@@ -120,15 +148,15 @@ public class MainFragment extends Fragment
                 ContextCompat.getColor(getMainActivity(), R.color.wave_widget_front_wave));
         waveView.startAnimation(1000);
         waveView.setText1(""+bd.getLevelPercent()+"%");*/
-        TextView tv = (TextView) root.findViewById(R.id.voltageValue);
-        DecimalFormat df = new DecimalFormat("0.00");
-        df.setMaximumFractionDigits(2);
+       // TextView tv = (TextView) root.findViewById(R.id.voltageValue);
+        //DecimalFormat df = new DecimalFormat("0.00");
+        /*df.setMaximumFractionDigits(2);
         tv.setText(df.format(bd.getVoltage()) + " v");
         tv = (TextView) root.findViewById(R.id.temperatureValue);
         df = new DecimalFormat("0.0");
         df.setMaximumFractionDigits(1);
         tv.setText(df.format(bd.getTemperature()) + "º");
-
+*/
         _resetFormLayout();
     }
 
@@ -144,6 +172,7 @@ public class MainFragment extends Fragment
 
     protected void _scanFileSystem()
     {
+        _firstUse = true;
         //Scan installed packages
         List<PackageInfo> allPackages= ActivityTools.getApps(getMainActivity(), PackageManager.GET_ACTIVITIES | PackageManager.GET_PERMISSIONS);
         List<PackageInfo> nonSystemAppsPackages= ActivityTools.getNonSystemApps(getMainActivity(), allPackages);
@@ -253,7 +282,17 @@ public class MainFragment extends Fragment
             @Override
             public void onFinished()
             {
-                showResultFragment(new ArrayList<BadPackageResultData>(tempBadResults));
+
+
+                if(tempBadResults.size() !=0)
+                {
+                    showResultFragment(new ArrayList<BadPackageResultData>(tempBadResults));
+                }else
+                {
+                    //##################################Falta volver a sacar el boton de scan, cambiar el tipo de lista por la del servicio y estaria listo ###########################
+                    activateProtectedState();
+
+                }
             }
         };
 
@@ -601,7 +640,7 @@ public class MainFragment extends Fragment
         {
             packInfo=packages.get(i);
 
-            if(packageNameBelongsToPackageMask(packInfo.packageName,filter))
+            if(packageNameBelongsToPackageMask(packInfo.packageName, filter))
             {
                 result.add(new GoodPackageResultData(packInfo));
 
@@ -673,4 +712,74 @@ public class MainFragment extends Fragment
         if(_cdTimer!=null)
             _cdTimer.start();
     }
+
+
+    void controlInitialStates()
+    {
+
+        if(_foundMenaces == null && !_firstUse)
+        {
+
+            _riskIcon.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.shield_medium_risk_icon));
+            _menacesCounterText.setText("Ejecutar primer analisis para comprobar amenazas");
+            _backgroundRisk.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.MediumRiskColor));
+           _resolvePersistProblems.setVisibility(View.GONE);
+
+        }else if(_foundMenaces.size() == 0 && _firstUse)
+        {
+
+            activateProtectedState();
+
+        }else if(_foundMenaces.size() !=0) // hay que meter comprobacion de peligrosidad por permiso de este estilo: else if(_foundMenaces.size() !=0 && existDangerous) entonces sacar riesgo alto
+        {
+
+            activateHighRiskState(_foundMenaces.size());
+
+
+        }// hay que meter comprobacion de peligrosidad por permiso de este estilo: else if(_foundMenaces.size() !=0 && !existDangerous) entonces sacar riesgo medio
+
+    }
+
+
+    void activateProtectedState()
+    {
+
+
+        _riskIcon.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.shield_protected_icon));
+        _backgroundRisk.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.ProtectedRiskColor));
+        _menacesCounterText.setText("Estas protegido");
+       _resolvePersistProblems.setVisibility(View.GONE);
+
+
+    }
+
+    void activateMediumRiskState(int menaces)
+    {
+
+        _riskIcon.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.shield_medium_risk_icon));
+        _backgroundRisk.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.MediumRiskColor));
+        _updateFoundThreatsText(_menacesCounterText, menaces);
+       _resolvePersistProblems.setVisibility(View.VISIBLE);
+
+    }
+
+    void activateHighRiskState(int menaces)
+    {
+
+        _riskIcon.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.shield_high_risk_icon));
+        _backgroundRisk.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.HighRiskColor));
+        _updateFoundThreatsText(_menacesCounterText, menaces);
+       _resolvePersistProblems.setVisibility(View.VISIBLE);
+    }
+
+
+    void _updateFoundThreatsText(TextView textView, int appCount)
+    {
+        String finalStr=getString(R.string.menaces_unresolved);
+        finalStr= StringTools.fillParams(finalStr, "#", Integer.toString(appCount));
+        textView.setText(finalStr);
+    }
+
+
+
 }

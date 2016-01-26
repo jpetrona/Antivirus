@@ -14,4 +14,5 @@
     <string name="yes">si</string>
     <string name="uninstall">Desinstalar</string>
     <string name="trust">Confiar</string>
+    <string name="menaces_unresolved">#1 Amenazas</string>
 </resources>
