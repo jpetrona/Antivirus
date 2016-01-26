@@ -1,5 +1,7 @@
 package com.cresan.antivirus;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -85,12 +87,37 @@ public class InfoAppFragment extends Fragment
             @Override
             public void onClick(View v)
             {
-                UserWhiteList userWhiteList=getMainActivity().getUserWhiteList();
 
-                PackageData pdo=new PackageData();
-                pdo.setPackageName(_suspiciousApp.getPackageName());
-                userWhiteList.addPackage(pdo);
-                userWhiteList.writeData();
+                new AlertDialog.Builder(getContext())
+                        .setTitle(getString(R.string.warning))
+                        .setMessage(getString(R.string.dialog_trust_app))
+                        .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which)
+                            {
+                                UserWhiteList userWhiteList=getMainActivity().getUserWhiteList();
+                                PackageData pdo=new PackageData();
+                                pdo.setPackageName(_suspiciousApp.getPackageName());
+                                userWhiteList.addPackage(pdo);
+                                userWhiteList.writeData();
+                                if(_appEventListener!=null && _suspiciousApp !=null)
+                                {
+                                    _appEventListener.onAppUninstalled(_suspiciousApp);
+                                }
+                                getMainActivity().goBack();
+
+                            }
+                        }).setNegativeButton("no", new DialogInterface.OnClickListener()
+                {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+
+                    }
+                }).show();
+
             }
         });
 

@@ -72,16 +72,18 @@ public class MonitorShieldService extends Service
             {
                 Intent toExecuteIntent = new Intent(MonitorShieldService.this, AntivirusActivity.class);
 
+                Intent openAppIntent = getPackageManager().getLaunchIntentForPackage(i.getData().getSchemeSpecificPart());
+
                 String packageName = i.getData().getSchemeSpecificPart();
 
                 String appName = ActivityTools.getAppNameFromPackage(MonitorShieldService.this, packageName);
 
                 if (_checkIfPackageInWhiteList(packageName, _whiteListPackages))
                     NotificationTools.notificatePush(MonitorShieldService.this, 0xFF00, R.drawable.ic_launcher,
-                            "Ticker text", appName, "App " + appName + " is a trusted application verified by antivirus.", toExecuteIntent);
+                            appName + " is a trusted application.", appName, "App " + appName + " is a trusted application verified by antivirus.", openAppIntent);
                 else
                     NotificationTools.notificatePush(MonitorShieldService.this, 0xFF00, R.drawable.ic_launcher,
-                            "Ticker text", appName, "App installed: Click to scan for menaces", toExecuteIntent);
+                            appName + " needs to be scanned.", appName, "App installed: Click to scan for menaces", toExecuteIntent);
             }
 
             public void OnPackageRemoved(Intent intent)

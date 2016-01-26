@@ -29,82 +29,53 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="0.7"
+                android:layout_weight="0.80"
                 android:layout_gravity="center"
-                android:layout_marginTop="32dp"
-                android:background="#FF0000"/>
+                android:background="@color/HighRiskColor"
+                android:id="@+id/BackgroundColorRisk">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.1"
-                android:gravity="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:text="Charging"
-                android:textColor="@color/info_icon_bottom_text"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.2"
-                android:orientation="horizontal">
-                <RelativeLayout
+                <LinearLayout
+                    android:orientation="vertical"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:gravity="center_horizontal">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/iconRisk"
+                        android:src="@drawable/shield_high_risk_icon"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_weight="1"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="20dp"/>
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:text="22º"
-                        android:textColor="@color/info_icon_top_text"
-                        android:id="@+id/temperatureValue"
-                        android:layout_centerInParent="true"/>
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:text="2 PROBLEMAS"
+                        android:id="@+id/menacesCounter"
+                        android:textColor="#ffffff"
+                        android:layout_alignParentBottom="false"
+                        android:layout_centerHorizontal="true"
+                        android:gravity="center_horizontal"
+                        android:layout_marginBottom="10dp"/>
 
-                    <TextView
-                        android:layout_width="match_parent"
+                    <Button
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                        android:text="@string/temperature"
-                        android:textColor="@color/info_icon_bottom_text"
-                        android:layout_below="@id/temperatureValue"
-                        android:layout_marginTop="10dp"/>
-
-                </RelativeLayout>
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center|bottom"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:text="1.7v"
-                        android:layout_centerInParent="true"
-                        android:id="@+id/voltageValue"/>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                        android:text="@string/voltage"
-                        android:textColor="@color/info_icon_bottom_text"
-                        android:layout_below="@+id/voltageValue"
-                        android:layout_marginTop="10dp"
-                        />
-
-                </RelativeLayout>
-
+                        android:text="@string/resolve_problems"
+                        android:id="@+id/button_resolve_problems"
+                        android:background="@drawable/resolve_button_selector"
+                        android:textColor="@color/SecondaryTextColor"
+                        android:layout_gravity="center"
+                        android:focusable="false"
+                        android:layout_marginBottom="10dp"/>
+                </LinearLayout>
             </LinearLayout>
-
 
 
         </LinearLayout>
@@ -115,7 +86,7 @@
             android:id="@+id/superContainer"
             android:layout_height="0dp"
             android:layout_weight="0.4"
-            android:background="@color/SecondaryColor">
+            android:background="#4B4F5E">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -124,9 +95,9 @@
 
                 <Button
                     android:id="@+id/runAntivirusNow"
-                    android:layout_width="wrap_content"
+                    android:layout_width="250dp"
                     android:layout_height="wrap_content"
-                    android:text="Run"
+                    android:text="Scan"
                     android:textStyle="bold"
                     android:typeface="monospace"
                     android:layout_centerInParent="true"
@@ -148,7 +119,7 @@
                     android:gravity="center"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:text="Trying root privileges"
-                    android:textColor="@color/info_icon_bottom_text"/>
+                    android:textColor="@color/SecondaryTextColor"/>
 
                 <ImageView
                     android:id="@+id/progressPanelIconImageView"
@@ -164,7 +135,7 @@
                     android:layout_height="5dp"
                     android:layout_below="@id/progressPanelTextView"
                     android:layout_margin="32dp"
-                    app:mpb_color="@color/PrimaryColor"
+                    app:mpb_color="@color/ProtectedRiskColor"
                     app:mpb_default_color="#1AFFFFFF"
                     app:mpb_percent="0.5"
                     />

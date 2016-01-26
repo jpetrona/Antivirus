@@ -9,13 +9,18 @@
 \n\nWe would be really happy if you could rate us 5 stars and add a nice comment at google play.
 \n\nWould you like to do it now?</string>
     <string name="threats_found">#1 Threats found</string>
+    <string name="menaces_unresolved">#1 Menaces</string>
     <string name="title_ads">Ads Displayed</string>
     <string name="ads_message">Displays ads while in use, including banners, pop-ups, and other graphics. The ads are common in free apps.</string>
     <string name="title_permission">Personal data shared</string>
     <string name="title_installedGPlay">Unknown sources</string>
     <string name="installedGPlay_message">Installing apps from unknown sources can lead to malware. Go to Settings>Security and then disable Unknown Sources.</string>
     <string name="read_phone_message">This app collects and sends SIM card details, including address book, mobile PIN, and call history. This can add charges to data plan and is a HIGH privacy risk.</string>
+    <string name="call_phone_message">This app can initiate a phone call without going through the Dialer user interface for the user to confirm the call. This can add charges to data plan and is a HIGH privacy risk.</string>
+    <string name="outgoing_phone_message">This app can see the number being dialed during an outgoing call with the option to redirect the call to a different number or abort the call altogether. This can add charges to data plan and is a HIGH privacy risk.</string>
     <string name="send_sms_message">This application can send SMS. This can add charges to data plan and is a HIGH privacy risk.</string>
+    <string name="record_audio_message">This application can record audio and is a risk for your privacy.</string>
+    <string name="camera_message">This application can access the camera device and is a risk for your privacy.</string>
     <string name="write_sms_message">This application can write SMS. This can add charges to data plan and is a MEDIUM privacy risk.</string>
     <string name="access_fine_message">This application can access its exact position and is a risk for your privacy.</string>
     <string name="read_sms_message">This application can read your private SMS and is a risk for your privacy.</string>
@@ -28,4 +33,5 @@
     <string name="uninstall">Uninstall</string>
     <string name="trust">Trust</string>
     <string name="resolve_problems">Resolve problems</string>
+    <string name="dialog_trust_app">You want to trust this application?</string>
 </resources>

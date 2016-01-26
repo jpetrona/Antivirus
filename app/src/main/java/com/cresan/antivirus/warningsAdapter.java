@@ -150,6 +150,22 @@ public class WarningsAdapter extends ArrayAdapter<WarningData>
         {
 
             message = resources.getString(R.string.write_history_message);
+        }else if (permissionName.contains("CALL_PHONE"))
+        {
+
+            message = resources.getString(R.string.call_phone_message);
+        }else if (permissionName.contains("PROCESS_OUTGOING_CALLS"))
+        {
+
+            message = resources.getString(R.string.outgoing_phone_message);
+        }else if (permissionName.contains("RECORD_AUDIO"))
+        {
+
+            message = resources.getString(R.string.record_audio_message);
+        }else if (permissionName.contains("CAMERA"))
+        {
+
+            message = resources.getString(R.string.camera_message);
         }
 
         return message;
@@ -198,6 +214,22 @@ public class WarningsAdapter extends ArrayAdapter<WarningData>
         {
 
             icon = R.drawable.history_icon;
+        }else if (permissionName.contains("CALL_PHONE"))
+        {
+
+            icon = R.drawable.phone_icon;
+        }else if (permissionName.contains("PROCESS_OUTGOING_CALLS"))
+        {
+
+            icon = R.drawable.phone_icon;
+        }else if (permissionName.contains("RECORD_AUDIO"))
+        {
+
+            icon = R.drawable.record_audio_icon;
+        }else if (permissionName.contains("CAMERA"))
+        {
+
+            icon = R.drawable.camera_icon;
         }
 
         return icon;

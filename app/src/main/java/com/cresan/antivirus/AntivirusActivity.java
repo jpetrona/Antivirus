@@ -1,5 +1,6 @@
 package com.cresan.antivirus;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -20,9 +21,14 @@ import android.support.v4.app.FragmentTransaction;
 
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 
+import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 
 
@@ -180,9 +186,9 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
     {
 		//Log.i(_logTag, "============= YEAH ACTIVITY RECREATED ============");
 		super.onCreate(paramBundle);
-        
+        makeActionOverflowMenuShown();
 	    setContentView(R.layout.activity_main);
-
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		//Start service
 		if(!ServiceTools.isServiceRunning(this,MonitorShieldService.class))
 		{
@@ -426,6 +432,54 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
             }).show();
 
 
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_layout, menu);
+        return true;
+
+    }
+
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item)
+    {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        switch (item.getItemId()) {
+            case R.id.ignoredListButton:
+
+                Log.d("ign","IGNORED BUTTON MENU");
+                return true;
+            case R.id.RateUs:
+                Log.d("ign","RATE US BUTTON MENU");
+                return true;
+            case R.id.information:
+                Log.d("ign","INFORMATION BUTTON MENU");
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+
+
+    }
+
+    
+
+    private void makeActionOverflowMenuShown() {
+        //devices with hardware menu button (e.g. Samsung Note) don't show action overflow menu
+        try {
+            ViewConfiguration config = ViewConfiguration.get(this);
+            Field menuKeyField = ViewConfiguration.class.getDeclaredField("sHasPermanentMenuKey");
+            if (menuKeyField != null) {
+                menuKeyField.setAccessible(true);
+                menuKeyField.setBoolean(config, false);
+            }
+        } catch (Exception e) {
+            Log.d("TAG", e.getLocalizedMessage());
         }
     }
 }

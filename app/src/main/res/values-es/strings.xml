@@ -10,4 +10,9 @@
  \n\nQuieres hacerlo ahora?</string>
     <string name="threats_found">#1 Amenazas detectadas</string>
     <string name="resolve_problems">Resolver problemas</string>
+    <string name="dialog_trust_app">¿Desea confiar en esta aplicación?</string>
+    <string name="yes">si</string>
+    <string name="uninstall">Desinstalar</string>
+    <string name="trust">Confiar</string>
+    <string name="menaces_unresolved">#1 Amenazas</string>
 </resources>
