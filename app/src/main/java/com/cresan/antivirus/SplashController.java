@@ -21,6 +21,8 @@ public class SplashController extends Activity
 
         setContentView(R.layout.splash);
 
+        final AppData appData = AppData.getInstance(this);
+
         Thread timerThread = new Thread(){
             public void run(){
                 try{
@@ -29,7 +31,7 @@ public class SplashController extends Activity
                     e.printStackTrace();
                 }finally{
 
-                    if(EulaController.isEulaAccepted)
+                    if(appData.getEulaAccepted())
                     {
                         Intent intent = new Intent(SplashController.this,AntivirusActivity.class);
                         startActivity(intent);

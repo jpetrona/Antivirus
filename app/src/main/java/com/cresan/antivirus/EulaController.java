@@ -14,7 +14,6 @@ import com.cresan.androidprotector.R;
 public class EulaController extends Activity
 {
 
-    public static boolean isEulaAccepted = false;
 
 
 
@@ -31,7 +30,9 @@ public class EulaController extends Activity
             @Override
             public void onClick(View v)
             {
-                isEulaAccepted = true;
+                AppData appData = AppData.getInstance(EulaController.this);
+                appData.setEulaAccepted(true);
+                appData.serialize(EulaController.this);
                 Intent intent = new Intent(EulaController.this,AntivirusActivity.class);
                 startActivity(intent);
             }
