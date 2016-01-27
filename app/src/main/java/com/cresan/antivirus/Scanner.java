@@ -140,15 +140,19 @@ class Scanner
     {
         BadPackageData bprd=null;
 
-        //Check against whitelist
         for(PackageInfo pi : packagesToSearch)
         {
+            //Try to update a bad package data if found
             bprd=getBadPackageResultByPackageName(setToUpdate,pi.packageName);
+
             if(bprd==null)
                 bprd=new BadPackageData(pi.packageName);
 
             scanForSuspiciousPermissionsApp(pi, bprd, suspiciousPermissions);
-            setToUpdate.add(bprd);
+
+            //This is only a new menace if we got some permission data
+            if(bprd.getPermissionData().size()>0)
+                setToUpdate.add(bprd);
         }
 
         return setToUpdate;

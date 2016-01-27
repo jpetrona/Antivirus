@@ -89,7 +89,7 @@ public class BadPackageDataSet
         _set.clear();
     }
 
-
+    public int getMenaceCount() {return _set.size(); }
     //Load WhiteList
     public void loadData()
     {

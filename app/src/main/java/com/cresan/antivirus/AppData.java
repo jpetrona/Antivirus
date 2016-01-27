@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 
+import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -22,6 +23,8 @@ public class AppData implements Serializable
 {
     transient final static String filePath="state.data";
 
+	transient static AppData _instance=null;
+
     private boolean _voted;
 	public boolean getVoted() { return _voted; }
 	public void setVoted(boolean voted) { _voted=voted; }
@@ -33,6 +36,27 @@ public class AppData implements Serializable
 	private boolean _eulaAccepted=false;
 	public boolean getEulaAccepted() { return _eulaAccepted;}
 	public void setEulaAccepted(boolean eulaAccepted) { _eulaAccepted=eulaAccepted; }
+
+	static public boolean isAppDataInited() {return _instance!=null;}
+	static public  synchronized AppData getInstance(Context context)
+	{
+		if(_instance!=null)
+		{
+			Log.d("AppData", "OOOOOOOOOOOOOOOOOOO> " + "AppData:getInstance: AppData instance existe devolviendo anterior referencia");
+			return _instance;
+		}
+		else
+		{
+			Log.d("AppData", "OOOOOOOOOOOOOOOOOOO> " + "AppData:getInstance: AppData instance NO EXISTE devolviendo Nueva referencia");
+
+			_instance=SerializationTools.deserializeFromDataFolder(context,filePath);
+
+			if(_instance==null)
+				_instance = new AppData();
+
+			return _instance;
+		}
+	}
 
     /*List<String> _pendingMenaces=null;
     public List<String> getPendingMenaces() { return _pendingMenaces; }
@@ -51,7 +75,7 @@ public class AppData implements Serializable
 	}
 	
 	
-	public void serialize(Context ctx)
+	public synchronized  void serialize(Context ctx)
 	{
 		try
 		{

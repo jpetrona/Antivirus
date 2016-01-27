@@ -40,7 +40,6 @@ import com.tech.applications.advertising.adnetworks.AdvertListener;
 import com.tech.applications.coretools.ActivityTools;
 import com.tech.applications.coretools.AdvertisingTools;
 import com.tech.applications.coretools.NetworkTools;
-import com.tech.applications.coretools.SerializationTools;
 
 import com.cresan.androidprotector.R;
 import com.tech.applications.coretools.ServiceTools;
@@ -142,7 +141,7 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
             Log.d(_logTag, "OOOOOOOOOOOOOOOOOO> onServiceConnected called");
 
             MonitorShieldService.MonitorShieldLocalBinder binder = (MonitorShieldService.MonitorShieldLocalBinder) service;
-            _serviceInstance = binder.getServiceInstance(); //Get instance of your service!
+            _serviceInstance = binder.getServiceInstance(); //Get getInstance of your service!
             _serviceInstance.registerClient(AntivirusActivity.this); //Activity register in the service as client for callabcks!
 
             //Now that service is active run fragment to init it
@@ -181,8 +180,11 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
             _serviceInstance.scanFileSystem();
     }
 
-	AppData _data=null;
-    public AppData getAppData() {return _data;}
+    public AppData getAppData()
+    {
+        Log.d(_logTag,"OOOOOOOOOOOOOOOOOOO> "+"AntivirusActivity:getAppData: Usando app data");
+        return AppData.getInstance(this);
+    }
 	
 	public void onCreate(Bundle paramBundle)
     {
@@ -240,9 +242,6 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
 
         AdRequest adRequest = builder.build();
         adView.loadAd(adRequest);
-
-
-	    _data=_deserializeAppData();
     }
 
     @Override
@@ -276,7 +275,7 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
 
 	}
 
-	protected AppData _deserializeAppData()
+	/*protected AppData _deserializeAppData()
 	{
 		AppData data=SerializationTools.deserializeFromDataFolder(this,_data.filePath);
 		
@@ -284,7 +283,7 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
 			data=new AppData();
 		
 		return data;
-	}
+	}*/
 
     public void showNoInetDialog()
     {
@@ -347,7 +346,8 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
 
 	void _showVoteUs()
 	{
-		if (!_data.getVoted())
+		final AppData appData=AppData.getInstance(this);
+        if (appData.getVoted())
 		{
 			AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
 
@@ -366,8 +366,8 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
 							final String appName = ActivityTools.getPackageName(AntivirusActivity.this);
 							AdvertisingTools.openMarketURL(AntivirusActivity.this, "market://details?id=" + appName, "http://play.google.com/store/apps/details?id=" + appName);
 
-							_data.setVoted(true);
-							_data.serialize(AntivirusActivity.this);
+                            appData.setVoted(true);
+                            appData.serialize(AntivirusActivity.this);
 
 							//_showDialogCalibrationFinished(_isRoot);
 						}
