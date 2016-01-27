@@ -3,7 +3,6 @@ package com.cresan.antivirus;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.view.View;
 import android.widget.Button;
 
@@ -11,7 +10,7 @@ import com.cresan.androidprotector.R;
 /**
  * Created by Magic Frame on 27/01/2016.
  */
-public class EulaController extends Activity
+public class EulaActivity extends Activity
 {
 
 
@@ -30,10 +29,10 @@ public class EulaController extends Activity
             @Override
             public void onClick(View v)
             {
-                AppData appData = AppData.getInstance(EulaController.this);
+                AppData appData = AppData.getInstance(EulaActivity.this);
                 appData.setEulaAccepted(true);
-                appData.serialize(EulaController.this);
-                Intent intent = new Intent(EulaController.this,AntivirusActivity.class);
+                appData.serialize(EulaActivity.this);
+                Intent intent = new Intent(EulaActivity.this,AntivirusActivity.class);
                 startActivity(intent);
             }
         });

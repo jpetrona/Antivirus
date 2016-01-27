@@ -3,14 +3,13 @@ package com.cresan.antivirus;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 
 import com.cresan.androidprotector.R;
 
 /**
  * Created by Magic Frame on 27/01/2016.
  */
-public class SplashController extends Activity
+public class SplashActivity extends Activity
 {
 
 
@@ -33,11 +32,11 @@ public class SplashController extends Activity
 
                     if(appData.getEulaAccepted())
                     {
-                        Intent intent = new Intent(SplashController.this,AntivirusActivity.class);
+                        Intent intent = new Intent(SplashActivity.this,AntivirusActivity.class);
                         startActivity(intent);
                     }else
                     {
-                        Intent intent = new Intent(SplashController.this,EulaController.class);
+                        Intent intent = new Intent(SplashActivity.this,EulaActivity.class);
                         startActivity(intent);
                     }
 
