@@ -46,16 +46,42 @@ import com.tech.applications.coretools.ServiceTools;
 
 public class AntivirusActivity extends AdvertFragmentActivity implements MonitorShieldService.IClientInterface
 {
-/*    Set<PackageData> _whiteListPackages;
-    public Set<PackageData> getWhiteListPackages() { return _whiteListPackages; }
-    Set<PackageData> _blackListPackages;
-    public Set<PackageData> getBlackListPackages(){return _blackListPackages;}
-    Set<PackageData> _blackListActivities;
-    public Set<PackageData> getBlackListActivities() { return _blackListActivities;}
-	Set<PermissionData> _suspiciousPermissions;
-	public Set<PermissionData> getSuspiciousPermissions() { return _suspiciousPermissions;}
-    PackageDataSet _userWhiteList=null;
-    public PackageDataSet getUserWhiteList() { return _userWhiteList;}*/
+    public static final String kMainFragmentTag="MainFragmentTag";
+    public static final String kResultFragmentTag="ResultFragmentTag";
+    public static final String kInfoFragmnetTag="InfoFragmentTag";
+
+    public MainFragment getMainFragment()
+    {
+        FragmentManager fm= getSupportFragmentManager();
+        MainFragment f= (MainFragment) fm.findFragmentByTag(kMainFragmentTag);
+
+        if(f==null)
+            return new MainFragment();
+        else
+            return f;
+    }
+
+    public ResultsFragment getResultFragment()
+    {
+        FragmentManager fm= getSupportFragmentManager();
+        ResultsFragment f= (ResultsFragment) fm.findFragmentByTag(kResultFragmentTag);
+
+        if(f==null)
+            return new ResultsFragment();
+        else
+            return f;
+    }
+
+    public InfoAppFragment getInfoFragment()
+    {
+        FragmentManager fm= getSupportFragmentManager();
+        InfoAppFragment f= (InfoAppFragment) fm.findFragmentByTag(kInfoFragmnetTag);
+
+        if(f==null)
+            return new InfoAppFragment();
+        else
+            return f;
+    }
 
     public UserWhiteList getUserWhiteList()
     {
@@ -70,6 +96,8 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
 	String _logTag=AntivirusActivity.class.getSimpleName();
 
     MonitorShieldService _serviceInstance=null;
+
+
 
 
 	AdvertListener _inMiddleAdListener=new AdvertListener() 
@@ -145,7 +173,7 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
             _serviceInstance.registerClient(AntivirusActivity.this); //Activity register in the service as client for callabcks!
 
             //Now that service is active run fragment to init it
-            slideInFragment(new MainFragment());
+            slideInFragment(AntivirusActivity.kMainFragmentTag);
         }
 
         @Override
@@ -391,18 +419,36 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
 
 	}
 
-	public void slideInFragment(Fragment newFragment)
+	public Fragment slideInFragment(String fragmentId)
 	{
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,R.anim.slide_in_left,R.anim.slide_out_right);
 
+		Fragment f=null;
+        switch(fragmentId)
+        {
+            case kMainFragmentTag:
+                f=getMainFragment();
+                break;
+            case kInfoFragmnetTag:
+                f=getInfoFragment();
+                break;
+            case kResultFragmentTag:
+                f=getResultFragment();
+                break;
+            default:
+        }
+
+
 		// Replace whatever is in the fragment_container view with this fragment,
 		// and add the transaction to the back stack if needed
-		transaction.replace(android.R.id.content, newFragment);
+		transaction.replace(android.R.id.content, f, fragmentId);
 		transaction.addToBackStack(null);
 
 		// Commit the transaction
 		transaction.commit();
+
+        return f;
 	}
 
     public void goBack()

@@ -123,11 +123,10 @@ public class ResultsAdapter extends ArrayAdapter<BadPackageData>
 
     }
 
-
     void showInfoAppFragment(BadPackageData suspiciousAppList)
     {
         // Cuando pulses el boton de info coger su posicion y pasarselo por la variable pos
-        InfoAppFragment newFragment = new InfoAppFragment();
+        InfoAppFragment newFragment =(InfoAppFragment) antivirusActivity.slideInFragment(AntivirusActivity.kInfoFragmnetTag);
         newFragment.setAppEventListener(new IOnAppEvent()
         {
             @Override
@@ -140,7 +139,7 @@ public class ResultsAdapter extends ArrayAdapter<BadPackageData>
             }
         });
         newFragment.setData(suspiciousAppList);
-        antivirusActivity.slideInFragment(newFragment);
+
 
     }
 

@@ -678,11 +678,8 @@ public class MainFragment extends Fragment
 
     void showResultFragment(List<BadPackageData> suspiciousApps)
     {
-
-        ResultsFragment newFragment = new ResultsFragment();
+        ResultsFragment newFragment= (ResultsFragment) getMainActivity().slideInFragment(AntivirusActivity.kResultFragmentTag);
         newFragment.setData(suspiciousApps);
-        getMainActivity().slideInFragment(newFragment);
-
     }
 
     @Override
