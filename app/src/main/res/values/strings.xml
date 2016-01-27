@@ -34,4 +34,6 @@
     <string name="trust">Trust</string>
     <string name="resolve_problems">Resolve problems</string>
     <string name="dialog_trust_app">You want to trust this application?</string>
+    <string name="accept_eula">Accept</string>
+    <string name="decline_eula">Decline</string>
 </resources>

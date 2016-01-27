@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+    android:background="#4B4F5E"
+              android:gravity="center_vertical|center_horizontal">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Texto eula"
+        android:id="@+id/textView2"
+        android:layout_marginBottom="100dp"
+        android:textColor="#ffffff"/>
+
+    <Button
+        android:layout_width="227dp"
+        android:layout_height="wrap_content"
+        android:text="@string/accept_eula"
+        android:id="@+id/accept_eula_button"
+        android:background="@drawable/calibrate_button_selector"
+        android:textColor="#ffffff"/>
+
+    <Button
+        android:layout_width="227dp"
+        android:layout_height="wrap_content"
+        android:text="@string/decline_eula"
+        android:id="@+id/decline_eula_button"
+        android:background="@color/HighRiskColor"
+        android:textColor="#ffffff"
+        android:layout_marginTop="20dp"/>
+</LinearLayout>
