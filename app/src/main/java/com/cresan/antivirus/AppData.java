@@ -26,16 +26,16 @@ public class AppData implements Serializable
 	public boolean getVoted() { return _voted; }
 	public void setVoted(boolean voted) { _voted=voted; }
 
-	private boolean _firstScan=false;
-	public boolean getFirstScan() { return _firstScan;}
-	public void setFirstScan(boolean firstScan) { _firstScan=firstScan; }
+	private boolean _firstScanDone=false;
+	public boolean getFirstScanDone() { return _firstScanDone;}
+	public void setFirstScanDone(boolean firstScanDone) { _firstScanDone=firstScanDone; }
 
     /*List<String> _pendingMenaces=null;
     public List<String> getPendingMenaces() { return _pendingMenaces; }
-    public void setPendingMenaces(Set<BadPackageResultData> bprdl)
+    public void setPendingMenaces(Set<BadPackageData> bprdl)
 	{
 		_pendingMenaces=new ArrayList<String>();
-		for(BadPackageResultData bprd : bprdl)
+		for(BadPackageData bprd : bprdl)
 		{
 			_pendingMenaces.add(bprd.getPackageName());
 		}

@@ -5,12 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.cresan.androidprotector.R;
@@ -23,25 +21,25 @@ import java.util.List;
  * Created by Magic Frame on 13/01/2016.
  */
 
-public class ResultsAdapter extends ArrayAdapter<BadPackageResultData>
+public class ResultsAdapter extends ArrayAdapter<BadPackageData>
 {
 
     private final Context context;
     private AntivirusActivity antivirusActivity;
     //private final String[] _values;
-    private List<BadPackageResultData> _values =null;
+    private List<BadPackageData> _values =null;
 
     private IResultItemSelecteStateChanged _onItemChangedStateListener =null;
 
     public void setResultItemSelectedStateChangedListener(IResultItemSelecteStateChanged listemer) { _onItemChangedStateListener =listemer; }
 
-    public void removeApps(List<BadPackageResultData> appsToRemove)
+    public void removeApps(List<BadPackageData> appsToRemove)
     {
         _values.removeAll(appsToRemove);
         notifyDataSetChanged();
     }
 
-    public ResultsAdapter(Context context, List<BadPackageResultData> values, AntivirusActivity antivirusActivity)
+    public ResultsAdapter(Context context, List<BadPackageData> values, AntivirusActivity antivirusActivity)
     {
 
         super(context, R.layout.list_apps,values);
@@ -68,7 +66,7 @@ public class ResultsAdapter extends ArrayAdapter<BadPackageResultData>
             rowView = convertView;
 
         }
-        final BadPackageResultData obj = _values.get(position);
+        final BadPackageData obj = _values.get(position);
         TextView textView = (TextView) rowView.findViewById(R.id.Titlelabel);
         ImageView imageView = (ImageView) rowView.findViewById(R.id.logo);
         CheckBox checkBox = (CheckBox) rowView.findViewById(R.id.checkBox);
@@ -126,14 +124,14 @@ public class ResultsAdapter extends ArrayAdapter<BadPackageResultData>
     }
 
 
-    void showInfoAppFragment(BadPackageResultData suspiciousAppList)
+    void showInfoAppFragment(BadPackageData suspiciousAppList)
     {
         // Cuando pulses el boton de info coger su posicion y pasarselo por la variable pos
         InfoAppFragment newFragment = new InfoAppFragment();
         newFragment.setAppEventListener(new IOnAppEvent()
         {
             @Override
-            public void onAppUninstalled(BadPackageResultData uninstalledApp)
+            public void onAppUninstalled(BadPackageData uninstalledApp)
             {
                 _values.remove(uninstalledApp);
 

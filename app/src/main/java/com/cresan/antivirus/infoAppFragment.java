@@ -26,7 +26,7 @@ public class InfoAppFragment extends Fragment
 
     public static ListView _listview;
 
-    BadPackageResultData _suspiciousApp = null;
+    BadPackageData _suspiciousApp = null;
     boolean  _uninstallingPackage = false;
 
     IOnAppEvent _appEventListener = null;
@@ -44,7 +44,7 @@ public class InfoAppFragment extends Fragment
         return (AntivirusActivity) getActivity();
     }
 
-    public void setData(BadPackageResultData suspiciousAppList)
+    public void setData(BadPackageData suspiciousAppList)
     {
         _suspiciousApp = suspiciousAppList;
 

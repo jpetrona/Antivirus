@@ -64,7 +64,7 @@ public class MainFragment extends Fragment
 
     PausableCountDownTimer _cdTimer =null;
 
-    /*Set<BadPackageResultData> _foundMenaces=null;*/
+    /*Set<BadPackageData> _foundMenaces=null;*/
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -96,12 +96,12 @@ public class MainFragment extends Fragment
             @Override
             public void onClick(View v)
             {
-                Set<BadPackageResultData> foundMenaces=getMainActivity().getBadResultPackageDataFromMenaceSet();
+                Set<BadPackageData> foundMenaces=getMainActivity().getBadResultPackageDataFromMenaceSet();
 
                 if (foundMenaces !=null && foundMenaces.size() !=0)
                 {
 
-                    showResultFragment(new ArrayList<BadPackageResultData>(foundMenaces));
+                    showResultFragment(new ArrayList<BadPackageData>(foundMenaces));
 
                 }
             }
@@ -171,15 +171,15 @@ public class MainFragment extends Fragment
         getMainActivity().startMonitorScan(new MonitorShieldService.IClientInterface()
         {
             @Override
-            public void onMonitorFoundMenace(BadPackageResultData menace)
+            public void onMonitorFoundMenace(BadPackageData menace)
             {
             }
 
             @Override
-            public void onScanResult(List<PackageInfo> allPacakgesToScan, Set<BadPackageResultData> scanResult)
+            public void onScanResult(List<PackageInfo> allPacakgesToScan, Set<BadPackageData> scanResult)
             {
                 AppData appData=getMainActivity().getAppData();
-                appData.setFirstScan(true);
+                appData.setFirstScanDone(true);
                 appData.serialize(getMainActivity());
 
                 _startScanningAnimation(allPacakgesToScan, scanResult);
@@ -201,7 +201,7 @@ public class MainFragment extends Fragment
 
         //Packages with problems will be stored here
         Set<GoodPackageResultData> tempGoodResults=new HashSet<GoodPackageResultData>();
-        Set<BadPackageResultData> tempBadResults=new HashSet<BadPackageResultData>();
+        Set<BadPackageData> tempBadResults=new HashSet<BadPackageData>();
 
         _scanForWhiteListedApps(nonSystemAppsPackages, whiteListPackages, tempGoodResults);
 
@@ -220,7 +220,7 @@ public class MainFragment extends Fragment
         _scanForSuspiciousPermissionsApps(potentialBadApps, suspiciousPermissions, tempBadResults);
         _fillInstalledFromGooglePlay(potentialBadApps, tempBadResults);
 
-        for (BadPackageResultData p : tempBadResults)
+        for (BadPackageData p : tempBadResults)
         {
             Log.d(_logTag, "======PACKAGE "+p.getPackageName()+" GPlay install: "+p.getInstalledThroughGooglePlay());
             if(p.getActivityData().size()>0)
@@ -243,7 +243,7 @@ public class MainFragment extends Fragment
             Log.d(_logTag," ");
         }
 
-        showResultFragment(new ArrayList<BadPackageResultData>(tempBadResults));
+        showResultFragment(new ArrayList<BadPackageData>(tempBadResults));
 
         List<PackageInfo> _packageInfo=new ArrayList<PackageInfo>();
         _packageInfo.add(allPackages.get(0));
@@ -256,7 +256,7 @@ public class MainFragment extends Fragment
 
     }
 */
-    private void _startScanningAnimation(final List<PackageInfo> packagesToScan, final Set<BadPackageResultData> tempBadResults)
+    private void _startScanningAnimation(final List<PackageInfo> packagesToScan, final Set<BadPackageData> tempBadResults)
     {
         ObjectAnimator oa1=new ObjectAnimator();
         oa1.setDuration(500);
@@ -303,7 +303,7 @@ public class MainFragment extends Fragment
 
                 if(tempBadResults.size() !=0)
                 {
-                    showResultFragment(new ArrayList<BadPackageResultData>(tempBadResults));
+                    showResultFragment(new ArrayList<BadPackageData>(tempBadResults));
                 }else
                 {
                     //##################################Falta volver a sacar el boton de scan, cambiar el tipo de lista por la del servicio y estaria listo ###########################
@@ -455,11 +455,11 @@ public class MainFragment extends Fragment
     }
 
 /*
-    protected BadPackageResultData getBadPackageResultByPackageName(Set<BadPackageResultData> prd, String packageName)
+    protected BadPackageData getBadPackageResultByPackageName(Set<BadPackageData> prd, String packageName)
     {
-        BadPackageResultData result=null;
+        BadPackageData result=null;
 
-        for (BadPackageResultData p : prd)
+        for (BadPackageData p : prd)
         {
             if(p.getPackageName().equals(packageName))
             {
@@ -517,9 +517,9 @@ public class MainFragment extends Fragment
         return trimmedPackageList;
     }
 
-    //In setToUpdate we receive a set of BadPackageResultData ready to be update with newly detected menaces
-    protected Set<BadPackageResultData> _scanForBlackListedActivityApps(List<PackageInfo> packagesToSearch, Set<PackageData> blackListedActivityPackages,
-                                                                     Set<BadPackageResultData> setToUpdate)
+    //In setToUpdate we receive a set of BadPackageData ready to be update with newly detected menaces
+    protected Set<BadPackageData> _scanForBlackListedActivityApps(List<PackageInfo> packagesToSearch, Set<PackageData> blackListedActivityPackages,
+                                                                     Set<BadPackageData> setToUpdate)
     {
         List<ActivityInfo> subResult=new ArrayList<ActivityInfo>();
 
@@ -537,10 +537,10 @@ public class MainFragment extends Fragment
                 if(subResult.size()>0)
                 {
                     //Update or create new if it does not exist
-                    BadPackageResultData bprd=getBadPackageResultByPackageName(setToUpdate, pi.packageName);
+                    BadPackageData bprd=getBadPackageResultByPackageName(setToUpdate, pi.packageName);
                     if(bprd==null)
                     {
-                        bprd = new BadPackageResultData(pi);
+                        bprd = new BadPackageData(pi);
                         setToUpdate.add(bprd);
                     }
 
@@ -556,9 +556,9 @@ public class MainFragment extends Fragment
         return setToUpdate;
     }
 
-    //In setToUpdate we receive a set of BadPackageResultData ready to be update with newly detected menaces
-    protected Set<BadPackageResultData> _scanForSuspiciousPermissionsApps(List<PackageInfo> packagesToSearch, Set<PermissionData> suspiciousPermissions,
-                                                                        Set<BadPackageResultData> setToUpdate)
+    //In setToUpdate we receive a set of BadPackageData ready to be update with newly detected menaces
+    protected Set<BadPackageData> _scanForSuspiciousPermissionsApps(List<PackageInfo> packagesToSearch, Set<PermissionData> suspiciousPermissions,
+                                                                        Set<BadPackageData> setToUpdate)
     {
         //Check against whitelist
         for(PackageInfo pi : packagesToSearch)
@@ -568,10 +568,10 @@ public class MainFragment extends Fragment
                 if(ActivityTools.packageInfoHasPermission(pi, permData.getPermissionName()))
                 {
                     //Update or create new if it does not exist
-                    BadPackageResultData bprd=getBadPackageResultByPackageName(setToUpdate, pi.packageName);
+                    BadPackageData bprd=getBadPackageResultByPackageName(setToUpdate, pi.packageName);
                     if(bprd==null)
                     {
-                        bprd = new BadPackageResultData(pi);
+                        bprd = new BadPackageData(pi);
                         setToUpdate.add(bprd);
                     }
 
@@ -676,7 +676,7 @@ public class MainFragment extends Fragment
 */
 
 
-    void showResultFragment(List<BadPackageResultData> suspiciousApps)
+    void showResultFragment(List<BadPackageData> suspiciousApps)
     {
 
         ResultsFragment newFragment = new ResultsFragment();
@@ -705,43 +705,37 @@ public class MainFragment extends Fragment
     void controlInitialStates()
     {
 
-        boolean firstScan=getMainActivity().getAppData().getFirstScan();
-        Set<BadPackageResultData> foundMenaces = getMainActivity().getBadResultPackageDataFromMenaceSet();
-        boolean _isDangerous = _isDangerousAppInSet(foundMenaces);
+        boolean firstScanDone =getMainActivity().getAppData().getFirstScanDone();
+        Set<BadPackageData> foundMenaces = getMainActivity().getBadResultPackageDataFromMenaceSet();
+        boolean isDangerous = _isDangerousAppInSet(foundMenaces);
 
-        if(foundMenaces == null && !firstScan)
+        if(foundMenaces.isEmpty() || foundMenaces==null)
         {
-
-            _riskIcon.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.shield_medium_risk_icon));
-            _menacesCounterText.setText("Ejecutar primer analisis para comprobar amenazas");
-            _backgroundRisk.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.MediumRiskColor));
-           _resolvePersistProblems.setVisibility(View.GONE);
-
-        }else if(foundMenaces.isEmpty() && firstScan)
-        {
-
-            activateProtectedState();
+            if(!firstScanDone)
+            {
+                _riskIcon.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.shield_medium_risk_icon));
+                _menacesCounterText.setText("Ejecutar primer analisis para comprobar amenazas");
+                _backgroundRisk.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.MediumRiskColor));
+                _resolvePersistProblems.setVisibility(View.GONE);
+            }
+            else
+                activateProtectedState();
 
         }
-        else if(!foundMenaces.isEmpty() && _isDangerous)
+        else
         {
-
-            activateHighRiskState(foundMenaces.size());
-
-
-        }else if(!foundMenaces.isEmpty() && !_isDangerous)
-        {
-
-            activateMediumRiskState(foundMenaces.size());
+            if(isDangerous)
+                activateHighRiskState(foundMenaces.size());
+            else
+                activateMediumRiskState(foundMenaces.size());
 
 
         }
-
     }
 
-    private boolean _isDangerousAppInSet(Set<BadPackageResultData> set)
+    private boolean _isDangerousAppInSet(Set<BadPackageData> set)
     {
-        for(BadPackageResultData bprd : set)
+        for(BadPackageData bprd : set)
         {
             if(bprd.isDangerousMenace())
                 return true;

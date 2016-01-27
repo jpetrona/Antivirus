@@ -52,7 +52,7 @@ public class MonitorShieldService extends Service
     UserWhiteList _userWhiteList=null;
     public UserWhiteList getUserWhiteList() { return _userWhiteList;}
     MenacesCacheSet _menacesCacheSet =null;
-    public MenacesCacheSet getMenacesCacheList() { return _menacesCacheSet; }
+    public MenacesCacheSet getMenacesCacheSet() { return _menacesCacheSet; }
 
     IClientInterface _clientInterface=null;
     public void registerClient(IClientInterface clientInterface) { _clientInterface=clientInterface;}
@@ -127,9 +127,9 @@ public class MonitorShieldService extends Service
     public interface IClientInterface
     {
         //Called when a menace is found by the watchdog
-        public void onMonitorFoundMenace(BadPackageResultData menace);
+        public void onMonitorFoundMenace(BadPackageData menace);
         //All packages to scan can be useful if the client wants to do for example some animation to cheat :P
-        public void onScanResult(List<PackageInfo> allPacakgesToScan, Set<BadPackageResultData> scanResult);
+        public void onScanResult(List<PackageInfo> allPacakgesToScan, Set<BadPackageData> scanResult);
     }
 
     /*private void _loadDataFiles()
@@ -293,7 +293,7 @@ public class MonitorShieldService extends Service
 
         //Packages with problems will be stored here
         Set<GoodPackageResultData> tempGoodResults=new HashSet<GoodPackageResultData>();
-        Set<BadPackageResultData> tempBadResults=new HashSet<BadPackageResultData>();
+        Set<BadPackageData> tempBadResults=new HashSet<BadPackageData>();
 
         Scanner.scanForWhiteListedApps(nonSystemAppsPackages, _whiteListPackages, tempGoodResults);
 
@@ -312,7 +312,7 @@ public class MonitorShieldService extends Service
         Scanner.scanForSuspiciousPermissionsApps(potentialBadApps, _suspiciousPermissions, tempBadResults);
         Scanner.scanInstalledAppsFromGooglePlay(this, potentialBadApps, tempBadResults);
 
-        /*for (BadPackageResultData p : tempBadResults)
+        /*for (BadPackageData p : tempBadResults)
         {
             Log.d(_logTag, "======PACKAGE "+p.getPackageName()+" GPlay install: "+p.getInstalledThroughGooglePlay());
             if(p.getActivityData().size()>0)
@@ -335,7 +335,7 @@ public class MonitorShieldService extends Service
             Log.d(_logTag," ");
         }
 
-        showResultFragment(new ArrayList<BadPackageResultData>(tempBadResults));*/
+        showResultFragment(new ArrayList<BadPackageData>(tempBadResults));*/
 
         //Pasamos esto por ahora para que no se pete el tema
         List<PackageInfo> _packagesInfo=new ArrayList<PackageInfo>();
@@ -344,7 +344,7 @@ public class MonitorShieldService extends Service
         _packagesInfo.add(allPackages.get(2));
 
         //Merge results with non resolved previous ones and serialize
-        _menacesCacheSet.setSetWithBadPackageList(tempBadResults);
+        _menacesCacheSet.addPackages(tempBadResults);
         _menacesCacheSet.writeData();
 
         if(_clientInterface!=null)
@@ -384,17 +384,15 @@ public class MonitorShieldService extends Service
 
                 if(pi!=null)
                 {
-                    BadPackageResultData bpbr=new BadPackageResultData(pi);
+                    BadPackageData bpbr=new BadPackageData(pi.packageName);
                     List<ActivityInfo> recycleList=new ArrayList<ActivityInfo>();
-                    Scanner.scanForBlackListedActivityApp(bpbr, _blackListActivities, recycleList);
-                    Scanner.scanForSuspiciousPermissionsApp(bpbr, _suspiciousPermissions);
+                    Scanner.scanForBlackListedActivityApp(pi,bpbr, _blackListActivities, recycleList);
+                    Scanner.scanForSuspiciousPermissionsApp(pi,bpbr, _suspiciousPermissions);
                     Scanner.scanInstalledAppFromGooglePlay(this,bpbr);
 
                     if(bpbr.isMenace())
                     {
-                        PackageData pd=new PackageData();
-                        pd.setPackageName(bpbr.getPackageInfo().packageName);
-                        _menacesCacheSet.addPackage(pd);
+                        _menacesCacheSet.addPackage(bpbr);
                         _menacesCacheSet.writeData();
 
                         if(_clientInterface!=null)
@@ -403,12 +401,6 @@ public class MonitorShieldService extends Service
                 }
             }
         }
-    }
-
-    public Set<BadPackageResultData> getBadResultPackageDataFromMenaceSet()
-    {
-        //Convert menaces found to BadPackageResultDataList
-        return null;
     }
 
     protected List<PackageInfo> _removeWhiteListPackagesFromPackageList(List<PackageInfo> packagesToSearch, Set<PackageData> whiteListPackages)

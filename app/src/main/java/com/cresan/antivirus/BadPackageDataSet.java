@@ -1,8 +1,10 @@
+/**
+ * Created by hexdump on 27/01/16.
+ */
 package com.cresan.antivirus;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
-import android.provider.MediaStore;
 
 import com.tech.applications.coretools.FileTools;
 import com.tech.applications.coretools.JSonTools;
@@ -20,34 +22,24 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+
 /**
  * Created by hexdump on 22/01/16.
  */
-public class PackageDataSet
+public class BadPackageDataSet
 {
-    private Set<PackageData> _set;
-    Set<PackageData> getSet() {return _set;}
-    void setSet(Set<PackageData> set) { _set=set;}
-
-    /*void setSetWithBadPackageList(Set<BadPackageResultData> bpdl)
-    {
-        _set.clear();
-        for(BadPackageResultData bpd : bpdl)
-        {
-            PackageData pd=new PackageData();
-            pd.setPackageName(bpd.getPackageName());
-            _set.add(pd);
-        }
-    }*/
+    private Set<BadPackageData> _set;
+    Set<BadPackageData> getSet() {return _set;}
+    void setSet(Set<BadPackageData> set) { _set=set;}
 
     String _filePath=null;
 
     Context _context= null;
 
-    public PackageDataSet(Context context, String serializeFileName)
+    public BadPackageDataSet(Context context, String serializeFileName)
     {
         _context=context;
-        _set=new HashSet<PackageData>();
+        _set=new HashSet<BadPackageData>();
         _filePath= MediaTools.getInternalDataPath(_context)+ File.separatorChar+serializeFileName;
 
         //Generate file if it does not exist
@@ -71,14 +63,21 @@ public class PackageDataSet
 
     boolean checkIfPackageInList(String packageName)
     {
-        return PackageData.isPackageInListByName(_set,packageName);
+        for(BadPackageData bpd : _set)
+        {
+            if(bpd.getPackageName().equals(packageName))
+                return true;
+        }
+
+        return false;
     }
 
-    public void addPackage(PackageData pd)
+    public void addPackage(BadPackageData pd)
     {
         _set.add(pd);
     }
-    public void addAllPackages(Set<PackageData> packagesDataToAdd) { _set.addAll(packagesDataToAdd);}
+
+    public void addPackages(Set<BadPackageData> packagesDataToAdd) { _set.addAll(packagesDataToAdd);}
 
     public void clear()
     {
@@ -94,14 +93,14 @@ public class PackageDataSet
             String jsonFile = JSonTools.loadJSONFromFile(_context, _filePath);
             JSONObject obj = new JSONObject(jsonFile);
 
-            JSONArray m_jArry = obj.getJSONArray("data");
+            JSONArray badAppsArray = obj.getJSONArray("data");
 
-            for (int i = 0; i < m_jArry.length(); i++)
+            for (int i = 0; i < badAppsArray.length(); i++)
             {
-                JSONObject temp = m_jArry.getJSONObject(i);
-                PackageData pd = new PackageData();
-                pd.setPackageName(temp.getString("packageName"));
-                _set.add(pd);
+                JSONObject badAppObj = badAppsArray.getJSONObject(i);
+                BadPackageData bpd = new BadPackageData("tempname");
+                bpd.loadFromJSON(badAppObj);
+                _set.add(bpd);
             }
         } catch (JSONException e)
         {
@@ -116,7 +115,7 @@ public class PackageDataSet
         {
             JSONObject jo;
             JSONArray jsonArray=new JSONArray();
-            for(PackageData pd : _set)
+            for(BadPackageData pd : _set)
             {
                 jo=pd.buildJSONObject();
                 jsonArray.put(jo);
@@ -135,36 +134,5 @@ public class PackageDataSet
         {
             e.printStackTrace();
         }
-    }
-
-
-    public List<PackageInfo> removeMyPackagesFromPackageList(List<PackageInfo> packagesToPurge)
-    {
-        boolean found=false;
-
-        List<PackageInfo> trimmedPackageList=new ArrayList<PackageInfo>(packagesToPurge);
-
-        //Check against whitelist
-        for(PackageData pd : _set)
-        {
-            PackageInfo p = null;
-            int index = 0;
-            String packageName = pd.getPackageName();
-            found = false;
-
-            while (found == false && index < trimmedPackageList.size())
-            {
-                p = trimmedPackageList.get(index);
-                if (StringTools.stringMatchesMask(p.packageName, pd.getPackageName()))
-                {
-                    found = true;
-                    trimmedPackageList.remove(index);
-                }
-                else
-                    ++index;
-            }
-        }
-
-        return trimmedPackageList;
     }
 }

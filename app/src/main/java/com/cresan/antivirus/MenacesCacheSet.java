@@ -5,7 +5,7 @@ import android.content.Context;
 /**
  * Created by hexdump on 22/01/16.
  */
-public class MenacesCacheSet extends PackageDataSet
+public class MenacesCacheSet extends BadPackageDataSet
 {
     public MenacesCacheSet(Context context)
     {

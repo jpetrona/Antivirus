@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -22,8 +21,6 @@ import com.tech.applications.coretools.StringTools;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.crypto.BadPaddingException;
 
 /**
  * Created by hexdump on 02/11/15.
@@ -37,18 +34,18 @@ public class ResultsFragment extends Fragment
 
     //String[] packagename = new String[]{"com.magic.sanfulgencio","com.dropbox.android","com.appspot.swisscodemonkeys.detector","com.nolanlawson.logcat"};
 
-    List<BadPackageResultData> _suspiciousAppList=null;
+    List<BadPackageData> _suspiciousAppList=null;
 
     private ListView _listview;
     private Button _buttonRemove;
 
-    List<BadPackageResultData> _selectedApps = new ArrayList<>();
+    List<BadPackageData> _selectedApps = new ArrayList<>();
 
     ResultsAdapter _resultAdapter=null;
 
     TextView _threatsFoundSummary=null;
 
-    public void setData(List<BadPackageResultData> suspiciousAppList)
+    public void setData(List<BadPackageData> suspiciousAppList)
     {
         _suspiciousAppList=suspiciousAppList;
     }
@@ -69,7 +66,7 @@ public class ResultsFragment extends Fragment
                 if(_selectedApps.size() > 0)
                 {
 
-                    for (BadPackageResultData pck : _selectedApps)
+                    for (BadPackageData pck : _selectedApps)
                     {
                         Uri uri = Uri.fromParts("package", pck.getPackageName(), null);
                         Intent it = new Intent(Intent.ACTION_DELETE, uri);
@@ -125,7 +122,7 @@ public class ResultsFragment extends Fragment
         _resultAdapter.setResultItemSelectedStateChangedListener(new IResultItemSelecteStateChanged()
         {
             @Override
-            public void onItemSelectedStateChanged(boolean isChecked, BadPackageResultData bpd)
+            public void onItemSelectedStateChanged(boolean isChecked, BadPackageData bpd)
             {
                 if (isChecked)
                 {
@@ -155,7 +152,7 @@ public class ResultsFragment extends Fragment
         super.onResume();
 
 
-        for (BadPackageResultData pd : _selectedApps )
+        for (BadPackageData pd : _selectedApps )
         {
             if(!ActivityTools.isPackageInstalled(getMainActivity(),pd.getPackageName()))
             {

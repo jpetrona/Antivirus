@@ -19,7 +19,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -43,8 +42,6 @@ import com.tech.applications.coretools.AdvertisingTools;
 import com.tech.applications.coretools.NetworkTools;
 import com.tech.applications.coretools.SerializationTools;
 
-import com.tech.applications.coretools.JSonTools;
-
 import com.cresan.androidprotector.R;
 import com.tech.applications.coretools.ServiceTools;
 
@@ -65,7 +62,7 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
     {
         return _serviceInstance.getUserWhiteList();
     }
-    public Set<BadPackageResultData> getBadResultPackageDataFromMenaceSet() { return _serviceInstance.getBadResultPackageDataFromMenaceSet(); }
+    public Set<BadPackageData> getBadResultPackageDataFromMenaceSet() { return _serviceInstance.getMenacesCacheSet().getSet(); }
 
     final String bannerAdUnit="";
 	final String interstitialAdUnit="";
@@ -146,6 +143,9 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
             MonitorShieldService.MonitorShieldLocalBinder binder = (MonitorShieldService.MonitorShieldLocalBinder) service;
             _serviceInstance = binder.getServiceInstance(); //Get instance of your service!
             _serviceInstance.registerClient(AntivirusActivity.this); //Activity register in the service as client for callabcks!
+
+            //Now that service is active run fragment to init it
+            slideInFragment(new MainFragment());
         }
 
         @Override
@@ -162,12 +162,12 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
     public void setMonitorServiceListener(MonitorShieldService.IClientInterface listener) { _appMonitorServiceListener=listener;}
 
     //Called when a menace is found by the watchdog
-    public void onMonitorFoundMenace(BadPackageResultData menace)
+    public void onMonitorFoundMenace(BadPackageData menace)
     {
         if(_appMonitorServiceListener!=null)
             _appMonitorServiceListener.onMonitorFoundMenace(menace);
     }
-    public void onScanResult(List<PackageInfo> allPacakgesToScan,Set<BadPackageResultData> scanResult)
+    public void onScanResult(List<PackageInfo> allPacakgesToScan,Set<BadPackageData> scanResult)
     {
         if(_appMonitorServiceListener!=null)
             _appMonitorServiceListener.onScanResult(allPacakgesToScan,scanResult);
@@ -190,6 +190,7 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
         makeActionOverflowMenuShown();
 	    setContentView(R.layout.activity_main);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
 		//Start service
 		if(!ServiceTools.isServiceRunning(this,MonitorShieldService.class))
 		{
@@ -201,14 +202,18 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
             bindService(i,_serviceConnection, Context.BIND_AUTO_CREATE);
 		}
         else
-            Log.d(_logTag,"=====> AntivirusActivity:onCreate: No need to start MonitorShieldService because it as running previously.");
+        {
+            Log.d(_logTag, "=====> AntivirusActivity:onCreate: No need to start MonitorShieldService because it as running previously.");
+            Intent i = new Intent(this, MonitorShieldService.class);
+
+            //Bind to service
+            bindService(i,_serviceConnection, Context.BIND_AUTO_CREATE);
+        }
 
 
         android.support.v7.app.ActionBar bar=getSupportActionBar();
         bar.setDisplayHomeAsUpEnabled(true);
 
-
-        slideInFragment(new MainFragment());
 
         //Configure Ads
 		if(!NetworkTools.isNetworkAvailable(this))

@@ -2,18 +2,15 @@ package com.cresan.antivirus;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cresan.androidprotector.R;
-import com.tech.applications.coretools.ActivityTools;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,10 +24,10 @@ import java.util.Set;
 public class WarningsAdapter extends ArrayAdapter<WarningData>
 {
     private final Context _context;
-    private  BadPackageResultData _resultData=null;
+    private BadPackageData _resultData=null;
     private List<WarningData> _convertedData=null;
 
-    public WarningsAdapter(Context context, BadPackageResultData resultData)
+    public WarningsAdapter(Context context, BadPackageData resultData)
     {
         super(context, R.layout.warnings_adapter);
 
@@ -43,7 +40,7 @@ public class WarningsAdapter extends ArrayAdapter<WarningData>
         notifyDataSetChanged();
     }
 
-    public List<WarningData> _fillDataArray(BadPackageResultData bp)
+    public List<WarningData> _fillDataArray(BadPackageData bp)
     {
         List<WarningData> wdl=new ArrayList<WarningData>();
 

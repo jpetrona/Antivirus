@@ -5,5 +5,5 @@ package com.cresan.antivirus;
  */
 public interface IResultItemSelecteStateChanged
 {
-    public void onItemSelectedStateChanged(boolean isChecked, BadPackageResultData bpd);
+    public void onItemSelectedStateChanged(boolean isChecked, BadPackageData bpd);
 }

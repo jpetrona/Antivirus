@@ -9,20 +9,17 @@ import java.io.Serializable;
  */
 public class ActivityData
 {
-    private ActivityInfo _activityInfo;
-    public ActivityInfo getActivityInfo() {return _activityInfo;}
-    private int _reasonId;
-    public int getReasorId() {return _reasonId;}
+    private String _package;
+    public String getPackage() {return _package;}
 
-    public ActivityData(ActivityInfo activityInfo, int reasonId)
+    public ActivityData(String packageName)
     {
-        _activityInfo=activityInfo;
-        _reasonId=reasonId;
+        _package=packageName;
     }
 
     public int hashCode()
     {
-        return (int) _activityInfo.packageName.hashCode()+_reasonId;
+        return (int) _package.hashCode();
     }
 
     public boolean equals(Object o)
@@ -31,6 +28,6 @@ public class ActivityData
             return false;
 
         ActivityData other = (ActivityData) o;
-        return  _activityInfo.packageName.equals(other._activityInfo.packageName);
+        return  _package.equals(other._package);
     }
 }

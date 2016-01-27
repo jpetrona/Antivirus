@@ -1,6 +1,5 @@
 package com.cresan.antivirus;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
@@ -50,9 +49,9 @@ class Scanner
         return matches;
     }
 
-    //In setToUpdate we receive a set of BadPackageResultData ready to be update with newly detected menaces
-    public static Set<BadPackageResultData> scanForBlackListedActivityApps(List<PackageInfo> packagesToSearch, Set<PackageData> blackListedActivityPackages,
-                                                                        Set<BadPackageResultData> setToUpdate)
+    //In setToUpdate we receive a set of BadPackageData ready to be update with newly detected menaces
+    public static Set<BadPackageData> scanForBlackListedActivityApps(List<PackageInfo> packagesToSearch, Set<PackageData> blackListedActivityPackages,
+                                                                        Set<BadPackageData> setToUpdate)
     {
         List<ActivityInfo> subResult=new ArrayList<ActivityInfo>();
 
@@ -70,16 +69,16 @@ class Scanner
                 if(subResult.size()>0)
                 {
                     //Update or create new if it does not exist
-                    BadPackageResultData bprd=getBadPackageResultByPackageName(setToUpdate, pi.packageName);
+                    BadPackageData bprd=getBadPackageResultByPackageName(setToUpdate, pi.packageName);
                     if(bprd==null)
                     {
-                        bprd = new BadPackageResultData(pi);
+                        bprd = new BadPackageData(pi.packageName);
                         setToUpdate.add(bprd);
                     }
 
                     for(ActivityInfo ai: subResult)
                     {
-                        bprd.addActivityData(new ActivityData(ai, 0));
+                        bprd.addActivityData(new ActivityData(ai.name));
                     }
                 }
             }
@@ -87,21 +86,21 @@ class Scanner
         return setToUpdate;
     }
 
-    public static BadPackageResultData scanForBlackListedActivityApp(BadPackageResultData bprdToFill,
+    public static BadPackageData scanForBlackListedActivityApp(PackageInfo pi,BadPackageData bprdToFill,
                                                                      Set<PackageData> blackListedActivityPackages, List<ActivityInfo> arrayToRecycle)
 
     {
         for(PackageData pd: blackListedActivityPackages)
         {
             //In subResult we have now all the ActivityInfo entries resulting in a menace
-            getActivitiesByNameFilter(bprdToFill.getPackageInfo(), pd.getPackageName(), arrayToRecycle);
+            getActivitiesByNameFilter(pi, pd.getPackageName(), arrayToRecycle);
 
             //If we found bad activities in the package fill the bad package information into result
             if(arrayToRecycle.size()>0)
             {
                 for(ActivityInfo ai: arrayToRecycle)
                 {
-                    bprdToFill.addActivityData(new ActivityData(ai, 0));
+                    bprdToFill.addActivityData(new ActivityData(ai.packageName));
                 }
             }
         }
@@ -109,7 +108,7 @@ class Scanner
         return bprdToFill;
     }
 
-    public static BadPackageResultData scanForBlackListedActivityApp(Context context, String packageName, Set<PackageData> blackListedActivityPackages)
+    public static BadPackageData scanForBlackListedActivityApp(Context context, String packageName, Set<PackageData> blackListedActivityPackages)
     {
         PackageInfo pi=null;
         try
@@ -124,42 +123,42 @@ class Scanner
         if(pi==null)
             return null;
 
-        BadPackageResultData bprd=new BadPackageResultData(pi);
+        BadPackageData bprd=new BadPackageData(pi.packageName);
 
         List<ActivityInfo> arrayToRecycle=new ArrayList<ActivityInfo>();
 
-        scanForBlackListedActivityApp(bprd, blackListedActivityPackages, arrayToRecycle);
+        scanForBlackListedActivityApp(pi, bprd, blackListedActivityPackages, arrayToRecycle);
 
 
         return bprd;
     }
 
 
-    //In setToUpdate we receive a set of BadPackageResultData ready to be update with newly detected menaces
-    public static Set<BadPackageResultData> scanForSuspiciousPermissionsApps(List<PackageInfo> packagesToSearch, Set<PermissionData> suspiciousPermissions,
-                                                                          Set<BadPackageResultData> setToUpdate)
+    //In setToUpdate we receive a set of BadPackageData ready to be update with newly detected menaces
+    public static Set<BadPackageData> scanForSuspiciousPermissionsApps(List<PackageInfo> packagesToSearch, Set<PermissionData> suspiciousPermissions,
+                                                                          Set<BadPackageData> setToUpdate)
     {
-        BadPackageResultData bprd=null;
+        BadPackageData bprd=null;
 
         //Check against whitelist
         for(PackageInfo pi : packagesToSearch)
         {
             bprd=getBadPackageResultByPackageName(setToUpdate,pi.packageName);
             if(bprd==null)
-                bprd=new BadPackageResultData(pi);
+                bprd=new BadPackageData(pi.packageName);
 
-            scanForSuspiciousPermissionsApp(bprd, suspiciousPermissions);
+            scanForSuspiciousPermissionsApp(pi, bprd, suspiciousPermissions);
             setToUpdate.add(bprd);
         }
 
         return setToUpdate;
     }
 
-    public static BadPackageResultData scanForSuspiciousPermissionsApp(BadPackageResultData bprdToFill,Set<PermissionData> suspiciousPermissions)
+    public static BadPackageData scanForSuspiciousPermissionsApp(PackageInfo pi, BadPackageData bprdToFill,Set<PermissionData> suspiciousPermissions)
     {
         for(PermissionData permData : suspiciousPermissions)
         {
-            if(ActivityTools.packageInfoHasPermission(bprdToFill.getPackageInfo(), permData.getPermissionName()))
+            if(ActivityTools.packageInfoHasPermission(pi, permData.getPermissionName()))
             {
                 bprdToFill.addPermissionData(permData);
             }
@@ -168,9 +167,9 @@ class Scanner
         return bprdToFill;
     }
 
-    public static BadPackageResultData scanForSuspiciousPermissionsApp(Context context, String packageName, Set<PermissionData> suspiciousPermissions)
+    public static BadPackageData scanForSuspiciousPermissionsApp(Context context, String packageName, Set<PermissionData> suspiciousPermissions)
     {
-        BadPackageResultData bprd=null;
+        BadPackageData bprd=null;
 
         PackageInfo pi=null;
         try
@@ -185,17 +184,17 @@ class Scanner
         if(pi==null)
             return null;
 
-        bprd=new BadPackageResultData(pi);
+        bprd=new BadPackageData(pi.packageName);
 
-        return scanForSuspiciousPermissionsApp(bprd,suspiciousPermissions);
+        return scanForSuspiciousPermissionsApp(pi,bprd,suspiciousPermissions);
     }
 
 
-    public static BadPackageResultData getBadPackageResultByPackageName(Set<BadPackageResultData> prd, String packageName)
+    public static BadPackageData getBadPackageResultByPackageName(Set<BadPackageData> prd, String packageName)
     {
-        BadPackageResultData result=null;
+        BadPackageData result=null;
 
-        for (BadPackageResultData p : prd)
+        for (BadPackageData p : prd)
         {
             if(p.getPackageName().equals(packageName))
             {
@@ -270,7 +269,7 @@ class Scanner
         return result;
     }
 
-    public static Set<BadPackageResultData> scanInstalledAppsFromGooglePlay(Context context,List<PackageInfo> packagesToSearch, Set<BadPackageResultData> setToUpdate)
+    public static Set<BadPackageData> scanInstalledAppsFromGooglePlay(Context context,List<PackageInfo> packagesToSearch, Set<BadPackageData> setToUpdate)
     {
         //Check against whitelist
         for(PackageInfo pi : packagesToSearch)
@@ -278,10 +277,10 @@ class Scanner
             if(!ActivityTools.checkIfAppWasInstalledThroughGooglePlay(context,pi.packageName))
             {
                 //Update or create new if it does not exist
-                BadPackageResultData bprd=Scanner.getBadPackageResultByPackageName(setToUpdate, pi.packageName);
+                BadPackageData bprd=Scanner.getBadPackageResultByPackageName(setToUpdate, pi.packageName);
                 if(bprd==null)
                 {
-                    bprd = new BadPackageResultData(pi);
+                    bprd = new BadPackageData(pi.packageName);
                     setToUpdate.add(bprd);
                 }
 
@@ -289,7 +288,7 @@ class Scanner
             }
             else
             {
-                BadPackageResultData bprd=Scanner.getBadPackageResultByPackageName(setToUpdate, pi.packageName);
+                BadPackageData bprd=Scanner.getBadPackageResultByPackageName(setToUpdate, pi.packageName);
                 if(bprd!=null)
                     bprd.setInstalledThroughGooglePlay(true);
             }
@@ -299,7 +298,7 @@ class Scanner
     }
 
 
-    protected static BadPackageResultData scanInstalledAppFromGooglePlay(Context context,BadPackageResultData bprd)
+    protected static BadPackageData scanInstalledAppFromGooglePlay(Context context,BadPackageData bprd)
     {
         if(!ActivityTools.checkIfAppWasInstalledThroughGooglePlay(context,bprd.getPackageName()))
         {

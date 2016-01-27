@@ -44,14 +44,14 @@ public class PackageData
         return jsonObj;
     }
 
-    public BadPackageResultData createBadPackageResultData(Context context)
+    /*public BadPackageData createBadPackageResultData(Context context)
     {
         try
         {
             PackageInfo pi = ActivityTools.getPackageInfo(context,getPackageName(),PackageManager.GET_ACTIVITIES | PackageManager.GET_PERMISSIONS);
             if(pi!=null)
             {
-                BadPackageResultData bprd = new BadPackageResultData(pi);
+                BadPackageData bprd = new BadPackageData(pi.packageName);
                 return bprd;
             }
             else
@@ -61,7 +61,7 @@ public class PackageData
         {
             return null;
         }
-    }
+    }*/
 
     public static List<PackageData> getPackagesByName(HashSet<PackageData> packages, String filter, List<PackageData> result)
     {
