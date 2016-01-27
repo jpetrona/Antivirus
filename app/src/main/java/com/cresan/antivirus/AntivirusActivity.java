@@ -170,7 +170,7 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
     public void onScanResult(List<PackageInfo> allPacakgesToScan,Set<BadPackageData> scanResult)
     {
         if(_appMonitorServiceListener!=null)
-            _appMonitorServiceListener.onScanResult(allPacakgesToScan,scanResult);
+            _appMonitorServiceListener.onScanResult(allPacakgesToScan, scanResult);
     }
 
     public void startMonitorScan(MonitorShieldService.IClientInterface listener)
@@ -252,10 +252,23 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
             case android.R.id.home:
                 _handleBackButton();
                 return true;
+            case R.id.ignoredListButton:
+                //slideInFragment();
+                Log.d("ign", "IGNORED BUTTON MENU");
+                return true;
+            case R.id.RateUs:
+                Log.d("ign", "RATE US BUTTON MENU");
+            return true;
+            case R.id.information:
+                Log.d("ign", "INFORMATION BUTTON MENU");
+            return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
+
+
+
 
     @Override
     public void onBackPressed()
@@ -452,27 +465,7 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
     }
 
 
-    @Override
-    public boolean onContextItemSelected(MenuItem item)
-    {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        switch (item.getItemId()) {
-            case R.id.ignoredListButton:
 
-                Log.d("ign","IGNORED BUTTON MENU");
-                return true;
-            case R.id.RateUs:
-                Log.d("ign","RATE US BUTTON MENU");
-                return true;
-            case R.id.information:
-                Log.d("ign","INFORMATION BUTTON MENU");
-                return true;
-            default:
-                return super.onContextItemSelected(item);
-        }
-
-
-    }
 
     
 
