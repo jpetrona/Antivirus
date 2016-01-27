@@ -36,4 +36,6 @@
     <string name="dialog_trust_app">You want to trust this application?</string>
     <string name="accept_eula">Accept</string>
     <string name="decline_eula">Decline</string>
+    <string name="remove_ignored_app_message">"Do you want to remove from the list "</string>
+    <string name="cancel">"Cancel"</string>
 </resources>

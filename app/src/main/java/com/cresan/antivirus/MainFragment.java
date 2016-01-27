@@ -83,7 +83,7 @@ public class MainFragment extends Fragment
     {
 
         _progressPanelIconImageView =(ImageView)root.findViewById(R.id.progressPanelIconImageView);
-        _progressPanelTextView =(TextView)root.findViewById(R.id.progressPanelTextView);;
+        _progressPanelTextView =(TextView)root.findViewById(R.id.progressPanelTextView);
         _progressPanelprogressBar =(MagicProgressBar)root.findViewById(R.id.progressPanelProgressBar);
         _buttonContainer=(RelativeLayout)root.findViewById(R.id.buttonLayout);
         _progressContainer=(RelativeLayout)root.findViewById(R.id.progressPanel);
