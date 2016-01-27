@@ -79,6 +79,11 @@ public class BadPackageDataSet
 
     public void addPackages(Set<BadPackageData> packagesDataToAdd) { _set.addAll(packagesDataToAdd);}
 
+    public void removePackage(BadPackageData pd)
+    {
+        _set.remove(pd);
+    }
+
     public void clear()
     {
         _set.clear();

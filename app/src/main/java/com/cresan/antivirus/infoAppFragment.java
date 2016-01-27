@@ -97,14 +97,24 @@ public class InfoAppFragment extends Fragment
                             public void onClick(DialogInterface dialog, int which)
                             {
                                 UserWhiteList userWhiteList=getMainActivity().getUserWhiteList();
+
                                 PackageData pdo=new PackageData();
                                 pdo.setPackageName(_suspiciousApp.getPackageName());
+
                                 userWhiteList.addPackage(pdo);
                                 userWhiteList.writeData();
+
+                                MenacesCacheSet menacesCacheSet=getMainActivity().getMenacesCacheSet();
+                                menacesCacheSet.removePackage(_suspiciousApp);
+                                menacesCacheSet.writeData();
+
+                                //Se llama este listener aunque no sea semánticamente lo que pasa (desinstalar app)
+                                //Porque asi aprovechamos y lo quita de la lista.
                                 if(_appEventListener!=null && _suspiciousApp !=null)
                                 {
                                     _appEventListener.onAppUninstalled(_suspiciousApp);
                                 }
+
                                 getMainActivity().goBack();
 
                             }
@@ -142,6 +152,10 @@ public class InfoAppFragment extends Fragment
             if(_appEventListener!=null && !ActivityTools.isPackageInstalled(getMainActivity(),_suspiciousApp.getPackageName()))
             {
                 _appEventListener.onAppUninstalled(_suspiciousApp);
+
+                MenacesCacheSet menacesCacheSet=getMainActivity().getMenacesCacheSet();
+                menacesCacheSet.removePackage(_suspiciousApp);
+                menacesCacheSet.writeData();
             }
 
             _uninstallingPackage=false;

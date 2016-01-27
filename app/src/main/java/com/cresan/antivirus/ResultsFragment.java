@@ -145,12 +145,12 @@ public class ResultsFragment extends Fragment
         _listview.setAdapter(_resultAdapter);
     }
 
-
     @Override
     public void onResume()
     {
         super.onResume();
 
+        MenacesCacheSet menacesCache = getMainActivity().getMenacesCacheSet();
 
         for (BadPackageData pd : _selectedApps )
         {
@@ -158,6 +158,9 @@ public class ResultsFragment extends Fragment
             {
                 _resultAdapter.remove(pd);
                 _selectedApps.remove(pd);
+
+                menacesCache.removePackage(pd);
+                menacesCache.writeData();
             }
         }
 
