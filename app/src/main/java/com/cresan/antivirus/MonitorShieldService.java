@@ -70,20 +70,8 @@ public class MonitorShieldService extends Service
 
             public void OnPackageAdded(Intent i)
             {
-                Intent toExecuteIntent = new Intent(MonitorShieldService.this, AntivirusActivity.class);
-
-                Intent openAppIntent = getPackageManager().getLaunchIntentForPackage(i.getData().getSchemeSpecificPart());
-
                 String packageName = i.getData().getSchemeSpecificPart();
-
-                String appName = ActivityTools.getAppNameFromPackage(MonitorShieldService.this, packageName);
-
-                if (_checkIfPackageInWhiteList(packageName, _whiteListPackages))
-                    NotificationTools.notificatePush(MonitorShieldService.this, 0xFF00, R.drawable.ic_launcher,
-                            appName + " is a trusted application.", appName, "App " + appName + " is a trusted application verified by antivirus.", openAppIntent);
-                else
-                    NotificationTools.notificatePush(MonitorShieldService.this, 0xFF00, R.drawable.ic_launcher,
-                            appName + " needs to be scanned.", appName, "App installed: Click to scan for menaces", toExecuteIntent);
+                scanApp(packageName);
             }
 
             public void OnPackageRemoved(Intent intent)
@@ -115,7 +103,7 @@ public class MonitorShieldService extends Service
         return _binder;
     }
 
-    //returns the instance of the service
+    //returns the getInstance of the service
     public class MonitorShieldLocalBinder extends Binder
     {
         public MonitorShieldService getServiceInstance()
@@ -340,8 +328,8 @@ public class MonitorShieldService extends Service
         //Pasamos esto por ahora para que no se pete el tema
         List<PackageInfo> _packagesInfo=new ArrayList<PackageInfo>();
         _packagesInfo.add(allPackages.get(0));
-        _packagesInfo.add(allPackages.get(1));
-        _packagesInfo.add(allPackages.get(2));
+        //_packagesInfo.add(allPackages.get(1));
+        //_packagesInfo.add(allPackages.get(2));
 
         //Merge results with non resolved previous ones and serialize
         _menacesCacheSet.addPackages(tempBadResults);
@@ -356,19 +344,29 @@ public class MonitorShieldService extends Service
 
     public void scanApp(String packageName)
     {
+        Log.d(_logTag,"OOOOOOOOOOOOOOOOOOO> "+"MonitorShieldService:scanApp: Usando app data");
+        AppData appData=AppData.getInstance(this);
+
+        Intent toExecuteIntent = new Intent(MonitorShieldService.this, AntivirusActivity.class);
+
+        Intent openAppIntent = getPackageManager().getLaunchIntentForPackage(packageName);
+
+        String appName = ActivityTools.getAppNameFromPackage(MonitorShieldService.this, packageName);
 
         boolean whiteListed=Scanner.isAppWhiteListed(packageName, _whiteListPackages);
 
         if(whiteListed)
         {
-
+            NotificationTools.notificatePush(MonitorShieldService.this, 0xFF00, R.drawable.ic_launcher,
+                    appName + " is a trusted application.", appName, "App " + appName + " is a trusted application verified by antivirus.", openAppIntent);
         }
         else
         {
             //We have it in our white package list
             if(_userWhiteList.checkIfPackageInList(packageName))
             {
-
+                NotificationTools.notificatePush(MonitorShieldService.this, 0xFF00, R.drawable.ic_launcher,
+                        appName + " is a trusted application.", appName, "App " + appName + " is a trusted application verified by user.", openAppIntent);
             }
             else
             {
@@ -386,18 +384,31 @@ public class MonitorShieldService extends Service
                 {
                     BadPackageData bpbr=new BadPackageData(pi.packageName);
                     List<ActivityInfo> recycleList=new ArrayList<ActivityInfo>();
-                    Scanner.scanForBlackListedActivityApp(pi,bpbr, _blackListActivities, recycleList);
-                    Scanner.scanForSuspiciousPermissionsApp(pi,bpbr, _suspiciousPermissions);
-                    Scanner.scanInstalledAppFromGooglePlay(this,bpbr);
+                    Scanner.scanForBlackListedActivityApp(pi, bpbr, _blackListActivities, recycleList);
+                    Scanner.scanForSuspiciousPermissionsApp(pi, bpbr, _suspiciousPermissions);
+                    Scanner.scanInstalledAppFromGooglePlay(this, bpbr);
 
                     if(bpbr.isMenace())
                     {
-                        _menacesCacheSet.addPackage(bpbr);
-                        _menacesCacheSet.writeData();
+                        //Do not scan if we haven't done any
+                        if(appData.getFirstScanDone())
+                        {
+                            _menacesCacheSet.addPackage(bpbr);
+                            _menacesCacheSet.writeData();
+                        }
 
                         if(_clientInterface!=null)
+                        {
                             _clientInterface.onMonitorFoundMenace(bpbr);
+                        }
+
+                        NotificationTools.notificatePush(MonitorShieldService.this, 0xFF00, R.drawable.ic_launcher,
+                                appName + " needs to be scanned.", appName, "Click to scan menaces", toExecuteIntent);
+
                     }
+                    else
+                        NotificationTools.notificatePush(MonitorShieldService.this, 0xFF00, R.drawable.ic_launcher,
+                            appName + " is secure.", appName, "Has no threats.", toExecuteIntent);
                 }
             }
         }

@@ -145,23 +145,35 @@ public class ResultsFragment extends Fragment
         _listview.setAdapter(_resultAdapter);
     }
 
-
     @Override
     public void onResume()
     {
         super.onResume();
 
+        MenacesCacheSet menacesCache = getMainActivity().getMenacesCacheSet();
+
+        List<BadPackageData> toDelete=new ArrayList<BadPackageData>();
 
         for (BadPackageData pd : _selectedApps )
         {
             if(!ActivityTools.isPackageInstalled(getMainActivity(),pd.getPackageName()))
             {
                 _resultAdapter.remove(pd);
-                _selectedApps.remove(pd);
+                toDelete.add(pd);
+
+                menacesCache.removePackage(pd);
+                menacesCache.writeData();
             }
         }
 
+        _selectedApps.removeAll(toDelete);
+
         _updateFoundThreatsText(_threatsFoundSummary, _resultAdapter.getCount());
+
+        if(menacesCache.getMenaceCount()<=0)
+        {
+            getMainActivity().goBack();
+        }
     }
 
     void _updateFoundThreatsText(TextView textView, int appCount)

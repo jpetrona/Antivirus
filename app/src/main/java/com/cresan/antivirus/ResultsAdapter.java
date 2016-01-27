@@ -133,10 +133,10 @@ public class ResultsAdapter extends ArrayAdapter<BadPackageData>
             @Override
             public void onAppUninstalled(BadPackageData uninstalledApp)
             {
-                _values.remove(uninstalledApp);
+                //_values.remove(uninstalledApp);
+                remove(uninstalledApp);
 
-                notifyDataSetChanged();
-
+                //notifyDataSetChanged();
             }
         });
         newFragment.setData(suspiciousAppList);
