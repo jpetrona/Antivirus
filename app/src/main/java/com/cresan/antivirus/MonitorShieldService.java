@@ -323,17 +323,18 @@ public class MonitorShieldService extends Service
         showResultFragment(new ArrayList<BadPackageData>(tempBadResults));*/
 
         //Pasamos esto por ahora para que no se pete el tema
-        List<PackageInfo> _packagesInfo=new ArrayList<PackageInfo>();
-        _packagesInfo.add(allPackages.get(0));
+        //List<PackageInfo> _packagesInfo=new ArrayList<PackageInfo>();
+        //_packagesInfo.add(allPackages.get(0));
         //_packagesInfo.add(allPackages.get(1));
         //_packagesInfo.add(allPackages.get(2));
 
         //Merge results with non resolved previous ones and serialize
+        Log.e(_logTag,"----------------------> Numero de aplicciones escaneadas: "+allPackages.size());
         _menacesCacheSet.addPackages(tempBadResults);
         _menacesCacheSet.writeData();
 
         if(_clientInterface!=null)
-            _clientInterface.onScanResult(_packagesInfo,tempBadResults);
+            _clientInterface.onScanResult(allPackages,tempBadResults);
 
         //_startScanningAnimation(_packageInfo,_foundMenaces);
 

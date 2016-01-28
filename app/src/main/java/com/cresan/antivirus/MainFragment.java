@@ -256,16 +256,12 @@ public class MainFragment extends Fragment
 
     private void _startScanningAnimation(final List<PackageInfo> packagesToScan, final Set<BadPackageData> tempBadResults)
     {
-        ObjectAnimator oa1=new ObjectAnimator();
-        oa1.setDuration(500);
-        oa1.setInterpolator(new AccelerateInterpolator());
-
-        oa1 = ObjectAnimator.ofFloat(_buttonContainer, "translationX",
+        //Animate the button exit
+        ObjectAnimator oa1 = ObjectAnimator.ofFloat(_buttonContainer, "translationX",
                 0,
                 -_superContainer.getWidth()/2.0f-_buttonContainer.getWidth());
-        oa1.setDuration(500);
+        oa1.setDuration(100);
         oa1.setInterpolator(new LinearInterpolator());
-        oa1.start();
         oa1.addListener(new Animator.AnimatorListener()
         {
             @Override
@@ -353,7 +349,7 @@ public class MainFragment extends Fragment
             {
                 _cdTimer =null;
                 _progressPanelprogressBar.setPercent(1.0f);
-                _convertStageIconInto(true, 2000, new IOnActionFinished()
+                _convertStageIconInto(true, 500, new IOnActionFinished()
                 {
                     @Override
                     public void onFinished()
@@ -424,6 +420,7 @@ public class MainFragment extends Fragment
         //_progressContainer.setVisibility(View.VISIBLE);
         ObjectAnimator oa1 = ObjectAnimator.ofFloat(_progressContainer, "translationX",
                 _superContainer.getWidth()/2.0f+_progressContainer.getWidth(), 0.0f);
+        oa1.setDuration(100);
         oa1.addListener(new Animator.AnimatorListener()
         {
             @Override
@@ -435,7 +432,7 @@ public class MainFragment extends Fragment
             @Override
             public void onAnimationEnd(Animator animation)
             {
-                _doWaitToScanPackage(3000, packagesToScan, currentPackageIndex, onActionFinished);
+                _doWaitToScanPackage(500, packagesToScan, currentPackageIndex, onActionFinished);
             }
 
             @Override
