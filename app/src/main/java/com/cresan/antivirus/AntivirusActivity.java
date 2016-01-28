@@ -1,6 +1,8 @@
 package com.cresan.antivirus;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -49,6 +51,7 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
     public static final String kMainFragmentTag="MainFragmentTag";
     public static final String kResultFragmentTag="ResultFragmentTag";
     public static final String kInfoFragmnetTag="InfoFragmentTag";
+    public static final String kIgnoredFragmentTag="IgnoredFragmentTag";
 
     public MainFragment getMainFragment()
     {
@@ -79,6 +82,17 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
 
         if(f==null)
             return new InfoAppFragment();
+        else
+            return f;
+    }
+
+    public IgnoredListFragment getIgnoredFragment()
+    {
+        FragmentManager fm= getSupportFragmentManager();
+        IgnoredListFragment f= (IgnoredListFragment) fm.findFragmentByTag(kIgnoredFragmentTag);
+
+        if(f==null)
+            return new IgnoredListFragment();
         else
             return f;
     }
@@ -198,7 +212,7 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
     public void onScanResult(List<PackageInfo> allPacakgesToScan,Set<BadPackageData> scanResult)
     {
         if(_appMonitorServiceListener!=null)
-            _appMonitorServiceListener.onScanResult(allPacakgesToScan,scanResult);
+            _appMonitorServiceListener.onScanResult(allPacakgesToScan, scanResult);
     }
 
     public void startMonitorScan(MonitorShieldService.IClientInterface listener)
@@ -280,9 +294,31 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
             case android.R.id.home:
                 _handleBackButton();
                 return true;
+            case R.id.ignoredListButton:
+
+                UserWhiteList userWhiteList=getUserWhiteList();
+                Set<PackageData> packageData =  userWhiteList.getSet();
+                packageData.toArray();
+                showIgnoredFragment(new ArrayList<PackageData>(packageData));
+
+                Log.d("ign", "IGNORED BUTTON MENU");
+                return true;
+            case R.id.RateUs:
+                Log.d("ign", "RATE US BUTTON MENU");
+            return true;
+            case R.id.information:
+                Log.d("ign", "INFORMATION BUTTON MENU");
+            return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+
+    void showIgnoredFragment(List<PackageData> userWhiteList)
+    {
+        IgnoredListFragment newFragment= (IgnoredListFragment) this.slideInFragment(AntivirusActivity.kIgnoredFragmentTag);
+        newFragment.setData(userWhiteList);
     }
 
     @Override
@@ -436,6 +472,9 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
             case kResultFragmentTag:
                 f=getResultFragment();
                 break;
+            case kIgnoredFragmentTag:
+                f=getIgnoredFragment();
+                break;
             default:
         }
 
@@ -498,27 +537,7 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
     }
 
 
-    @Override
-    public boolean onContextItemSelected(MenuItem item)
-    {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        switch (item.getItemId()) {
-            case R.id.ignoredListButton:
 
-                Log.d("ign","IGNORED BUTTON MENU");
-                return true;
-            case R.id.RateUs:
-                Log.d("ign","RATE US BUTTON MENU");
-                return true;
-            case R.id.information:
-                Log.d("ign","INFORMATION BUTTON MENU");
-                return true;
-            default:
-                return super.onContextItemSelected(item);
-        }
-
-
-    }
 
     
 

@@ -413,9 +413,6 @@ public class MainFragment extends Fragment
         oa2.start();
     }
 
-
-
-
     private void _scanPackage(final List<PackageInfo> packagesToScan, final int currentPackageIndex, final IOnFileScanFinished onActionFinished)
     {
         PackageInfo packageToScan=packagesToScan.get(currentPackageIndex);

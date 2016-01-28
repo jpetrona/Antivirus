@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/SecondaryColor"
+              android:orientation="vertical">
+
+
+    <!-- Process ListView -->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:background="@color/SecondaryColor">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Textgdgdgd"
+            android:id="@+id/ignoredCounter"
+            android:textColor="@color/info_icon_bottom_text"/>
+
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/ignoredList"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="3dp"
+        android:layout_weight="8.5"
+        android:divider="@color/DividerColor"
+        android:dividerHeight="0.5dp"
+        android:drawSelectorOnTop="true"
+        android:background="@color/SecondaryColor"/>
+
+
+</LinearLayout>
