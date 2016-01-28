@@ -181,7 +181,8 @@
                     android:gravity="center"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:text="Trying root privileges"
-                    android:textColor="@color/SecondaryTextColor"/>
+                    android:textColor="@color/SecondaryTextColor"
+                    android:textSize="20dp"/>
 
                 <ImageView
                     android:id="@+id/animationProgressPanelIconImageView"
