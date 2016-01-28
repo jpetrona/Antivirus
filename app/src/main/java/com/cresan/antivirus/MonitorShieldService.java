@@ -117,7 +117,7 @@ public class MonitorShieldService extends Service
         //Called when a menace is found by the watchdog
         public void onMonitorFoundMenace(BadPackageData menace);
         //All packages to scan can be useful if the client wants to do for example some animation to cheat :P
-        public void onScanResult(List<PackageInfo> allPacakgesToScan, Set<BadPackageData> scanResult);
+        public void onScanResult(List<PackageInfo> allPackages, Set<BadPackageData> menacesFound);
     }
 
     /*private void _loadDataFiles()
@@ -274,24 +274,14 @@ public class MonitorShieldService extends Service
     {
         //Scan installed packages
         List<PackageInfo> allPackages= ActivityTools.getApps(this, PackageManager.GET_ACTIVITIES | PackageManager.GET_PERMISSIONS);
-        List<PackageInfo> nonSystemAppsPackages= ActivityTools.getNonSystemApps(this, allPackages);
 
         //Packages with problems will be stored here
         Set<GoodPackageResultData> tempGoodResults=new HashSet<GoodPackageResultData>();
         Set<BadPackageData> tempBadResults=new HashSet<BadPackageData>();
 
-        Scanner.scanForWhiteListedApps(nonSystemAppsPackages, _whiteListPackages, tempGoodResults);
-
-        /*Log.d(_logTag, "=====> Showing whitelisted apps");
-        for (GoodPackageResultData p : tempGoodResults)
-        {
-            Log.d(_logTag, p.getPackageName());
-        }
-
-        Log.d(_logTag, " ");*/
-
-        List<PackageInfo> potentialBadApps=_removeWhiteListPackagesFromPackageList(nonSystemAppsPackages, _whiteListPackages);
-        potentialBadApps=_removeWhiteListPackagesFromPackageList(potentialBadApps, _userWhiteList.getSet());
+        //Filter white listed apps
+        List<PackageInfo> potentialBadApps=_removeWhiteListPackagesFromPackageList(allPackages, _whiteListPackages);
+        potentialBadApps=_removeWhiteListPackagesFromPackageList(allPackages, _userWhiteList.getSet());
 
         Scanner.scanForBlackListedActivityApps(potentialBadApps, _blackListActivities, tempBadResults);
         Scanner.scanForSuspiciousPermissionsApps(potentialBadApps, _suspiciousPermissions, tempBadResults);

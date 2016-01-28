@@ -8,10 +8,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -65,6 +65,9 @@ public class MainFragment extends Fragment
     private boolean firstScan = false;
     final int kProgressBarRefressTime=50;
 
+    final int kEnterAppTime=50;
+    final int kScanningAppTime=100;
+    final int kIconChangeToGoodOrBadTime =100;
 
     PausableCountDownTimer _cdTimer =null;
 
@@ -184,7 +187,7 @@ public class MainFragment extends Fragment
             @Override
             public void onScanResult(List<PackageInfo> allPacakgesToScan, Set<BadPackageData> scanResult)
             {
-                AppData appData=getMainActivity().getAppData();
+                AppData appData = getMainActivity().getAppData();
                 appData.setFirstScanDone(true);
                 appData.serialize(getMainActivity());
 
@@ -254,7 +257,7 @@ public class MainFragment extends Fragment
         oa1.start();
     }
 
-    private void _startScanningAnimation(final List<PackageInfo> packagesToScan, final Set<BadPackageData> tempBadResults)
+    private void _startScanningAnimation(final List<PackageInfo> allPackages, final Set<BadPackageData> tempBadResults)
     {
         //Animate the button exit
         ObjectAnimator oa1 = ObjectAnimator.ofFloat(_buttonContainer, "translationX",
@@ -307,27 +310,96 @@ public class MainFragment extends Fragment
             }
         };
 
-        _onScanFileListener=new IOnFileScanFinished()
+//        _scanPackage(packagesToScan,0, _onScanFileListener);
+
+        List<PackageInfo> systemApps=ActivityTools.getSystemApps(getActivity(), allPackages);
+        _scanSystemPackagesAnimationWithText(systemApps, new IOnActionFinished()
         {
             @Override
-            public void onFinished(int scannedIndex)
+            public void onFinished()
             {
-                _continueScanning(packagesToScan,scannedIndex,_scanFinished);
+                Log.i("kakas", "Al finished!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                //_continueScanning(packagesToScan,scannedIndex,_scanFinished);
             }
-        };
-
-        _scanPackage(packagesToScan,0, _onScanFileListener);
+        });
     }
 
-    IOnFileScanFinished _onScanFileListener=null;
+    //Cambiando texto SCAN SYSTEM PACKAGES
+    private void _scanSystemPackagesAnimationWithText(final List<PackageInfo> systemApps,final IOnActionFinished scanFinishedListener)
+    {
+
+        //_progressContainer.setVisibility(View.VISIBLE);
+        ObjectAnimator oa1 = ObjectAnimator.ofFloat(_progressContainer, "translationX",
+                _superContainer.getWidth()/2.0f+_progressContainer.getWidth(), 0.0f);
+        oa1.setDuration(kEnterAppTime);
+        oa1.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+                _progressContainer.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                _scanSystemPackageText(systemApps,0,scanFinishedListener);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+            }
+        });
+
+        oa1.start();
+    }
+
+    class ScanSystemPackageTextRunnable implements   Runnable
+    {
+        public List<PackageInfo> systemApps;
+        public int currentPackage;
+        public IOnActionFinished onActionFinishedListener;
+
+        @Override
+        public void run()
+        {
+            _scanSystemPackageText(systemApps,currentPackage,onActionFinishedListener );
+        }
+    }
+    Handler _handler=new Handler();
+    ScanSystemPackageTextRunnable _scanSystemPackageTextRunnable=new ScanSystemPackageTextRunnable();
+
+    private void _scanSystemPackageText(final List<PackageInfo> systemApps, int currentPackage, final IOnActionFinished fileScanFinishedListener)
+    {
+        PackageInfo packageToScan=systemApps.get(currentPackage);
+
+        _progressPanelIconImageView.setImageDrawable(ActivityTools.getIconFromPackage(packageToScan.packageName, getMainActivity()));
+        _progressPanelTextView.setText(packageToScan.packageName);
+
+        if(currentPackage>=systemApps.size())
+            fileScanFinishedListener.onFinished();
+        else
+        {
+            _scanSystemPackageTextRunnable.systemApps=systemApps;
+            _scanSystemPackageTextRunnable.currentPackage=++currentPackage;
+            _scanSystemPackageTextRunnable.onActionFinishedListener=fileScanFinishedListener;
+            _handler.postDelayed(_scanSystemPackageTextRunnable,100);
+        }
+    }
 
     void _continueScanning(List<PackageInfo> packagesToScan,int scannedIndex, IOnActionFinished scanFinishedListener)
     {
-        ++scannedIndex;
+        /*++scannedIndex;
         if(scannedIndex<packagesToScan.size())
             _scanPackage(packagesToScan,scannedIndex,_onScanFileListener);
         else
-            scanFinishedListener.onFinished();
+            scanFinishedListener.onFinished();*/
     }
 
     void _doWaitToScanPackage(final int miliseconds, List<PackageInfo> packagesToScan, final int currentPackage, final IOnFileScanFinished listener)
@@ -349,7 +421,7 @@ public class MainFragment extends Fragment
             {
                 _cdTimer =null;
                 _progressPanelprogressBar.setPercent(1.0f);
-                _convertStageIconInto(true, 500, new IOnActionFinished()
+                _convertStageIconInto(true, kIconChangeToGoodOrBadTime, new IOnActionFinished()
                 {
                     @Override
                     public void onFinished()
@@ -420,7 +492,7 @@ public class MainFragment extends Fragment
         //_progressContainer.setVisibility(View.VISIBLE);
         ObjectAnimator oa1 = ObjectAnimator.ofFloat(_progressContainer, "translationX",
                 _superContainer.getWidth()/2.0f+_progressContainer.getWidth(), 0.0f);
-        oa1.setDuration(100);
+        oa1.setDuration(kEnterAppTime);
         oa1.addListener(new Animator.AnimatorListener()
         {
             @Override
@@ -432,7 +504,7 @@ public class MainFragment extends Fragment
             @Override
             public void onAnimationEnd(Animator animation)
             {
-                _doWaitToScanPackage(500, packagesToScan, currentPackageIndex, onActionFinished);
+                _doWaitToScanPackage(kScanningAppTime, packagesToScan, currentPackageIndex, onActionFinished);
             }
 
             @Override
