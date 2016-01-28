@@ -10,9 +10,8 @@
     <dimen name="buy_image_size">50dp</dimen>
     <dimen name="calibrate_font_size">25dp</dimen>
 
-
-    <dimen name="menaces_text_font_size">20dp</dimen>
-    <dimen name="button_menaces_text_font_size">20dp</dimen>
-    <dimen name="text_scan_button_font_size">20dp</dimen>
-    <dimen name="button_scan_widht">250dp</dimen>
+    <dimen name="menaces_text_font_size">40dp</dimen>
+    <dimen name="button_menaces_text_font_size">40dp</dimen>
+    <dimen name="button_scan_widht">500dp</dimen>
+    <dimen name="text_scan_button_font_size">40dp</dimen>
 </resources>
