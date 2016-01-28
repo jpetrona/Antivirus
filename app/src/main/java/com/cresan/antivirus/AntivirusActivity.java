@@ -297,9 +297,8 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
             case R.id.ignoredListButton:
 
                 UserWhiteList userWhiteList=getUserWhiteList();
-                Set<PackageData> packageData =  userWhiteList.getSet();
-                packageData.toArray();
-                showIgnoredFragment(new ArrayList<PackageData>(packageData));
+                Set<BadPackageData> packageData =  userWhiteList.getSet();
+                showIgnoredFragment(new ArrayList<BadPackageData>(packageData));
 
                 Log.d("ign", "IGNORED BUTTON MENU");
                 return true;
@@ -315,7 +314,7 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
     }
 
 
-    void showIgnoredFragment(List<PackageData> userWhiteList)
+    void showIgnoredFragment(List<BadPackageData> userWhiteList)
     {
         IgnoredListFragment newFragment= (IgnoredListFragment) this.slideInFragment(AntivirusActivity.kIgnoredFragmentTag);
         newFragment.setData(userWhiteList);

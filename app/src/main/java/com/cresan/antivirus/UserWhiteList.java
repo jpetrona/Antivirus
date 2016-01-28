@@ -22,7 +22,7 @@ import java.util.Set;
 /**
  * Created by hexdump on 22/01/16.
  */
-public class UserWhiteList extends PackageDataSet
+public class UserWhiteList extends BadPackageDataSet
 {
     public UserWhiteList(Context context)
     {

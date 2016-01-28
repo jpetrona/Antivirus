@@ -22,22 +22,18 @@ import java.util.List;
 /**
  * Created by Magic Frame on 27/01/2016.
  */
-public class IgnoredAdapter  extends ArrayAdapter<PackageData>
+public class IgnoredAdapter  extends ArrayAdapter<BadPackageData>
 {
-
     private final Context _context;
-    private AntivirusActivity _antivirusActivity;
-    private List<PackageData> _values =null;
+    private List<BadPackageData> _values =null;
+    IOnAdapterItemRemoved _adapterListener=null;
+    void setOnAdapterItemRemovedListener(IOnAdapterItemRemoved listener) { _adapterListener=listener;}
 
-
-    public IgnoredAdapter(Context context, List<PackageData> values, AntivirusActivity antivirusActivity)
+    public IgnoredAdapter(Context context, List<BadPackageData> values)
     {
-
         super(context, R.layout.ignored_adapter,values);
         this._context = context;
         this._values = values;
-        this._antivirusActivity = antivirusActivity;
-
     }
 
     @Override
@@ -56,7 +52,7 @@ public class IgnoredAdapter  extends ArrayAdapter<PackageData>
 
         }
 
-        final PackageData obj = _values.get(position);
+        final BadPackageData obj = _values.get(position);
 
         TextView textView = (TextView) rowView.findViewById(R.id.nameAppIgnored);
         ImageView imageView = (ImageView) rowView.findViewById(R.id.iconAppIgnored);
@@ -74,9 +70,8 @@ public class IgnoredAdapter  extends ArrayAdapter<PackageData>
                                     @Override
                                     public void onClick(DialogInterface dialog, int which)
                                     {
-                                        //Metodo para quitar de la lista de ignorados y volver a meterlo en la malas
-
-
+                                        remove(obj);
+                                        _adapterListener.onItemRemoved(obj);
                                     }
                                 }).setNegativeButton(_context.getString(R.string.cancel), new DialogInterface.OnClickListener()
                                 {

@@ -12,15 +12,11 @@ import java.util.Set;
 /**
  * Created by hexdump on 15/01/16.
  */
-public class BadPackageData
+public class BadPackageData extends PackageData
 {
-    private String _packageName;
-    public String getPackageName() {return _packageName;}
-    public void setPackageName(String packageName) { _packageName=packageName;}
-
     public BadPackageData(String packageName)
     {
-        setPackageName(packageName);
+        super(packageName);
     }
 
     private Set<ActivityData> _activities=new HashSet<ActivityData>();
@@ -35,20 +31,6 @@ public class BadPackageData
     public boolean getInstalledThroughGooglePlay() { return _installedThroughGooglePlay; }
     public void setInstalledThroughGooglePlay(boolean installed) { _installedThroughGooglePlay=installed;}
 
-    public int hashCode()
-    {
-        return (int) getPackageName().hashCode();
-    }
-
-
-    public boolean equals(Object o)
-    {
-        if(o == null)
-            return false;
-
-        BadPackageData other = (BadPackageData) o;
-        return getPackageName().equals(other.getPackageName());
-    }
 
     public boolean isMenace()
     {
@@ -69,7 +51,7 @@ public class BadPackageData
     public JSONObject buildJSONObject() throws JSONException
     {
         JSONObject jsonObj=new JSONObject();
-        jsonObj.put("packageName",_packageName);
+        jsonObj.put("packageName",getPackageName());
 
         //Add activities
         JSONArray activitiesArray=new JSONArray();

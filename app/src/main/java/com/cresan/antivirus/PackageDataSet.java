@@ -99,8 +99,7 @@ public class PackageDataSet
             for (int i = 0; i < m_jArry.length(); i++)
             {
                 JSONObject temp = m_jArry.getJSONObject(i);
-                PackageData pd = new PackageData();
-                pd.setPackageName(temp.getString("packageName"));
+                PackageData pd = new PackageData(temp.getString("packageName"));
                 _set.add(pd);
             }
         } catch (JSONException e)

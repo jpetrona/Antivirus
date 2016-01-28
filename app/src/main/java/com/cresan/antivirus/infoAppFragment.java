@@ -98,10 +98,9 @@ public class InfoAppFragment extends Fragment
                             {
                                 UserWhiteList userWhiteList=getMainActivity().getUserWhiteList();
 
-                                PackageData pdo=new PackageData();
-                                pdo.setPackageName(_suspiciousApp.getPackageName());
+                                //PackageData pdo=new PackageData(_suspiciousApp.getPackageName());
 
-                                userWhiteList.addPackage(pdo);
+                                userWhiteList.addPackage(_suspiciousApp);
                                 userWhiteList.writeData();
 
                                 MenacesCacheSet menacesCacheSet=getMainActivity().getMenacesCacheSet();
