@@ -28,6 +28,8 @@ import com.tech.applications.coretools.NetworkTools;
 import com.tech.applications.coretools.StringTools;
 import com.tech.applications.coretools.time.PausableCountDownTimer;
 
+import at.grabner.circleprogress.CircleProgressView;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -56,7 +58,9 @@ public class MainFragment extends Fragment
     RelativeLayout _buttonContainer;
     RelativeLayout _superContainer;
     ImageView _riskIcon;
-    LinearLayout _backgroundRisk;
+    LinearLayout _deviceRiskPanel;
+    LinearLayout _scanningProgressPanel;
+    CircleProgressView _circleProgressBar;
     TextView _menacesCounterText;
     private boolean firstScan = false;
     final int kProgressBarRefressTime=50;
@@ -82,14 +86,16 @@ public class MainFragment extends Fragment
     protected void _setupFragment(View root)
     {
 
-        _progressPanelIconImageView =(ImageView)root.findViewById(R.id.progressPanelIconImageView);
-        _progressPanelTextView =(TextView)root.findViewById(R.id.progressPanelTextView);;
-        _progressPanelprogressBar =(MagicProgressBar)root.findViewById(R.id.progressPanelProgressBar);
+        _progressPanelIconImageView =(ImageView)root.findViewById(R.id.animationProgressPanelIconImageView);
+        _progressPanelTextView =(TextView)root.findViewById(R.id.animationProgressPanelTextView);;
+        _progressPanelprogressBar =(MagicProgressBar)root.findViewById(R.id.animationProgressPanelProgressBar);
         _buttonContainer=(RelativeLayout)root.findViewById(R.id.buttonLayout);
-        _progressContainer=(RelativeLayout)root.findViewById(R.id.progressPanel);
+        _progressContainer=(RelativeLayout)root.findViewById(R.id.animationProgressPanel);
         _superContainer=(RelativeLayout)root.findViewById(R.id.superContainer);
         _riskIcon = (ImageView) root.findViewById(R.id.iconRisk);
-        _backgroundRisk = (LinearLayout) root.findViewById(R.id.BackgroundColorRisk);
+        _deviceRiskPanel = (LinearLayout) root.findViewById(R.id.deviceRiskPanel);
+        _scanningProgressPanel=(LinearLayout) root.findViewById(R.id.scanningProgressPanel);
+        _circleProgressBar=(CircleProgressView) root.findViewById(R.id.circleView);
         _resolvePersistProblems = (Button) root.findViewById(R.id.button_resolve_problems);
         _resolvePersistProblems.setOnClickListener(new View.OnClickListener()
         {
@@ -165,7 +171,7 @@ public class MainFragment extends Fragment
         _runAntivirusNow.setEnabled(true);
     }
 
-    protected void _scanFileSystem()
+    protected void _startRealScan()
     {
 
         getMainActivity().startMonitorScan(new MonitorShieldService.IClientInterface()
@@ -187,75 +193,67 @@ public class MainFragment extends Fragment
         });
     }
 
-/*
-    protected void _scanFileSystem()
+    private void _scanFileSystem()
     {
-        //Scan installed packages
-        List<PackageInfo> allPackages= ActivityTools.getApps(getMainActivity(), PackageManager.GET_ACTIVITIES | PackageManager.GET_PERMISSIONS);
-        List<PackageInfo> nonSystemAppsPackages= ActivityTools.getNonSystemApps(getMainActivity(), allPackages);
+        _scanningProgressPanel.setAlpha(0.0f);
+        _scanningProgressPanel.setVisibility(View.VISIBLE);
 
-        Set<PackageData> whiteListPackages=getMainActivity().getWhiteListPackages();
-        Set<PackageData> blackListPackages=getMainActivity().getBlackListPackages();
-        Set<PackageData> blackListActivities=getMainActivity().getBlackListActivities();
-        Set<PermissionData> suspiciousPermissions=getMainActivity().getSuspiciousPermissions();
-
-        //Packages with problems will be stored here
-        Set<GoodPackageResultData> tempGoodResults=new HashSet<GoodPackageResultData>();
-        Set<BadPackageData> tempBadResults=new HashSet<BadPackageData>();
-
-        _scanForWhiteListedApps(nonSystemAppsPackages, whiteListPackages, tempGoodResults);
-
-        Log.d(_logTag, "=====> Showing whitelisted apps");
-        for (GoodPackageResultData p : tempGoodResults)
+        ObjectAnimator oa1 = ObjectAnimator.ofFloat(_scanningProgressPanel, "alpha",0.0f,1.0f);
+        oa1.addListener(new Animator.AnimatorListener()
         {
-            Log.d(_logTag, p.getPackageName());
-        }
-
-        Log.d(_logTag, " ");
-
-        List<PackageInfo> potentialBadApps=_removeWhiteListPackagesFromPackageList(nonSystemAppsPackages, whiteListPackages);
-        potentialBadApps=getMainActivity().getUserWhiteList().removeMyPackagesFromPackageList(potentialBadApps);
-
-        _scanForBlackListedActivityApps(potentialBadApps, blackListActivities, tempBadResults);
-        _scanForSuspiciousPermissionsApps(potentialBadApps, suspiciousPermissions, tempBadResults);
-        _fillInstalledFromGooglePlay(potentialBadApps, tempBadResults);
-
-        for (BadPackageData p : tempBadResults)
-        {
-            Log.d(_logTag, "======PACKAGE "+p.getPackageName()+" GPlay install: "+p.getInstalledThroughGooglePlay());
-            if(p.getActivityData().size()>0)
+            @Override
+            public void onAnimationStart(Animator animation)
             {
-                Log.d(_logTag, "=========BLACK-ACTIVITIES>");
-                for (ActivityData ad : p.getActivityData())
-                {
-                    Log.d(_logTag, "=============> " + ad.getActivityInfo().name);
-                }
-            }
-            if(p.getPermissionData().size()>0)
-            {
-                Log.d(_logTag,"=========BAD-PERMISSIONS>");
-                for(PermissionData pd : p.getPermissionData())
-                {
-                    Log.d(_logTag,"=============> "+ pd.getPermissionName());
-                }
             }
 
-            Log.d(_logTag," ");
-        }
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                _startRealScan();
+            }
 
-        showResultFragment(new ArrayList<BadPackageData>(tempBadResults));
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+            }
 
-        List<PackageInfo> _packageInfo=new ArrayList<PackageInfo>();
-        _packageInfo.add(allPackages.get(0));
-        _packageInfo.add(allPackages.get(1));
-        _packageInfo.add(allPackages.get(2));
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+            }
+        });
+        oa1.setDuration(500);
+        oa1.start();
 
-        _foundMenaces=tempBadResults;
+        oa1 = ObjectAnimator.ofFloat(_deviceRiskPanel, "alpha",1.0f,0.0f);
+        oa1.addListener(new Animator.AnimatorListener()
+        {
+            @Override
+            public void onAnimationStart(Animator animation)
+            {
+                _deviceRiskPanel.setVisibility(View.INVISIBLE);
+            }
 
-        _startScanningAnimation(_packageInfo,_foundMenaces);
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+            }
 
+            @Override
+            public void onAnimationCancel(Animator animation)
+            {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation)
+            {
+            }
+        });
+
+        oa1.setDuration(500);
+        oa1.start();
     }
-*/
+
     private void _startScanningAnimation(final List<PackageInfo> packagesToScan, final Set<BadPackageData> tempBadResults)
     {
         ObjectAnimator oa1=new ObjectAnimator();
@@ -415,6 +413,9 @@ public class MainFragment extends Fragment
         oa2.start();
     }
 
+
+
+
     private void _scanPackage(final List<PackageInfo> packagesToScan, final int currentPackageIndex, final IOnFileScanFinished onActionFinished)
     {
         PackageInfo packageToScan=packagesToScan.get(currentPackageIndex);
@@ -454,228 +455,6 @@ public class MainFragment extends Fragment
         oa1.start();
     }
 
-/*
-    protected BadPackageData getBadPackageResultByPackageName(Set<BadPackageData> prd, String packageName)
-    {
-        BadPackageData result=null;
-
-        for (BadPackageData p : prd)
-        {
-            if(p.getPackageName().equals(packageName))
-            {
-                result=p;
-                break;
-            }
-        }
-
-        return result;
-    }
-
-    protected Set<GoodPackageResultData> _scanForWhiteListedApps(List<PackageInfo> packagesToSearch, Set<PackageData> whiteListPackages,
-                                                              Set<GoodPackageResultData> result)
-    {
-        Set<GoodPackageResultData> subResult=new HashSet<GoodPackageResultData>();
-
-        //Check against whitelist
-        for(PackageData pd : whiteListPackages)
-        {
-            _getPackagesByNameFilter(packagesToSearch, pd.getPackageName(), subResult);
-
-            result.addAll(subResult);
-        }
-
-        return result;
-    }
-
-    protected List<PackageInfo> _removeWhiteListPackagesFromPackageList(List<PackageInfo> packagesToSearch, Set<PackageData> whiteListPackages)
-    {
-        boolean found=false;
-
-        List<PackageInfo> trimmedPackageList=new ArrayList<PackageInfo>(packagesToSearch);
-
-        //Check against whitelist
-        for(PackageData pd : whiteListPackages)
-        {
-            PackageInfo p = null;
-            int index = 0;
-            String packageName = pd.getPackageName();
-            found = false;
-
-            while (found == false && index < trimmedPackageList.size())
-            {
-                p = trimmedPackageList.get(index);
-                if (packageNameBelongsToPackageMask(p.packageName,pd.getPackageName()))
-                {
-                    found = true;
-                    trimmedPackageList.remove(index);
-                }
-                else
-                    ++index;
-            }
-        }
-
-        return trimmedPackageList;
-    }
-
-    //In setToUpdate we receive a set of BadPackageData ready to be update with newly detected menaces
-    protected Set<BadPackageData> _scanForBlackListedActivityApps(List<PackageInfo> packagesToSearch, Set<PackageData> blackListedActivityPackages,
-                                                                     Set<BadPackageData> setToUpdate)
-    {
-        List<ActivityInfo> subResult=new ArrayList<ActivityInfo>();
-
-        ActivityInfo[] activities;
-
-        //Check against black listed activity apps
-        for(PackageData pd : blackListedActivityPackages)
-        {
-            for(PackageInfo pi: packagesToSearch)
-            {
-                //In subResult we have now all the ActivityInfo entries resulting in a menace
-                _getActivitiesByNameFilter(pi, pd.getPackageName(), subResult);
-
-                //If we found bad activities in the package fill the bad package information into result
-                if(subResult.size()>0)
-                {
-                    //Update or create new if it does not exist
-                    BadPackageData bprd=getBadPackageResultByPackageName(setToUpdate, pi.packageName);
-                    if(bprd==null)
-                    {
-                        bprd = new BadPackageData(pi);
-                        setToUpdate.add(bprd);
-                    }
-
-                    for(ActivityInfo ai: subResult)
-                    {
-                        bprd.addActivityData(new ActivityData(ai, 0));
-                    }
-                }
-
-            }
-        }
-
-        return setToUpdate;
-    }
-
-    //In setToUpdate we receive a set of BadPackageData ready to be update with newly detected menaces
-    protected Set<BadPackageData> _scanForSuspiciousPermissionsApps(List<PackageInfo> packagesToSearch, Set<PermissionData> suspiciousPermissions,
-                                                                        Set<BadPackageData> setToUpdate)
-    {
-        //Check against whitelist
-        for(PackageInfo pi : packagesToSearch)
-        {
-            for(PermissionData permData : suspiciousPermissions)
-            {
-                if(ActivityTools.packageInfoHasPermission(pi, permData.getPermissionName()))
-                {
-                    //Update or create new if it does not exist
-                    BadPackageData bprd=getBadPackageResultByPackageName(setToUpdate, pi.packageName);
-                    if(bprd==null)
-                    {
-                        bprd = new BadPackageData(pi);
-                        setToUpdate.add(bprd);
-                    }
-
-
-                    bprd.addPermissionData(permData);
-                }
-            }
-        }
-
-        return setToUpdate;
-    }
-
-    static public boolean packageNameBelongsToPackageMask(String packageName, String mask)
-    {
-        boolean wildcard=false;
-
-        if(mask.charAt(mask.length()-1)=='*')
-        {
-            wildcard=true;
-            mask=mask.substring(0,mask.length()-2);
-        }
-        else
-            wildcard=false;
-
-        if(wildcard==true)
-        {
-            if (packageName.startsWith(mask))
-                return true;
-            else
-                return false;
-        }
-        else
-        {
-            if(packageName.equals(mask))
-                return true;
-            else
-                return false;
-        }
-
-    }
-
-    Set<GoodPackageResultData> _getPackagesByNameFilter(List<PackageInfo> packages, String filter, Set<GoodPackageResultData> result)
-    {
-        boolean wildcard=false;
-
-        result.clear();
-
-        if(filter.charAt(filter.length()-1)=='*')
-            wildcard=true;
-
-        PackageInfo packInfo =null;
-
-        for (int i=0; i < packages.size(); i++)
-        {
-            packInfo=packages.get(i);
-
-            if(packageNameBelongsToPackageMask(packInfo.packageName, filter))
-            {
-                result.add(new GoodPackageResultData(packInfo));
-
-                //Just one package if we were not using a wildcard
-                if (!wildcard)
-                    break;
-            }
-        }
-
-        return result;
-    }
-
-    //We will return a list of uniquely named ActivityInfo becase we can't have 2 same activities in a manifeset with same name
-    List<ActivityInfo> _getActivitiesByNameFilter(PackageInfo pi, String filter, List<ActivityInfo> result)
-    {
-        result.clear();
-
-        if(pi.activities==null)
-            return result;
-
-        boolean wildcard=false;
-
-        if(filter.charAt(filter.length()-1)=='*')
-        {
-            wildcard=true;
-            filter=filter.substring(0,filter.length()-2);
-        }
-        else
-            wildcard=false;
-
-        ActivityInfo activityInfo =null;
-
-        for (int i=0; i < pi.activities.length; i++)
-        {
-            activityInfo=pi.activities[i];
-
-            if(activityInfo.name.startsWith(filter))
-            {
-                result.add(activityInfo);
-            }
-        }
-
-        return result;
-    }
-*/
-
-
     void showResultFragment(List<BadPackageData> suspiciousApps)
     {
         ResultsFragment newFragment= (ResultsFragment) getMainActivity().slideInFragment(AntivirusActivity.kResultFragmentTag);
@@ -712,7 +491,7 @@ public class MainFragment extends Fragment
             {
                 _riskIcon.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.shield_medium_risk_icon));
                 _menacesCounterText.setText("Ejecutar primer analisis para comprobar amenazas");
-                _backgroundRisk.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.MediumRiskColor));
+                _deviceRiskPanel.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.MediumRiskColor));
                 _resolvePersistProblems.setVisibility(View.GONE);
             }
             else
@@ -746,7 +525,7 @@ public class MainFragment extends Fragment
 
 
         _riskIcon.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.shield_protected_icon));
-        _backgroundRisk.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.ProtectedRiskColor));
+        _deviceRiskPanel.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.ProtectedRiskColor));
         _menacesCounterText.setText("Estas protegido");
        _resolvePersistProblems.setVisibility(View.GONE);
 
@@ -757,7 +536,7 @@ public class MainFragment extends Fragment
     {
 
         _riskIcon.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.shield_medium_risk_icon));
-        _backgroundRisk.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.MediumRiskColor));
+        _deviceRiskPanel.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.MediumRiskColor));
         _updateFoundThreatsText(_menacesCounterText, menaces);
        _resolvePersistProblems.setVisibility(View.VISIBLE);
 
@@ -767,7 +546,7 @@ public class MainFragment extends Fragment
     {
 
         _riskIcon.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.shield_high_risk_icon));
-        _backgroundRisk.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.HighRiskColor));
+        _deviceRiskPanel.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.HighRiskColor));
         _updateFoundThreatsText(_menacesCounterText, menaces);
        _resolvePersistProblems.setVisibility(View.VISIBLE);
     }

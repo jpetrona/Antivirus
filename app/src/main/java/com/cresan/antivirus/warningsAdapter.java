@@ -45,7 +45,9 @@ public class WarningsAdapter extends ArrayAdapter<WarningData>
         List<WarningData> wdl=new ArrayList<WarningData>();
 
         Set<ActivityData> activityData=bp.getActivityData();
-        for(ActivityData ad : activityData)
+
+        //for(ActivityData ad : activityData)
+        if(activityData.size()>0)
         {
 
             WarningData wd=new WarningData();

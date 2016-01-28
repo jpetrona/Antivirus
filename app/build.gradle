@@ -72,5 +72,6 @@ dependencies {
     compile project(':waveview')
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.liulishuo.magicprogresswidget:library:1.0.2'
+    compile 'com.github.jakob-grabner:Circle-Progress-View:1.2.8'
     compile 'com.google.android.gms:play-services-ads:8.4.0'
 }

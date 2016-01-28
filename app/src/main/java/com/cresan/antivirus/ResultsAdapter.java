@@ -41,14 +41,11 @@ public class ResultsAdapter extends ArrayAdapter<BadPackageData>
 
     public ResultsAdapter(Context context, List<BadPackageData> values, AntivirusActivity antivirusActivity)
     {
-
         super(context, R.layout.list_apps,values);
         this.context = context;
         this._values = values;
         this.antivirusActivity = antivirusActivity;
-
     }
-
 
 
     @Override

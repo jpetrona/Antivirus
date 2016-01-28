@@ -37,4 +37,9 @@
 	<color name="HighRiskColor">#E74C3C</color>
 	<color name="MediumRiskColor">#FF933C</color>
 	<color name="ProtectedRiskColor">#71B867</color>
+
+	<color name="fix_screen_bottom_color">#ffffffff</color>
+	<color name="fix_screen_progressbar_rim_bg_color">#ffffffff</color>
+	<color name="fix_screen_progressbar_rim_fg_color">#ff00acc1</color>
+	<color name="fix_screen_top_color">#ffe91e63</color>
 </resources>
