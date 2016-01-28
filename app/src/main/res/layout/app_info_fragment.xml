@@ -11,7 +11,8 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="@color/SecondaryColor"
-        android:layout_weight="0.15">
+        android:layout_weight="0.15"
+        android:padding="10dp">
 
         <ImageView
             android:id="@+id/iconGeneral"

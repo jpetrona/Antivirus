@@ -23,6 +23,11 @@ public class PackageData
     public String getPackageName() { return _packageName; }
     public void setPackageName(String packageName) { _packageName=packageName;}
 
+    public PackageData(String packageName)
+    {
+        setPackageName(packageName);
+    }
+
     public int hashCode()
     {
         return (int) _packageName.hashCode();
@@ -63,7 +68,7 @@ public class PackageData
         }
     }*/
 
-    public static List<PackageData> getPackagesByName(HashSet<PackageData> packages, String filter, List<PackageData> result)
+    public static List<PackageData> getPackagesByName(Set<PackageData> packages, String filter, List<PackageData> result)
     {
         boolean wildcard=false;
 

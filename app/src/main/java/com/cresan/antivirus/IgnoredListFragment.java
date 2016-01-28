@@ -20,11 +20,11 @@ public class IgnoredListFragment extends Fragment
 
     AntivirusActivity getMainActivity() {return (AntivirusActivity) getActivity();}
     IgnoredAdapter _ignoredAdapter =null;
-    List<PackageData> _userWhiteList =null;
+    List<BadPackageData> _userWhiteList =null;
     private ListView _listView;
 
 
-    public void setData(List<PackageData> userWhiteList)
+    public void setData(List<BadPackageData> userWhiteList)
     {
         _userWhiteList = userWhiteList;
     }
@@ -35,7 +35,20 @@ public class IgnoredListFragment extends Fragment
     {
         View rootView = inflater.inflate(R.layout.ignored_list_fragment, container, false);
         _listView = (ListView)rootView.findViewById(R.id.ignoredList);
-        _ignoredAdapter=new IgnoredAdapter(getMainActivity(), _userWhiteList, getMainActivity());
+        _ignoredAdapter=new IgnoredAdapter(getMainActivity(), _userWhiteList);
+        _ignoredAdapter.setOnAdapterItemRemovedListener(new IOnAdapterItemRemoved<BadPackageData>()
+        {
+            @Override
+            public void onItemRemoved(BadPackageData item)
+            {
+                UserWhiteList userWhiteList= getMainActivity().getUserWhiteList();
+                MenacesCacheSet menaceCacheSet= getMainActivity().getMenacesCacheSet();
+                userWhiteList.removePackage(item);
+                userWhiteList.writeData();
+                menaceCacheSet.addPackage(item);
+                menaceCacheSet.writeData();
+            }
+        });
         _listView.setAdapter(_ignoredAdapter);
         return rootView;
     }

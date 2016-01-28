@@ -187,8 +187,7 @@ public class MonitorShieldService extends Service
             for (int i = 0; i < m_jArry.length(); i++)
             {
                 JSONObject temp = m_jArry.getJSONObject(i);
-                PackageData pd=new PackageData();
-                pd.setPackageName(temp.getString("packageName"));
+                PackageData pd=new PackageData(temp.getString("packageName"));
                 _whiteListPackages.add(pd);
             }
         }
@@ -208,8 +207,7 @@ public class MonitorShieldService extends Service
             for (int i = 0; i < m_jArry.length(); i++)
             {
                 JSONObject temp = m_jArry.getJSONObject(i);
-                PackageData pd=new PackageData();
-                pd.setPackageName(temp.getString("packageName"));
+                PackageData pd=new PackageData(temp.getString("packageName"));
                 _blackListPackages.add(pd);
             }
         }
@@ -229,8 +227,7 @@ public class MonitorShieldService extends Service
             for (int i = 0; i < m_jArry.length(); i++)
             {
                 JSONObject temp = m_jArry.getJSONObject(i);
-                PackageData pd=new PackageData();
-                pd.setPackageName(temp.getString("packageName"));
+                PackageData pd=new PackageData(temp.getString("packageName"));
                 _blackListActivities.add(pd);
             }
         }
@@ -294,7 +291,7 @@ public class MonitorShieldService extends Service
         Log.d(_logTag, " ");*/
 
         List<PackageInfo> potentialBadApps=_removeWhiteListPackagesFromPackageList(nonSystemAppsPackages, _whiteListPackages);
-        potentialBadApps=_userWhiteList.removeMyPackagesFromPackageList(potentialBadApps);
+        potentialBadApps=_removeWhiteListPackagesFromPackageList(potentialBadApps, _userWhiteList.getSet());
 
         Scanner.scanForBlackListedActivityApps(potentialBadApps, _blackListActivities, tempBadResults);
         Scanner.scanForSuspiciousPermissionsApps(potentialBadApps, _suspiciousPermissions, tempBadResults);
@@ -414,7 +411,7 @@ public class MonitorShieldService extends Service
         }
     }
 
-    protected List<PackageInfo> _removeWhiteListPackagesFromPackageList(List<PackageInfo> packagesToSearch, Set<PackageData> whiteListPackages)
+    protected List<PackageInfo> _removeWhiteListPackagesFromPackageList(List<PackageInfo> packagesToSearch, Set<? extends PackageData> whiteListPackages)
     {
         boolean found=false;
 
