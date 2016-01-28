@@ -49,11 +49,11 @@
                         app:cpv_autoTextSize="true"
                         app:cpv_value="10.0"
                         app:cpv_maxValue="100.0"
-                        app:cpv_barWidth="15.0dip"
+                        app:cpv_barWidth="20.0dip"
                         app:cpv_barColor="@color/fix_screen_progressbar_rim_fg_color"
                         app:cpv_spinColor="@color/fix_screen_progressbar_rim_fg_color"
                         app:cpv_rimColor="@color/fix_screen_progressbar_rim_bg_color"
-                        app:cpv_rimWidth="15.0dip"
+                        app:cpv_rimWidth="20.0dip"
                         app:cpv_contourSize="0.0dip"
                         app:cpv_seekMode="false"
                         app:cpv_unitPosition="right_bottom"
@@ -71,7 +71,8 @@
                         android:text="Scanning..."
                         android:id="@+id/scanningTextView"
                         android:textColor="#ffffff"
-                        android:gravity="center_horizontal"/>
+                        android:gravity="center_horizontal"
+                        android:textSize="30dp"/>
 
                     <FrameLayout
                         android:layout_width="match_parent"
@@ -114,7 +115,8 @@
                             android:text="2 PROBLEMAS"
                             android:id="@+id/menacesCounter"
                             android:textColor="#ffffff"
-                            android:gravity="center_horizontal"/>
+                            android:gravity="center_horizontal"
+                            android:textSize="45dp"/>
 
                         <FrameLayout
                             android:layout_width="match_parent"
@@ -129,7 +131,8 @@
                             android:background="@drawable/resolve_button_selector"
                             android:textColor="@color/SecondaryTextColor"
                             android:layout_gravity="center"
-                            android:focusable="false"/>
+                            android:focusable="false"
+                            android:textSize="35dp"/>
 
                         <FrameLayout
                             android:layout_width="match_parent"
@@ -154,14 +157,15 @@
 
                 <Button
                     android:id="@+id/runAntivirusNow"
-                    android:layout_width="250dp"
+                    android:layout_width="400dp"
                     android:layout_height="wrap_content"
                     android:text="Scan"
                     android:textStyle="bold"
                     android:typeface="monospace"
                     android:layout_centerInParent="true"
                     android:background="@drawable/calibrate_button_selector"
-                    android:textColor="@color/SecondaryTextColor"/>
+                    android:textColor="@color/SecondaryTextColor"
+                    android:textSize="35dp"/>
 
             </RelativeLayout>
 
@@ -178,7 +182,8 @@
                     android:gravity="center"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:text="Trying root privileges"
-                    android:textColor="@color/SecondaryTextColor"/>
+                    android:textColor="@color/SecondaryTextColor"
+                    android:textSize="40dp"/>
 
                 <ImageView
                     android:id="@+id/animationProgressPanelIconImageView"
@@ -186,7 +191,8 @@
                     android:layout_height="64dp"
                     android:src="@drawable/gear"
                     android:layout_centerHorizontal="true"
-                    android:layout_above="@id/animationProgressPanelTextView"/>
+                    android:layout_above="@id/animationProgressPanelTextView"
+                    android:adjustViewBounds="false"/>
 
                 <com.liulishuo.magicprogresswidget.MagicProgressBar
                     android:id="@+id/animationProgressPanelProgressBar"
