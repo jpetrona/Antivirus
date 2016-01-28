@@ -76,6 +76,7 @@ public class IgnoredAdapter  extends ArrayAdapter<PackageData>
                                     {
                                         //Metodo para quitar de la lista de ignorados y volver a meterlo en la malas
 
+
                                     }
                                 }).setNegativeButton(_context.getString(R.string.cancel), new DialogInterface.OnClickListener()
                                 {
