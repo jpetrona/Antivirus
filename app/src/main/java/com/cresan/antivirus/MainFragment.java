@@ -53,15 +53,18 @@ public class MainFragment extends Fragment
     //Scrollable data chunk data
     ImageView _progressPanelIconImageView;
     TextView _progressPanelTextView;
-    MagicProgressBar _progressPanelprogressBar;
+    CircleProgressView _circleProgressBar;
+    TextView _bottomMenacesCounterText;
+    TextView _bottomScannedAppsText;
     RelativeLayout _progressContainer;
     RelativeLayout _buttonContainer;
     RelativeLayout _superContainer;
     ImageView _riskIcon;
     LinearLayout _deviceRiskPanel;
     LinearLayout _scanningProgressPanel;
-    CircleProgressView _circleProgressBar;
-    TextView _menacesCounterText;
+    TextView _topMenacesCounterText;
+
+
     private boolean firstScan = false;
     final int kProgressBarRefressTime=50;
 
@@ -91,14 +94,15 @@ public class MainFragment extends Fragment
 
         _progressPanelIconImageView =(ImageView)root.findViewById(R.id.animationProgressPanelIconImageView);
         _progressPanelTextView =(TextView)root.findViewById(R.id.animationProgressPanelTextView);;
-        _progressPanelprogressBar =(MagicProgressBar)root.findViewById(R.id.animationProgressPanelProgressBar);
+        _circleProgressBar=(CircleProgressView) root.findViewById(R.id.circleView);
+        _bottomMenacesCounterText=(TextView) root.findViewById(R.id.bottomFoundMenacesCount);
+        _bottomScannedAppsText=(TextView) root.findViewById(R.id.bottomScannedApp);
         _buttonContainer=(RelativeLayout)root.findViewById(R.id.buttonLayout);
         _progressContainer=(RelativeLayout)root.findViewById(R.id.animationProgressPanel);
         _superContainer=(RelativeLayout)root.findViewById(R.id.superContainer);
         _riskIcon = (ImageView) root.findViewById(R.id.iconRisk);
         _deviceRiskPanel = (LinearLayout) root.findViewById(R.id.deviceRiskPanel);
         _scanningProgressPanel=(LinearLayout) root.findViewById(R.id.scanningProgressPanel);
-        _circleProgressBar=(CircleProgressView) root.findViewById(R.id.circleView);
         _resolvePersistProblems = (Button) root.findViewById(R.id.button_resolve_problems);
         _resolvePersistProblems.setOnClickListener(new View.OnClickListener()
         {
@@ -117,7 +121,7 @@ public class MainFragment extends Fragment
         });
 
 
-        _menacesCounterText = (TextView)root.findViewById(R.id.menacesCounter);
+        _topMenacesCounterText = (TextView)root.findViewById(R.id.topMenacesCounter);
         _runAntivirusNow=(Button)root.findViewById(R.id.runAntivirusNow);
         _runAntivirusNow.setOnClickListener(new View.OnClickListener()
         {
@@ -275,8 +279,36 @@ public class MainFragment extends Fragment
             @Override
             public void onAnimationEnd(Animator animation)
             {
-                //_buttonContainer.setVisibility(View.INVISIBLE);
-                //whenFinishedAction.doAction();
+                _progressContainer.setVisibility(View.VISIBLE);
+                _progressContainer.setTranslationX(0);
+                _buttonContainer.setVerticalGravity(View.INVISIBLE);
+
+                ScanningFileSystemAsyncTask task = new ScanningFileSystemAsyncTask(getMainActivity(), allPackages, tempBadResults);
+                task.setAsyncTaskCallback(new IOnActionFinished()
+                {
+                    @Override
+                    public void onFinished()
+                    {
+
+                        showResultFragment(new ArrayList<BadPackageData>(tempBadResults));
+
+                        Handler handler=new Handler();
+                        handler.postDelayed(new Runnable()
+                        {
+                            @Override
+                            public void run()
+                            {
+                                _progressContainer.setVisibility(View.INVISIBLE);
+                                _progressContainer.setTranslationX(0);
+                                _buttonContainer.setVerticalGravity(View.VISIBLE);
+                                _buttonContainer.setTranslationX(0);
+                            }
+                        },400);
+
+                    }
+                });
+
+                task.execute();
             }
 
             @Override
@@ -290,7 +322,7 @@ public class MainFragment extends Fragment
             }
         });
         oa1.start();
-
+/*
         final IOnActionFinished _scanFinished= new IOnActionFinished()
         {
             @Override
@@ -308,24 +340,15 @@ public class MainFragment extends Fragment
 
                 }
             }
-        };
+        };*/
 
 //        _scanPackage(packagesToScan,0, _onScanFileListener);
 
-        List<PackageInfo> systemApps=ActivityTools.getSystemApps(getActivity(), allPackages);
-        _scanSystemPackagesAnimationWithText(systemApps, new IOnActionFinished()
-        {
-            @Override
-            public void onFinished()
-            {
-                Log.i("kakas", "Al finished!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-                //_continueScanning(packagesToScan,scannedIndex,_scanFinished);
-            }
-        });
     }
-
+/*
     //Cambiando texto SCAN SYSTEM PACKAGES
-    private void _scanSystemPackagesAnimationWithText(final List<PackageInfo> systemApps,final IOnActionFinished scanFinishedListener)
+    private void _scanSystemPackagesAnimationWithText(final List<PackageInfo> systemApps,Set<BadPackageData> menaces,
+                                                      final IOnActionFinished scanFinishedListener)
     {
 
         //_progressContainer.setVisibility(View.VISIBLE);
@@ -343,7 +366,7 @@ public class MainFragment extends Fragment
             @Override
             public void onAnimationEnd(Animator animation)
             {
-                _scanSystemPackageText(systemApps,0,scanFinishedListener);
+                _scanSystemPackageText(systemApps,0,menaces,scanFinishedListener);
             }
 
             @Override
@@ -360,22 +383,24 @@ public class MainFragment extends Fragment
         oa1.start();
     }
 
-    class ScanSystemPackageTextRunnable implements   Runnable
+    class ScanPackagesRunnable implements   Runnable
     {
         public List<PackageInfo> systemApps;
         public int currentPackage;
         public IOnActionFinished onActionFinishedListener;
+        public Set<BadPackageData> menaces;
 
         @Override
         public void run()
         {
-            _scanSystemPackageText(systemApps,currentPackage,onActionFinishedListener );
+            _scanSystemPackageText(systemApps,currentPackage, menaces, onActionFinishedListener );
         }
     }
     Handler _handler=new Handler();
-    ScanSystemPackageTextRunnable _scanSystemPackageTextRunnable=new ScanSystemPackageTextRunnable();
+    ScanPackagesRunnable _scanSystemPackageTextRunnable=new ScanPackagesRunnable();
 
-    private void _scanSystemPackageText(final List<PackageInfo> systemApps, int currentPackage, final IOnActionFinished fileScanFinishedListener)
+    private void _scanSystemPackageText(final List<PackageInfo> systemApps, int currentPackage, Set<BadPackageData> menaces,
+                                        final IOnActionFinished fileScanFinishedListener)
     {
         PackageInfo packageToScan=systemApps.get(currentPackage);
 
@@ -395,11 +420,11 @@ public class MainFragment extends Fragment
 
     void _continueScanning(List<PackageInfo> packagesToScan,int scannedIndex, IOnActionFinished scanFinishedListener)
     {
-        /*++scannedIndex;
+        ++scannedIndex;
         if(scannedIndex<packagesToScan.size())
             _scanPackage(packagesToScan,scannedIndex,_onScanFileListener);
         else
-            scanFinishedListener.onFinished();*/
+            scanFinishedListener.onFinished();
     }
 
     void _doWaitToScanPackage(final int miliseconds, List<PackageInfo> packagesToScan, final int currentPackage, final IOnFileScanFinished listener)
@@ -519,7 +544,7 @@ public class MainFragment extends Fragment
         });
 
         oa1.start();
-    }
+    }*/
 
     void showResultFragment(List<BadPackageData> suspiciousApps)
     {
@@ -556,7 +581,7 @@ public class MainFragment extends Fragment
             if(!firstScanDone)
             {
                 _riskIcon.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.shield_medium_risk_icon));
-                _menacesCounterText.setText("Ejecutar primer analisis para comprobar amenazas");
+                _topMenacesCounterText.setText("Ejecutar primer analisis para comprobar amenazas");
                 _deviceRiskPanel.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.MediumRiskColor));
                 _resolvePersistProblems.setVisibility(View.GONE);
             }
@@ -592,7 +617,7 @@ public class MainFragment extends Fragment
 
         _riskIcon.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.shield_protected_icon));
         _deviceRiskPanel.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.ProtectedRiskColor));
-        _menacesCounterText.setText("Estas protegido");
+        _topMenacesCounterText.setText("Estas protegido");
        _resolvePersistProblems.setVisibility(View.GONE);
 
 
@@ -603,7 +628,7 @@ public class MainFragment extends Fragment
 
         _riskIcon.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.shield_medium_risk_icon));
         _deviceRiskPanel.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.MediumRiskColor));
-        _updateFoundThreatsText(_menacesCounterText, menaces);
+        _updateFoundThreatsText(_topMenacesCounterText, menaces);
        _resolvePersistProblems.setVisibility(View.VISIBLE);
 
     }
@@ -613,7 +638,7 @@ public class MainFragment extends Fragment
 
         _riskIcon.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.shield_high_risk_icon));
         _deviceRiskPanel.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.HighRiskColor));
-        _updateFoundThreatsText(_menacesCounterText, menaces);
+        _updateFoundThreatsText(_topMenacesCounterText, menaces);
        _resolvePersistProblems.setVisibility(View.VISIBLE);
     }
 

@@ -2,6 +2,10 @@
   "data":
 [
   {
+    "packageName": "com.google.android.*"
+
+  },
+  {
   "packageName": "com.facebook.*"
   },
   {
@@ -96,10 +100,6 @@
   ,
   {
   "packageName": "com.trivago"
-  },
-  {
-  "packageName": "com.google.android.*"
-
   },
   {
   "packageName": "com.supercell.*"
