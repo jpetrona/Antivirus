@@ -304,11 +304,24 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
 
                 UserWhiteList userWhiteList=getUserWhiteList();
                 Set<BadPackageData> packageData =  userWhiteList.getSet();
+                if(packageData.size() > 0)
                 showIgnoredFragment(new ArrayList<BadPackageData>(packageData));
+                else
+                    new AlertDialog.Builder(this)
+                            .setTitle(this.getString(R.string.warning))
+                            .setMessage(this.getString(R.string.igonred_message_dialog))
+                            .setPositiveButton(this.getString(R.string.accept_eula), new DialogInterface.OnClickListener()
+                            {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which)
+                                {
 
+                                }
+                            }).show();
                 Log.d("ign", "IGNORED BUTTON MENU");
                 return true;
             case R.id.RateUs:
+                _showVoteUs();
                 Log.d("ign", "RATE US BUTTON MENU");
             return true;
             case R.id.information:

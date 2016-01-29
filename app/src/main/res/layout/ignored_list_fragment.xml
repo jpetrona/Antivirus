@@ -19,7 +19,7 @@
             android:layout_height="match_parent"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Medium Textgdgdgd"
-            android:id="@+id/ignoredCounter"
+            android:id="@+id/ignoredCounterText"
             android:textColor="@color/info_icon_bottom_text"/>
 
     </LinearLayout>
