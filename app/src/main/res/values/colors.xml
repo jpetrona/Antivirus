@@ -24,15 +24,15 @@
 	<color name="info_icon_top_text">#D3D2D1</color>
 	<color name="info_icon_bottom_text">#726D6C</color>
 
-	<color name="actionbar_background">#3B3F4D</color>
+	<color name="actionbar_background">#22242B</color>
 	<color name="actionbar_text">#ffffff</color>
 	<color name="PrimaryTextColor">#726D6C</color>
 	<color name="SecondaryTextColor">#ffffff</color>
-	<color name="PrimaryColor">#3B3F4D</color>
+	<color name="PrimaryColor">#22242B</color>
 	<color name="SecondaryColor">#D3D2D1</color>
 	<color name="DividerColor">#3B3F4D</color>
-
-
+	<color name="colorBackgroundScanInProgress">#3B3F4D</color>
+	<color name="color_BackgroundAnimationProgress">#4B4F5E</color>
 
 	<color name="HighRiskColor">#E74C3C</color>
 	<color name="MediumRiskColor">#FF933C</color>
