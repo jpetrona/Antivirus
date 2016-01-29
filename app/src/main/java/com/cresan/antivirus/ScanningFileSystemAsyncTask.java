@@ -171,6 +171,8 @@ public class ScanningFileSystemAsyncTask extends AsyncTask<Void,ScanningFileSyst
     {
         Log.i(_logTag, "AsyncTask finished...");
 
+        _circleProgressBar.setValue(_circleProgressBar.getMaxValue());
+
         if(_asyncTaskCallBack!=null)
             _asyncTaskCallBack.onFinished();
     }
