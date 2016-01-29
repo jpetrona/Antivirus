@@ -59,6 +59,7 @@ public class MainFragment extends Fragment
     RelativeLayout _progressContainer;
     RelativeLayout _buttonContainer;
     RelativeLayout _superContainer;
+    RelativeLayout _noMenacesInformationContainer;
     ImageView _riskIcon;
     LinearLayout _deviceRiskPanel;
     LinearLayout _scanningProgressPanel;
@@ -100,6 +101,7 @@ public class MainFragment extends Fragment
         _buttonContainer=(RelativeLayout)root.findViewById(R.id.buttonLayout);
         _progressContainer=(RelativeLayout)root.findViewById(R.id.animationProgressPanel);
         _superContainer=(RelativeLayout)root.findViewById(R.id.superContainer);
+        _noMenacesInformationContainer=(RelativeLayout) root.findViewById(R.id.noMenacesFoundPanel);
         _riskIcon = (ImageView) root.findViewById(R.id.iconRisk);
         _deviceRiskPanel = (LinearLayout) root.findViewById(R.id.deviceRiskPanel);
         _scanningProgressPanel=(LinearLayout) root.findViewById(R.id.scanningProgressPanel);
@@ -279,9 +281,7 @@ public class MainFragment extends Fragment
             @Override
             public void onAnimationEnd(Animator animation)
             {
-                _progressContainer.setVisibility(View.VISIBLE);
-                _progressContainer.setTranslationX(0);
-                _buttonContainer.setVerticalGravity(View.INVISIBLE);
+                _configureScanningUI();
 
                 ScanningFileSystemAsyncTask task = new ScanningFileSystemAsyncTask(getMainActivity(), allPackages, tempBadResults);
                 task.setAsyncTaskCallback(new IOnActionFinished()
@@ -289,21 +289,24 @@ public class MainFragment extends Fragment
                     @Override
                     public void onFinished()
                     {
-
-                        showResultFragment(new ArrayList<BadPackageData>(tempBadResults));
-
-                        Handler handler=new Handler();
-                        handler.postDelayed(new Runnable()
+                        if(tempBadResults.size()>0)
                         {
-                            @Override
-                            public void run()
+                            showResultFragment(new ArrayList<BadPackageData>(tempBadResults));
+
+                            Handler handler = new Handler();
+                            handler.postDelayed(new Runnable()
                             {
-                                _progressContainer.setVisibility(View.INVISIBLE);
-                                _progressContainer.setTranslationX(0);
-                                _buttonContainer.setVerticalGravity(View.VISIBLE);
-                                _buttonContainer.setTranslationX(0);
-                            }
-                        },400);
+                                @Override
+                                public void run()
+                                {
+                                    _configureNonScanningUI();
+                                }
+                            }, 400);
+                        }
+                        else
+                        {
+                            _playNoMenacesAnimationFound();
+                        }
 
                     }
                 });
@@ -344,6 +347,64 @@ public class MainFragment extends Fragment
 
 //        _scanPackage(packagesToScan,0, _onScanFileListener);
 
+    }
+
+    void _playNoMenacesAnimationFound()
+    {
+        ObjectAnimator oa = ObjectAnimator.ofFloat(_progressContainer, "rotationY", 0f, 90.0f);
+
+        oa.addListener(new AnimatorListenerAdapter()
+        {
+            @Override
+            public void onAnimationEnd(Animator animation)
+            {
+                super.onAnimationEnd(animation);
+
+                _noMenacesInformationContainer.setVisibility(View.VISIBLE);
+                _progressContainer.setVisibility(View.INVISIBLE);
+                _progressContainer.setRotationY(0);
+                ObjectAnimator oa = ObjectAnimator.ofFloat(_noMenacesInformationContainer, "rotationY", -90f, 0.0f);
+                oa.addListener(new AnimatorListenerAdapter()
+                {
+                    @Override
+                    public void onAnimationEnd(Animator animation)
+                    {
+                        Handler handler=new Handler();
+                        handler.postDelayed(new Runnable()
+                        {
+                            @Override
+                            public void run()
+                            {
+                                ObjectAnimator oa = ObjectAnimator.ofFloat(_noMenacesInformationContainer, "rotationY", 0, 90.0f);
+                                oa.addListener(new AnimatorListenerAdapter()
+                                {
+                                    @Override
+                                    public void onAnimationEnd(Animator animation)
+                                    {
+                                        _noMenacesInformationContainer.setRotationY(0);
+                                        _noMenacesInformationContainer.setVisibility(View.INVISIBLE);
+                                        _buttonContainer.setVisibility(View.VISIBLE);
+                                        _buttonContainer.setTranslationX(0);
+                                        ObjectAnimator oa = ObjectAnimator.ofFloat(_buttonContainer, "rotationY", -90f, 0.0f);
+                                    }
+                                });
+                                oa.setDuration(100);
+                                oa.setInterpolator(new LinearInterpolator());
+                                oa.start();
+                            }
+                        },2000);
+                    }
+                });
+
+                oa.setDuration(100);
+                oa.setInterpolator(new LinearInterpolator());
+                oa.start();
+            }
+        });
+
+        oa.setDuration(100);
+        oa.setInterpolator(new LinearInterpolator());
+        oa.start();
     }
 /*
     //Cambiando texto SCAN SYSTEM PACKAGES
@@ -613,7 +674,7 @@ public class MainFragment extends Fragment
 
     void activateProtectedState()
     {
-
+        _configureNonScanningUI();
 
         _riskIcon.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.shield_protected_icon));
         _deviceRiskPanel.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.ProtectedRiskColor));
@@ -625,6 +686,7 @@ public class MainFragment extends Fragment
 
     void activateMediumRiskState(int menaces)
     {
+        _configureNonScanningUI();
 
         _riskIcon.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.shield_medium_risk_icon));
         _deviceRiskPanel.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.MediumRiskColor));
@@ -635,11 +697,12 @@ public class MainFragment extends Fragment
 
     void activateHighRiskState(int menaces)
     {
+        _configureNonScanningUI();
 
         _riskIcon.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.shield_high_risk_icon));
         _deviceRiskPanel.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.HighRiskColor));
         _updateFoundThreatsText(_topMenacesCounterText, menaces);
-       _resolvePersistProblems.setVisibility(View.VISIBLE);
+        _resolvePersistProblems.setVisibility(View.VISIBLE);
     }
 
 
@@ -650,6 +713,22 @@ public class MainFragment extends Fragment
         textView.setText(finalStr);
     }
 
+    void _configureScanningUI()
+    {
+        _scanningProgressPanel.setAlpha(1.0f);
+        
+        _progressContainer.setVisibility(View.VISIBLE);
+        _progressContainer.setTranslationX(0);
+        _buttonContainer.setVerticalGravity(View.INVISIBLE);
+    }
+
+    void _configureNonScanningUI()
+    {
+        _progressContainer.setVisibility(View.INVISIBLE);
+        _progressContainer.setTranslationX(0);
+        _buttonContainer.setVerticalGravity(View.VISIBLE);
+        _buttonContainer.setTranslationX(0);
+    }
 
 
 }
