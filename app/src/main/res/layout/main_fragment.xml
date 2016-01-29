@@ -256,19 +256,4 @@
 
     </LinearLayout>
 
-    <LinearLayout  android:id="@+id/adContainer"
-                   android:orientation="vertical"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content">
-
-        <com.google.android.gms.ads.AdView
-            android:id="@+id/adView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            ads:adSize="SMART_BANNER"
-            ads:adUnitId="YOU AD UNIT ID"
-            android:layout_gravity="center_horizontal">
-        </com.google.android.gms.ads.AdView>
-    </LinearLayout>
-
 </LinearLayout>

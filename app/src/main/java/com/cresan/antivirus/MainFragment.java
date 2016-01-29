@@ -131,12 +131,14 @@ public class MainFragment extends Fragment
             @Override
             public void onClick(View v)
             {
+                _runAntivirusNow.setEnabled(false);
 
                 if(!NetworkTools.isNetworkAvailable(getMainActivity()))
                 {
                     getMainActivity().showNoInetDialog();
                     return;
                 }
+
 
                 _scanFileSystem();
 
@@ -385,6 +387,7 @@ public class MainFragment extends Fragment
                                         _noMenacesInformationContainer.setVisibility(View.INVISIBLE);
                                         _buttonContainer.setVisibility(View.VISIBLE);
                                         _buttonContainer.setTranslationX(0);
+                                        _runAntivirusNow.setEnabled(true);
                                         ObjectAnimator oa = ObjectAnimator.ofFloat(_buttonContainer, "rotationY", -90f, 0.0f);
                                     }
                                 });

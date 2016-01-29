@@ -481,7 +481,7 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
 
 		// Replace whatever is in the fragment_container view with this fragment,
 		// and add the transaction to the back stack if needed
-		transaction.replace(android.R.id.content, f, fragmentId);
+		transaction.replace(R.id.container, f, fragmentId);
 		transaction.addToBackStack(null);
 
 		// Commit the transaction
