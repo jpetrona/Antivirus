@@ -136,7 +136,7 @@ public class MainFragment extends Fragment
                     return;
                 }
 
-
+                getMainActivity().getMenu().setGroupVisible(0,false);
                 _scanFileSystem();
 
             }
@@ -409,6 +409,7 @@ public class MainFragment extends Fragment
                                             @Override
                                             public void onAnimationEnd(Animator animation)
                                             {
+                                                getMainActivity().getMenu().setGroupVisible(0,true);
                                                 _runAntivirusNow.setEnabled(true);
                                             }
                                         });

@@ -25,6 +25,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 
@@ -54,6 +55,9 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
     public static final String kIgnoredFragmentTag="IgnoredFragmentTag";
 
     public static final String kBannerAdUnit="ca-app-pub-3912218987594825/9095635994";
+
+    Menu _menu=null;
+    public Menu getMenu() {return _menu;}
 
     public MainFragment getMainFragment()
     {
@@ -238,6 +242,8 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
 	    setContentView(R.layout.activity_main);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
+        getSupportActionBar();
+
 		//Start service
 		if(!ServiceTools.isServiceRunning(this,MonitorShieldService.class))
 		{
@@ -312,7 +318,6 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
                 return super.onOptionsItemSelected(item);
         }
     }
-
 
     void showIgnoredFragment(List<BadPackageData> userWhiteList)
     {
@@ -533,13 +538,16 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_layout, menu);
         return true;
-
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu)
+    {
+        //menu.setGroupVisible(0,false);
+        _menu=menu;
+        return true;
+    }
 
-
-
-    
 
     private void makeActionOverflowMenuShown() {
         //devices with hardware menu button (e.g. Samsung Note) don't show action overflow menu
