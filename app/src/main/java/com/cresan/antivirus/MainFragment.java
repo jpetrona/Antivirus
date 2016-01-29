@@ -205,7 +205,8 @@ public class MainFragment extends Fragment
     {
         _scanningProgressPanel.setAlpha(0.0f);
         _scanningProgressPanel.setVisibility(View.VISIBLE);
-
+        _circleProgressBar.setValue(0);
+        
         ObjectAnimator oa1 = ObjectAnimator.ofFloat(_scanningProgressPanel, "alpha",0.0f,1.0f);
         oa1.addListener(new Animator.AnimatorListener()
         {
