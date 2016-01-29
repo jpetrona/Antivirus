@@ -280,7 +280,8 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
 	    vg.addView(adView);
 
         AdRequest.Builder builder = new AdRequest.Builder();
-
+        builder.addTestDevice("4DDC4FAE98222F010D35E8EA7A6E4E34");
+        builder.addTestDevice("4F5A2126D375B24EB67CF38C123A0CAF");
         AdRequest adRequest = builder.build();
         adView.loadAd(adRequest);
     }
