@@ -40,4 +40,6 @@
     <string name="cancel">Cancel</string>
     <string name="ignored_counter">#1 Apps ignored</string>
     <string name="igonred_message_dialog">Do not exist applications in ignore list</string>
+    <string name="show_ignored_list_menu">Show ignored list</string>
+    <string name="scanningText">Scanning...</string>
 </resources>

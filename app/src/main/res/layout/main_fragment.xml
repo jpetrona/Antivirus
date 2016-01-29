@@ -28,7 +28,8 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:id="@+id/scanningProgressPanel"
-                    android:visibility="invisible">
+                    android:visibility="invisible"
+                    android:background="@color/colorBackgroundScanInProgress">
 
                     <FrameLayout
                         android:layout_width="match_parent"
@@ -45,14 +46,14 @@
                         app:cpv_textColor="#ffffffff"
                         app:cpv_unitColor="#ffffffff"
                         app:cpv_showUnit="true"
-                        app:cpv_textScale="1.0"
+                        app:cpv_textScale="0.5"
                         app:cpv_unitScale="1.0"
                         app:cpv_autoTextSize="true"
                         app:cpv_value="0.0"
                         app:cpv_maxValue="100.0"
                         app:cpv_barWidth="15.0dip"
-                        app:cpv_barColor="@color/fix_screen_progressbar_rim_fg_color"
-                        app:cpv_spinColor="@color/fix_screen_progressbar_rim_fg_color"
+                        app:cpv_barColor="@color/MediumRiskColor"
+                        app:cpv_spinColor="@color/MediumRiskColor"
                         app:cpv_rimColor="@color/fix_screen_progressbar_rim_bg_color"
                         app:cpv_rimWidth="15.0dip"
                         app:cpv_contourSize="0.0dip"
@@ -69,7 +70,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="Scanning..."
+                        android:text="@string/scanningText"
                         android:id="@+id/scanningTextView"
                         android:textColor="#ffffff"
                         android:gravity="center_horizontal"
@@ -150,7 +151,7 @@
             android:id="@+id/superContainer"
             android:layout_height="0dp"
             android:layout_weight="0.4"
-            android:background="#4B4F5E">
+            android:background="@color/color_BackgroundAnimationProgress">
 
             <RelativeLayout
                 android:layout_width="match_parent"
