@@ -412,6 +412,8 @@ public class MainFragment extends Fragment
                                                 _runAntivirusNow.setEnabled(true);
                                             }
                                         });
+                                        oa.setDuration(100);
+                                        oa.start();
                                     }
                                 });
                                 oa.setDuration(100);

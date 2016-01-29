@@ -13,20 +13,15 @@
         android:id="@+id/container"
         android:orientation="vertical"/>
 
-    <FrameLayout
-        android:id="@+id/adHolder"
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        ads:adSize="SMART_BANNER"
+        ads:adUnitId="ca-app-pub-3912218987594825/9095635994"
+        android:layout_gravity="center_horizontal">
+    </com.google.android.gms.ads.AdView>
 
-        <com.google.android.gms.ads.AdView
-            android:id="@+id/adView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            ads:adSize="SMART_BANNER"
-            ads:adUnitId="ca-app-pub-3912218987594825/9095635994"
-            android:layout_gravity="center_horizontal">
-        </com.google.android.gms.ads.AdView>
 
-    </FrameLayout>
 
 </LinearLayout>
