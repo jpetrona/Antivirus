@@ -53,6 +53,8 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
     public static final String kInfoFragmnetTag="InfoFragmentTag";
     public static final String kIgnoredFragmentTag="IgnoredFragmentTag";
 
+    public static final String kBannerAdUnit="ca-app-pub-3912218987594825/9095635994";
+
     public MainFragment getMainFragment()
     {
         FragmentManager fm= getSupportFragmentManager();
@@ -268,14 +270,11 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
 	    }
 
 	    AdsCore ac=getAdsCore();
-		//ac.initAirpush();
-	 	//ac.initStartApp("110020761","204682277");
 	 	ac.initAdMob(interstitialAdUnit);
-		//ac.initVungle("5364b2d90471b1cf05000071");
-	 	
+
 	 	AdView adView= new AdView(AntivirusActivity.this);
     	adView.setAdSize(AdSize.SMART_BANNER);
-    	adView.setAdUnitId(bannerAdUnit);
+    	adView.setAdUnitId(kBannerAdUnit);
 
     	ViewGroup vg= (ViewGroup)findViewById(R.id.topcontainer);
 	    vg.addView(adView);
