@@ -72,7 +72,8 @@
                         android:text="Scanning..."
                         android:id="@+id/scanningTextView"
                         android:textColor="#ffffff"
-                        android:gravity="center_horizontal"/>
+                        android:gravity="center_horizontal"
+                        android:textSize="@dimen/scanning_font_size"/>
 
                     <FrameLayout
                         android:layout_width="match_parent"

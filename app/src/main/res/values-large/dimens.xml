@@ -15,4 +15,5 @@
     <dimen name="eula_button_widht">342dp</dimen>
     <dimen name="eula_button_height">66dp</dimen>
     <dimen name="eula_font_size">21dp</dimen>
+    <dimen name="scanning_font_size">27dp</dimen>
 </resources>
