@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +19,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.cresan.androidprotector.R;
-import com.liulishuo.magicprogresswidget.MagicProgressBar;
-import com.tech.applications.coretools.ActivityTools;
 import com.tech.applications.coretools.BatteryData;
 import com.tech.applications.coretools.BatteryTools;
 import com.tech.applications.coretools.NetworkTools;
@@ -84,7 +81,7 @@ public class MainFragment extends Fragment
         View rootView = inflater.inflate(R.layout.main_fragment, container, false);
 
         _setupFragment(rootView);
-        controlInitialStates();
+        setUIRiskState();
         return rootView;
     }
 
@@ -265,6 +262,20 @@ public class MainFragment extends Fragment
         oa1.start();
     }
 
+    private void _topProgressBarGoesToScanningState(int transitionTime)
+    {
+        _deviceRiskPanel.setAlpha(0.0f);
+        _deviceRiskPanel.setVisibility(View.VISIBLE);
+
+        ObjectAnimator oa1 = ObjectAnimator.ofFloat(_deviceRiskPanel, "alpha",0.0f,1.0f);
+        oa1.setDuration(transitionTime);
+        oa1.start();
+
+        oa1 = ObjectAnimator.ofFloat(_scanningProgressPanel, "alpha",1.0f,0.0f);
+        oa1.setDuration(transitionTime);
+        oa1.start();
+    }
+
     private void _startScanningAnimation(final List<PackageInfo> allPackages, final Set<BadPackageData> tempBadResults)
     {
         //Animate the button exit
@@ -387,8 +398,20 @@ public class MainFragment extends Fragment
                                         _noMenacesInformationContainer.setVisibility(View.INVISIBLE);
                                         _buttonContainer.setVisibility(View.VISIBLE);
                                         _buttonContainer.setTranslationX(0);
-                                        _runAntivirusNow.setEnabled(true);
+
+                                        setUIRiskState();
+
+                                        _topProgressBarGoesToScanningState(200);
+
                                         ObjectAnimator oa = ObjectAnimator.ofFloat(_buttonContainer, "rotationY", -90f, 0.0f);
+                                        oa.addListener(new AnimatorListenerAdapter()
+                                        {
+                                            @Override
+                                            public void onAnimationEnd(Animator animation)
+                                            {
+                                                _runAntivirusNow.setEnabled(true);
+                                            }
+                                        });
                                     }
                                 });
                                 oa.setDuration(100);
@@ -632,10 +655,8 @@ public class MainFragment extends Fragment
             _cdTimer.start();
     }
 
-
-    void controlInitialStates()
+    void setUIRiskState()
     {
-
         boolean firstScanDone =getMainActivity().getAppData().getFirstScanDone();
         Set<BadPackageData> foundMenaces = getMainActivity().getBadResultPackageDataFromMenaceSet();
         boolean isDangerous = _isDangerousAppInSet(foundMenaces);
