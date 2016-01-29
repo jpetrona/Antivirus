@@ -123,8 +123,8 @@
                             android:layout_weight="0.05"/>
 
                         <Button
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="@dimen/button_widht_resolve_problems"
+                            android:layout_height="@dimen/button_height_resolve_problems"
                             android:text="@string/resolve_problems"
                             android:id="@+id/button_resolve_problems"
                             android:background="@drawable/resolve_button_selector"
@@ -157,7 +157,7 @@
                 <Button
                     android:id="@+id/runAntivirusNow"
                     android:layout_width="@dimen/button_scan_widht"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/button_scan_height"
                     android:text="Scan"
                     android:textStyle="bold"
                     android:typeface="monospace"
@@ -182,12 +182,12 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:text="Trying root privileges"
                     android:textColor="@color/SecondaryTextColor"
-                    android:textSize="20dp"/>
+                    android:textSize="@dimen/text_anim_font_size"/>
 
                 <ImageView
                     android:id="@+id/animationProgressPanelIconImageView"
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
+                    android:layout_width="@dimen/icon_size"
+                    android:layout_height="@dimen/icon_size"
                     android:src="@drawable/gear"
                     android:layout_centerHorizontal="true"
                     android:layout_above="@id/animationProgressPanelTextView"/>
@@ -204,7 +204,8 @@
                     android:layout_alignParentStart="true"
                     android:layout_marginLeft="33dp"
                     android:layout_marginStart="33dp"
-                    android:textColor="#ffffff"/>
+                    android:textColor="#ffffff"
+                    android:textSize="@dimen/counters_font_size"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -217,7 +218,8 @@
                     android:layout_alignParentEnd="true"
                     android:layout_marginRight="32dp"
                     android:layout_marginEnd="32dp"
-                    android:textColor="#ffffffff"/>
+                    android:textColor="#ffffffff"
+                    android:textSize="@dimen/counters_font_size"/>
 
             </RelativeLayout>
 

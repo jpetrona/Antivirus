@@ -91,7 +91,7 @@ public class MainFragment extends Fragment
 
         _progressPanelIconImageView =(ImageView)root.findViewById(R.id.animationProgressPanelIconImageView);
         _progressPanelTextView =(TextView)root.findViewById(R.id.animationProgressPanelTextView);;
-        _progressPanelprogressBar =(MagicProgressBar)root.findViewById(R.id.animationProgressPanelProgressBar);
+        //_progressPanelprogressBar =(MagicProgressBar)root.findViewById(R.id.animationProgressPanelProgressBar);
         _buttonContainer=(RelativeLayout)root.findViewById(R.id.buttonLayout);
         _progressContainer=(RelativeLayout)root.findViewById(R.id.animationProgressPanel);
         _superContainer=(RelativeLayout)root.findViewById(R.id.superContainer);

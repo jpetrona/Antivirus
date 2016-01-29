@@ -13,5 +13,14 @@
     <dimen name="menaces_text_font_size">30dp</dimen>
     <dimen name="button_menaces_text_font_size">30dp</dimen>
     <dimen name="button_scan_widht">370dp</dimen>
+    <dimen name="button_scan_height">75dp</dimen>
     <dimen name="text_scan_button_font_size">30dp</dimen>
+    <dimen name="text_anim_font_size">30dp</dimen>
+    <dimen name="counters_font_size">27dp</dimen>
+    <dimen name="icon_size">96dp</dimen>
+    <dimen name="button_widht_resolve_problems">375dp</dimen>
+    <dimen name="button_height_resolve_problems">75dp</dimen>
+    <dimen name="eula_button_widht">342dp</dimen>
+    <dimen name="eula_button_height">66dp</dimen>
+    <dimen name="eula_font_size">21dp</dimen>
 </resources>
