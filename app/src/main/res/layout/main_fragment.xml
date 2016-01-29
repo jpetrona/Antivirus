@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -47,7 +48,7 @@
                         app:cpv_textScale="1.0"
                         app:cpv_unitScale="1.0"
                         app:cpv_autoTextSize="true"
-                        app:cpv_value="10.0"
+                        app:cpv_value="0.0"
                         app:cpv_maxValue="100.0"
                         app:cpv_barWidth="15.0dip"
                         app:cpv_barColor="@color/fix_screen_progressbar_rim_fg_color"
@@ -123,7 +124,7 @@
                             android:layout_weight="0.05"/>
 
                         <Button
-                            android:layout_width="@dimen/button_widht_resolve_problems"
+                            android:layout_width="wrap_content"
                             android:layout_height="@dimen/button_height_resolve_problems"
                             android:text="@string/resolve_problems"
                             android:id="@+id/button_resolve_problems"
@@ -131,7 +132,8 @@
                             android:textColor="@color/SecondaryTextColor"
                             android:layout_gravity="center"
                             android:focusable="false"
-                            android:textSize="@dimen/button_menaces_text_font_size"/>
+                            android:textSize="@dimen/button_menaces_text_font_size"
+                            />
 
                         <FrameLayout
                             android:layout_width="match_parent"
@@ -184,7 +186,8 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:text="Trying root privileges"
                     android:textColor="@color/SecondaryTextColor"
-                    android:textSize="@dimen/text_anim_font_size"/>
+                    android:textSize="@dimen/text_anim_font_size"
+                    android:singleLine="true"/>
 
                 <ImageView
                     android:id="@+id/animationProgressPanelIconImageView"
@@ -229,9 +232,19 @@
 
     </LinearLayout>
 
-    <LinearLayout  android:id="@+id/topcontainer"
+    <LinearLayout  android:id="@+id/adContainer"
                    android:orientation="vertical"
                   android:layout_width="match_parent"
-                  android:layout_height="wrap_content"/>
+                  android:layout_height="wrap_content">
+
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/adView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            ads:adSize="SMART_BANNER"
+            ads:adUnitId="YOU AD UNIT ID"
+            android:layout_gravity="center_horizontal">
+        </com.google.android.gms.ads.AdView>
+    </LinearLayout>
 
 </LinearLayout>
