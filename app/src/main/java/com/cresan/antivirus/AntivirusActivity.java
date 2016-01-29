@@ -459,6 +459,7 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,R.anim.slide_in_left,R.anim.slide_out_right);
 
+
 		Fragment f=null;
         switch(fragmentId)
         {

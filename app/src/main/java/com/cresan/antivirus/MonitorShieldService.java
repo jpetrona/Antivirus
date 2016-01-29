@@ -274,14 +274,14 @@ public class MonitorShieldService extends Service
     {
         //Scan installed packages
         List<PackageInfo> allPackages= ActivityTools.getApps(this, PackageManager.GET_ACTIVITIES | PackageManager.GET_PERMISSIONS);
+        List<PackageInfo> nonSystemApps=ActivityTools.getNonSystemApps(this,allPackages);
 
         //Packages with problems will be stored here
-        Set<GoodPackageResultData> tempGoodResults=new HashSet<GoodPackageResultData>();
         Set<BadPackageData> tempBadResults=new HashSet<BadPackageData>();
 
         //Filter white listed apps
-        List<PackageInfo> potentialBadApps=_removeWhiteListPackagesFromPackageList(allPackages, _whiteListPackages);
-        potentialBadApps=_removeWhiteListPackagesFromPackageList(allPackages, _userWhiteList.getSet());
+        List<PackageInfo> potentialBadApps=_removeWhiteListPackagesFromPackageList(nonSystemApps, _whiteListPackages);
+        potentialBadApps=_removeWhiteListPackagesFromPackageList(potentialBadApps, _userWhiteList.getSet());
 
         Scanner.scanForBlackListedActivityApps(potentialBadApps, _blackListActivities, tempBadResults);
         Scanner.scanForSuspiciousPermissionsApps(potentialBadApps, _suspiciousPermissions, tempBadResults);
@@ -413,17 +413,15 @@ public class MonitorShieldService extends Service
         {
             PackageInfo p = null;
             int index = 0;
-            String packageName = pd.getPackageName();
+            String mask = pd.getPackageName();
             found = false;
 
             while (found == false && index < trimmedPackageList.size())
             {
                 p = trimmedPackageList.get(index);
-                if (StringTools.stringMatchesMask(p.packageName, pd.getPackageName()))
-                {
-                    found = true;
+
+                if (StringTools.stringMatchesMask(p.packageName, mask))
                     trimmedPackageList.remove(index);
-                }
                 else
                     ++index;
             }
