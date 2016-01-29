@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
@@ -85,8 +86,6 @@ public class MainFragment extends Fragment
         return rootView;
     }
 
-
-
     protected void _setupFragment(View root)
     {
 
@@ -142,30 +141,6 @@ public class MainFragment extends Fragment
             }
         });
 
-        //Set form data
-        BatteryData bd = BatteryTools.getBatteryData(getMainActivity());
-
-        /*final WaveView waveView = (WaveView) root.findViewById(R.id.wave);
-        waveView.setWaterLevelRatio(bd.getLevelPercent() / 100.0f);
-        waveView.setBorder(15, ContextCompat.getColor(getMainActivity(), R.color.wave_widget_stroke));
-        waveView.setText1Color(ContextCompat.getColor(getMainActivity(), android.R.color.white));
-        waveView.setShowWave(true);
-        waveView.setWaveColor(
-                ContextCompat.getColor(getMainActivity(), R.color.wave_starting_wave_color),
-                ContextCompat.getColor(getMainActivity(), R.color.wave_widget_back_wave),
-                ContextCompat.getColor(getMainActivity(), R.color.wave_starting_wave_color),
-                ContextCompat.getColor(getMainActivity(), R.color.wave_widget_front_wave));
-        waveView.startAnimation(1000);
-        waveView.setText1(""+bd.getLevelPercent()+"%");*/
-       // TextView tv = (TextView) root.findViewById(R.id.voltageValue);
-        //DecimalFormat df = new DecimalFormat("0.00");
-        /*df.setMaximumFractionDigits(2);
-        tv.setText(df.format(bd.getVoltage()) + " v");
-        tv = (TextView) root.findViewById(R.id.temperatureValue);
-        df = new DecimalFormat("0.0");
-        df.setMaximumFractionDigits(1);
-        tv.setText(df.format(bd.getTemperature()) + "º");
-*/
         _resetFormLayout();
     }
 
@@ -206,7 +181,7 @@ public class MainFragment extends Fragment
         _scanningProgressPanel.setAlpha(0.0f);
         _scanningProgressPanel.setVisibility(View.VISIBLE);
         _circleProgressBar.setValue(0);
-        
+
         ObjectAnimator oa1 = ObjectAnimator.ofFloat(_scanningProgressPanel, "alpha",0.0f,1.0f);
         oa1.addListener(new Animator.AnimatorListener()
         {
@@ -339,28 +314,6 @@ public class MainFragment extends Fragment
             }
         });
         oa1.start();
-/*
-        final IOnActionFinished _scanFinished= new IOnActionFinished()
-        {
-            @Override
-            public void onFinished()
-            {
-
-
-                if(tempBadResults.size() !=0)
-                {
-                    showResultFragment(new ArrayList<BadPackageData>(tempBadResults));
-                }else
-                {
-                    //##################################Falta volver a sacar el boton de scan, cambiar el tipo de lista por la del servicio y estaria listo ###########################
-                    activateProtectedState();
-
-                }
-            }
-        };*/
-
-//        _scanPackage(packagesToScan,0, _onScanFileListener);
-
     }
 
     void _playNoMenacesAnimationFound()
@@ -436,211 +389,10 @@ public class MainFragment extends Fragment
         oa.setInterpolator(new LinearInterpolator());
         oa.start();
     }
-/*
-    //Cambiando texto SCAN SYSTEM PACKAGES
-    private void _scanSystemPackagesAnimationWithText(final List<PackageInfo> systemApps,Set<BadPackageData> menaces,
-                                                      final IOnActionFinished scanFinishedListener)
-    {
-
-        //_progressContainer.setVisibility(View.VISIBLE);
-        ObjectAnimator oa1 = ObjectAnimator.ofFloat(_progressContainer, "translationX",
-                _superContainer.getWidth()/2.0f+_progressContainer.getWidth(), 0.0f);
-        oa1.setDuration(kEnterAppTime);
-        oa1.addListener(new Animator.AnimatorListener()
-        {
-            @Override
-            public void onAnimationStart(Animator animation)
-            {
-                _progressContainer.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation)
-            {
-                _scanSystemPackageText(systemApps,0,menaces,scanFinishedListener);
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation)
-            {
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation)
-            {
-            }
-        });
-
-        oa1.start();
-    }
-
-    class ScanPackagesRunnable implements   Runnable
-    {
-        public List<PackageInfo> systemApps;
-        public int currentPackage;
-        public IOnActionFinished onActionFinishedListener;
-        public Set<BadPackageData> menaces;
-
-        @Override
-        public void run()
-        {
-            _scanSystemPackageText(systemApps,currentPackage, menaces, onActionFinishedListener );
-        }
-    }
-    Handler _handler=new Handler();
-    ScanPackagesRunnable _scanSystemPackageTextRunnable=new ScanPackagesRunnable();
-
-    private void _scanSystemPackageText(final List<PackageInfo> systemApps, int currentPackage, Set<BadPackageData> menaces,
-                                        final IOnActionFinished fileScanFinishedListener)
-    {
-        PackageInfo packageToScan=systemApps.get(currentPackage);
-
-        _progressPanelIconImageView.setImageDrawable(ActivityTools.getIconFromPackage(packageToScan.packageName, getMainActivity()));
-        _progressPanelTextView.setText(packageToScan.packageName);
-
-        if(currentPackage>=systemApps.size())
-            fileScanFinishedListener.onFinished();
-        else
-        {
-            _scanSystemPackageTextRunnable.systemApps=systemApps;
-            _scanSystemPackageTextRunnable.currentPackage=++currentPackage;
-            _scanSystemPackageTextRunnable.onActionFinishedListener=fileScanFinishedListener;
-            _handler.postDelayed(_scanSystemPackageTextRunnable,100);
-        }
-    }
-
-    void _continueScanning(List<PackageInfo> packagesToScan,int scannedIndex, IOnActionFinished scanFinishedListener)
-    {
-        ++scannedIndex;
-        if(scannedIndex<packagesToScan.size())
-            _scanPackage(packagesToScan,scannedIndex,_onScanFileListener);
-        else
-            scanFinishedListener.onFinished();
-    }
-
-    void _doWaitToScanPackage(final int miliseconds, List<PackageInfo> packagesToScan, final int currentPackage, final IOnFileScanFinished listener)
-    {
-        //_progressDialog=_getProgressDialog();
-        //_progressDialog.show();
-
-
-        _cdTimer =new PausableCountDownTimer(miliseconds,kProgressBarRefressTime)
-        {
-            @Override
-            public void onTick(long millisUntilFinished)
-            {
-                _progressPanelprogressBar.setPercent((miliseconds - millisUntilFinished) / (float) miliseconds);
-            }
-
-            @Override
-            public void onFinish()
-            {
-                _cdTimer =null;
-                _progressPanelprogressBar.setPercent(1.0f);
-                _convertStageIconInto(true, kIconChangeToGoodOrBadTime, new IOnActionFinished()
-                {
-                    @Override
-                    public void onFinished()
-                    {
-                        listener.onFinished(currentPackage);
-                    }
-                });
-            }
-        };
-
-        _cdTimer.start();
-    }
-
-    private void _convertStageIconInto(final boolean isOkIcon,final int waitTimeToEnd, final IOnActionFinished finishedAction)
-    {
-        ObjectAnimator oa2 = ObjectAnimator.ofFloat(_progressPanelIconImageView, "rotationY", 0f, 90.0f);
-
-        oa2.addListener(new AnimatorListenerAdapter()
-        {
-            @Override
-            public void onAnimationEnd(Animator animation)
-            {
-                super.onAnimationEnd(animation);
-                if (isOkIcon)
-                    _progressPanelIconImageView.setImageResource(R.drawable.ok_100);
-                else
-                    _progressPanelIconImageView.setImageResource(R.drawable.cancel);
-
-                ObjectAnimator oa1 = ObjectAnimator.ofFloat(_progressPanelIconImageView, "rotationY", -90.0f, 0.0f);
-                oa1.setInterpolator(new LinearInterpolator());
-                oa1.setDuration(100);
-                oa1.start();
-                oa1.addListener(new AnimatorListenerAdapter()
-                {
-                    @Override
-                    public void onAnimationEnd(Animator animation)
-                    {
-                        Handler handler = new Handler();
-
-                        // Post the task to set it visible in 5000ms
-                        handler.postDelayed(
-                                new Runnable()
-                                {
-                                    @Override
-                                    public void run()
-                                    {
-                                        finishedAction.onFinished();
-                                    }
-                                }, waitTimeToEnd);
-                    }
-                });
-            }
-        });
-
-        oa2.setDuration(100);
-        oa2.setInterpolator(new LinearInterpolator());
-        oa2.start();
-    }
-
-    private void _scanPackage(final List<PackageInfo> packagesToScan, final int currentPackageIndex, final IOnFileScanFinished onActionFinished)
-    {
-        PackageInfo packageToScan=packagesToScan.get(currentPackageIndex);
-
-        _progressPanelIconImageView.setImageDrawable(ActivityTools.getIconFromPackage(packageToScan.packageName, getMainActivity()));
-        _progressPanelTextView.setText(packageToScan.packageName);
-        _progressPanelprogressBar.setPercent(0);
-
-        //_progressContainer.setVisibility(View.VISIBLE);
-        ObjectAnimator oa1 = ObjectAnimator.ofFloat(_progressContainer, "translationX",
-                _superContainer.getWidth()/2.0f+_progressContainer.getWidth(), 0.0f);
-        oa1.setDuration(kEnterAppTime);
-        oa1.addListener(new Animator.AnimatorListener()
-        {
-            @Override
-            public void onAnimationStart(Animator animation)
-            {
-                _progressContainer.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation)
-            {
-                _doWaitToScanPackage(kScanningAppTime, packagesToScan, currentPackageIndex, onActionFinished);
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation)
-            {
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation)
-            {
-            }
-        });
-
-        oa1.start();
-    }*/
-
     void showResultFragment(List<BadPackageData> suspiciousApps)
     {
         ResultsFragment newFragment= (ResultsFragment) getMainActivity().slideInFragment(AntivirusActivity.kResultFragmentTag);
-        newFragment.setData(suspiciousApps);
+        newFragment.setData(getMainActivity(), suspiciousApps);
     }
 
     @Override
@@ -743,6 +495,11 @@ public class MainFragment extends Fragment
 
     void _configureScanningUI()
     {
+        Menu menu=getMainActivity().getMenu();
+
+        if(menu!=null)
+            menu.setGroupVisible(0,false);
+
         _scanningProgressPanel.setAlpha(1.0f);
         
         _progressContainer.setVisibility(View.VISIBLE);
@@ -752,6 +509,11 @@ public class MainFragment extends Fragment
 
     void _configureNonScanningUI()
     {
+        Menu menu=getMainActivity().getMenu();
+
+        if(menu!=null)
+            menu.setGroupVisible(0,true);
+
         _progressContainer.setVisibility(View.INVISIBLE);
         _progressContainer.setTranslationX(0);
         _buttonContainer.setVerticalGravity(View.VISIBLE);

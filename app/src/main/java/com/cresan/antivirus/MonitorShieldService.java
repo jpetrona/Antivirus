@@ -120,49 +120,6 @@ public class MonitorShieldService extends Service
         public void onScanResult(List<PackageInfo> allPackages, Set<BadPackageData> menacesFound);
     }
 
-    /*private void _loadDataFiles()
-    {
-
-        if(_whiteListPackages==null)
-            _whiteListPackages=new HashSet<PackageData>();
-        else
-        {
-            if(_whiteListPackages.size()>0)
-            {
-                Log.d("CRESAN", "################# NO NEED TO LOAD WHITELIST...");
-                return;
-            }
-            else
-            {
-                Log.d("CRESAN", "################# SOMETHING ODD HAPPENED. WHITELISTPACKAGES IS INSTANTIATED BUT NOT HAS ITEMS ?????????...");
-            }
-
-        }
-
-        Log.d("CRESAN", "################# LOADING WHITELIST FILE FROM SERVICE");
-
-        //Load WhiteList
-        try
-        {
-            String jsonFile= JSonTools.loadJSONFromAsset(this, "whiteList.json");
-            JSONObject obj = new JSONObject(jsonFile);
-
-            JSONArray m_jArry = obj.getJSONArray("data");
-
-            for (int i = 0; i < m_jArry.length(); i++)
-            {
-                JSONObject temp = m_jArry.getJSONObject(i);
-                PackageData pd=new PackageData();
-                pd.setPackageName(temp.getString("packageName"));
-                _whiteListPackages.add(pd);
-            }
-        }
-        catch (JSONException e)
-        {
-            e.printStackTrace();
-        }
-    }*/
-
     private void _loadDataFiles()
     {
 
@@ -361,7 +318,7 @@ public class MonitorShieldService extends Service
                 PackageInfo pi=null;
                 try
                 {
-                    pi=ActivityTools.getPackageInfo(this,packageName, PackageManager.GET_ACTIVITIES);
+                    pi=ActivityTools.getPackageInfo(this,packageName, PackageManager.GET_ACTIVITIES | PackageManager.GET_PERMISSIONS);
                 }
                 catch(PackageManager.NameNotFoundException ex)
                 {

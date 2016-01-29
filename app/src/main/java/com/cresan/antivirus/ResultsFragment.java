@@ -1,6 +1,7 @@
 package com.cresan.antivirus;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -33,21 +34,33 @@ public class ResultsFragment extends Fragment
     AntivirusActivity getMainActivity() {return (AntivirusActivity) getActivity();}
 
     //String[] packagename = new String[]{"com.magic.sanfulgencio","com.dropbox.android","com.appspot.swisscodemonkeys.detector","com.nolanlawson.logcat"};
-
     List<BadPackageData> _suspiciousAppList=null;
 
     private ListView _listview;
     private Button _buttonRemove;
 
-    List<BadPackageData> _selectedApps = new ArrayList<>();
-
     ResultsAdapter _resultAdapter=null;
 
     TextView _threatsFoundSummary=null;
 
-    public void setData(List<BadPackageData> suspiciousAppList)
+    public void setData(AntivirusActivity antivirusActivity, List<BadPackageData> suspiciousAppList)
     {
         _suspiciousAppList=suspiciousAppList;
+        _resultAdapter=new ResultsAdapter(antivirusActivity, ResultsAdapter.buildBadPackageDataWrapper(_suspiciousAppList));
+
+        _resultAdapter.setResultItemSelectedStateChangedListener(new IResultItemSelecteStateChanged()
+        {
+            @Override
+            public void onItemSelectedStateChanged(boolean isChecked, BadPackageData bpd)
+            {
+            }
+
+            @Override
+            public void onItemSelected(BadPackageData bpd)
+            {
+                showInfoAppFragment(bpd);
+            }
+        });
     }
 
     @Override
@@ -63,10 +76,12 @@ public class ResultsFragment extends Fragment
             @Override
             public void onClick(View v)
             {
-                if(_selectedApps.size() > 0)
+
+                List<BadPackageData> selectedApps= _resultAdapter.getSelectedApps();
+                if(selectedApps.size() > 0)
                 {
 
-                    for (BadPackageData pck : _selectedApps)
+                    for (BadPackageData pck : selectedApps)
                     {
                         Uri uri = Uri.fromParts("package", pck.getPackageName(), null);
                         Intent it = new Intent(Intent.ACTION_DELETE, uri);
@@ -117,28 +132,28 @@ public class ResultsFragment extends Fragment
     protected void _setupFragment(View view)
     {
         _listview = (ListView) view.findViewById(R.id.list);
-        _resultAdapter=new ResultsAdapter(getMainActivity(), _suspiciousAppList, getMainActivity());
 
+        /*_resultAdapter=new ResultsAdapter(getMainActivity(), _suspiciousAppList, getMainActivity());
         _resultAdapter.setResultItemSelectedStateChangedListener(new IResultItemSelecteStateChanged()
         {
             @Override
-            public void onItemSelectedStateChanged(boolean isChecked, BadPackageData bpd)
+            public void onItemSelectedStateChanged(boolean isChecked, BadPackageDataWrapper bpdw)
             {
                 if (isChecked)
                 {
                     // Si marcamos el checkbox cogemos su nombre de paquete y lo metemos en la lista
-                    _selectedApps.add(bpd);
-                    Log.i("MSF", "METIDO A LA LISTA: " + bpd.getPackageName());
+                    _selectedApps.add(bpdw);
+                    Log.i("MSF", "METIDO A LA LISTA: " + bpdw.bpd.getPackageName());
 
                 } else
                 {
 
                     // Si desmarcamos el checkbox eliminamos el  nombre del paquete de la lista
-                    _selectedApps.remove(bpd);
-                    Log.i("MSF", "SACADO DE A LA LISTA: " + bpd.getPackageName());
+                    _selectedApps.remove(bpdw);
+                    Log.i("MSF", "SACADO DE A LA LISTA: " + bpdw.bpd.getPackageName());
                 }
             }
-        });
+        });*/
 
 
 
@@ -154,11 +169,13 @@ public class ResultsFragment extends Fragment
 
         List<BadPackageData> toDelete=new ArrayList<BadPackageData>();
 
-        for (BadPackageData pd : _selectedApps )
+        List<BadPackageData> selectedApps= _resultAdapter.getSelectedApps();
+
+        for (BadPackageData pd : selectedApps )
         {
-            if(!ActivityTools.isPackageInstalled(getMainActivity(),pd.getPackageName()))
+            if(!ActivityTools.isPackageInstalled(getMainActivity(), pd.getPackageName()))
             {
-                _resultAdapter.remove(pd);
+                _resultAdapter.removeByPackageData(pd);
                 toDelete.add(pd);
 
                 menacesCache.removePackage(pd);
@@ -166,7 +183,7 @@ public class ResultsFragment extends Fragment
             }
         }
 
-        _selectedApps.removeAll(toDelete);
+        selectedApps.removeAll(toDelete);
 
         _updateFoundThreatsText(_threatsFoundSummary, _resultAdapter.getCount());
 
@@ -181,6 +198,23 @@ public class ResultsFragment extends Fragment
         String finalStr=getString(R.string.threats_found);
         finalStr=StringTools.fillParams(finalStr, "#", Integer.toString(appCount));
         textView.setText(finalStr);
+    }
+
+    void showInfoAppFragment(final BadPackageData suspiciousApp)
+    {
+        // Cuando pulses el boton de info coger su posicion y pasarselo por la variable pos
+        InfoAppFragment newFragment =(InfoAppFragment) getMainActivity().slideInFragment(AntivirusActivity.kInfoFragmnetTag);
+        newFragment.setAppEventListener(new IOnAppEvent()
+        {
+            @Override
+            public void onAppUninstalled(BadPackageData uninstalledApp)
+            {
+                _resultAdapter.removeByPackageData(uninstalledApp);
+            }
+        });
+        newFragment.setData(suspiciousApp);
+
+
     }
 }
 

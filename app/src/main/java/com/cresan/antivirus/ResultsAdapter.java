@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.cresan.androidprotector.R;
 import com.tech.applications.coretools.ActivityTools;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -21,32 +22,62 @@ import java.util.List;
  * Created by Magic Frame on 13/01/2016.
  */
 
-public class ResultsAdapter extends ArrayAdapter<BadPackageData>
+public class ResultsAdapter extends ArrayAdapter<BadPackageDataWrapper>
 {
 
-    private final Context context;
-    private AntivirusActivity antivirusActivity;
-    //private final String[] _values;
-    private List<BadPackageData> _values =null;
+    Context _context;
+
+    private List<BadPackageDataWrapper> _values =null;
 
     private IResultItemSelecteStateChanged _onItemChangedStateListener =null;
 
     public void setResultItemSelectedStateChangedListener(IResultItemSelecteStateChanged listemer) { _onItemChangedStateListener =listemer; }
 
-    public void removeApps(List<BadPackageData> appsToRemove)
+    public void removeApps(List<BadPackageDataWrapper> appsToRemove)
     {
         _values.removeAll(appsToRemove);
         notifyDataSetChanged();
     }
 
-    public ResultsAdapter(Context context, List<BadPackageData> values, AntivirusActivity antivirusActivity)
+    public List<BadPackageData> getSelectedApps()
     {
-        super(context, R.layout.list_apps,values);
-        this.context = context;
-        this._values = values;
-        this.antivirusActivity = antivirusActivity;
+        List<BadPackageData> bpdl=new ArrayList<BadPackageData>();
+
+        for(BadPackageDataWrapper bpdw : _values)
+        {
+            if(bpdw.checked)
+                bpdl.add(bpdw.bpd);
+        }
+
+        return bpdl;
     }
 
+    public ResultsAdapter(Context context, List<BadPackageDataWrapper> values)
+    {
+        super(context, R.layout.list_apps,values);
+
+        _context=context;
+        _values=values;
+
+    }
+
+    public static List<BadPackageDataWrapper> buildBadPackageDataWrapper(List<BadPackageData> bpdl)
+    {
+        List<BadPackageDataWrapper> bpdw=new ArrayList<BadPackageDataWrapper>();
+
+        for(BadPackageData bpd: bpdl)
+        {
+            bpdw.add(new BadPackageDataWrapper(bpd,false));
+        }
+
+        return bpdw;
+    }
+
+    public void removeByPackageData(PackageData pd)
+    {
+        BadPackageDataWrapper bpdw= BadPackageDataWrapper.findByPackageDataInstance(pd, _values);
+        remove(bpdw);
+    }
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent)
@@ -56,24 +87,25 @@ public class ResultsAdapter extends ArrayAdapter<BadPackageData>
 
         if(convertView == null)
         {
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflater = (LayoutInflater) _context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             rowView = inflater.inflate(R.layout.list_apps, parent, false);
         }else
         {
             rowView = convertView;
 
         }
-        final BadPackageData obj = _values.get(position);
+        final BadPackageDataWrapper obj = _values.get(position);
         TextView textView = (TextView) rowView.findViewById(R.id.Titlelabel);
         ImageView imageView = (ImageView) rowView.findViewById(R.id.logo);
         CheckBox checkBox = (CheckBox) rowView.findViewById(R.id.checkBox);
+        checkBox.setChecked(obj.checked);
         LinearLayout linearLayout = (LinearLayout) rowView.findViewById(R.id.linearLayout);
         linearLayout.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                showInfoAppFragment(obj);
+                _onItemChangedStateListener.onItemSelected(obj.bpd);
             }
         });
         imageView.setOnClickListener(new View.OnClickListener()
@@ -81,7 +113,7 @@ public class ResultsAdapter extends ArrayAdapter<BadPackageData>
             @Override
             public void onClick(View v)
             {
-                showInfoAppFragment(obj);
+                _onItemChangedStateListener.onItemSelected(obj.bpd);
             }
         });
 
@@ -97,49 +129,25 @@ public class ResultsAdapter extends ArrayAdapter<BadPackageData>
             }
         });*/
 
-        checkBox.setChecked(false);
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
         {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
             {
+                obj.checked=isChecked;
                 if(_onItemChangedStateListener != null)
                 {
-                    _onItemChangedStateListener.onItemSelectedStateChanged(isChecked,obj);
-
+                    _onItemChangedStateListener.onItemSelectedStateChanged(isChecked,obj.bpd);
                 }
             }
         });
 
 
 
-        textView.setText(ActivityTools.getAppNameFromPackage(getContext(), obj.getPackageName()));
-        imageView.setImageDrawable(ActivityTools.getIconFromPackage(obj.getPackageName(), getContext()));
+        textView.setText(ActivityTools.getAppNameFromPackage(getContext(), obj.bpd.getPackageName()));
+        imageView.setImageDrawable(ActivityTools.getIconFromPackage(obj.bpd.getPackageName(), getContext()));
 
         return rowView;
 
     }
-
-    void showInfoAppFragment(BadPackageData suspiciousAppList)
-    {
-        // Cuando pulses el boton de info coger su posicion y pasarselo por la variable pos
-        InfoAppFragment newFragment =(InfoAppFragment) antivirusActivity.slideInFragment(AntivirusActivity.kInfoFragmnetTag);
-        newFragment.setAppEventListener(new IOnAppEvent()
-        {
-            @Override
-            public void onAppUninstalled(BadPackageData uninstalledApp)
-            {
-                //_values.remove(uninstalledApp);
-                remove(uninstalledApp);
-
-                //notifyDataSetChanged();
-            }
-        });
-        newFragment.setData(suspiciousAppList);
-
-
-    }
-
-
-
 }
