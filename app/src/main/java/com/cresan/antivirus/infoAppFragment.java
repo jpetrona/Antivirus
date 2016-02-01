@@ -144,7 +144,7 @@ public class InfoAppFragment extends Fragment
 
         textView.setText(ActivityTools.getAppNameFromPackage(getContext(), _suspiciousApp.getPackageName()));
         iconApp.setImageDrawable(s);
-        warningLevel.setText("RIESGO MEDIO");
+        
 
         _listview = (ListView) view.findViewById(R.id.listView);
 
