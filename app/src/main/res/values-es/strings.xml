@@ -28,4 +28,6 @@
     <string name="scanningText">Escaneando...</string>
     <string name="execute_first_analysis">Ejecutar primer análisis para comprobar amenazas</string>
     <string name="are_protected">Estás protegido</string>
+    <string name="high_risk">Riesgo Alto</string>
+    <string name="medium_risk">Riesgo Medio</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.cresan.antivirus;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,6 +82,8 @@ public class ResultsAdapter extends ArrayAdapter<BadPackageDataWrapper>
             bpdw.add(new BadPackageDataWrapper(bpd,false));
         }
 
+
+
         return bpdw;
     }
 
@@ -107,9 +110,22 @@ public class ResultsAdapter extends ArrayAdapter<BadPackageDataWrapper>
         }
         final BadPackageDataWrapper obj = _values.get(position);
         TextView textView = (TextView) rowView.findViewById(R.id.Titlelabel);
+        TextView riskText = (TextView) rowView.findViewById(R.id.qualityApp);
         ImageView imageView = (ImageView) rowView.findViewById(R.id.logo);
         CheckBox checkBox = (CheckBox) rowView.findViewById(R.id.checkBox);
         checkBox.setChecked(obj.checked);
+
+        if(obj.bpd.isDangerousMenace())
+        {
+            riskText.setTextColor(ContextCompat.getColor(getContext(),R.color.HighRiskColor));
+            riskText.setText(R.string.high_risk);
+        }
+        else
+        {
+            riskText.setTextColor(ContextCompat.getColor(getContext(),R.color.MediumRiskColor));
+            riskText.setText(R.string.medium_risk);
+        }
+
         LinearLayout linearLayout = (LinearLayout) rowView.findViewById(R.id.linearLayout);
         linearLayout.setOnClickListener(new View.OnClickListener()
         {

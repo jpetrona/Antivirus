@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +58,19 @@ public class InfoAppFragment extends Fragment
 
         TextView textView = (TextView) view.findViewById(R.id.titleApp);
         TextView warningLevel = (TextView) view.findViewById(R.id.warningLevel);
+
+        if(_suspiciousApp.isDangerousMenace())
+        {
+            warningLevel.setTextColor(ContextCompat.getColor(getContext(),R.color.HighRiskColor));
+            warningLevel.setText(R.string.high_risk);
+        }
+        else
+        {
+            warningLevel.setTextColor(ContextCompat.getColor(getContext(),R.color.MediumRiskColor));
+            warningLevel.setText(R.string.medium_risk);
+        }
+
+
         ImageView iconApp = (ImageView) view.findViewById(R.id.iconGeneral);
         Drawable s = ActivityTools.getIconFromPackage(_suspiciousApp.getPackageName(), getContext());
         _button = (Button) view.findViewById(R.id.buttonUninstall);
