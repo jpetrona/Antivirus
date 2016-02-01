@@ -16,4 +16,8 @@
     <dimen name="eula_button_height">66dp</dimen>
     <dimen name="eula_font_size">21dp</dimen>
     <dimen name="scanning_font_size">27dp</dimen>
+    <dimen name="ignored_counter_font_size">30dp</dimen>
+    <dimen name="resolve_problems_widht">450dp</dimen>
+    <dimen name="resolve_problems_height">75dp</dimen>
+    <dimen name="resolve_problems_font_size">27dp</dimen>
 </resources>

@@ -64,7 +64,7 @@ public class IgnoredAdapter  extends ArrayAdapter<BadPackageData>
             {
                 new AlertDialog.Builder(getContext())
                         .setTitle(_context.getString(R.string.warning))
-                                .setMessage(_context.getString(R.string.remove_ignored_app_message) + ActivityTools.getAppNameFromPackage(getContext(), obj.getPackageName()))
+                                .setMessage(_context.getString(R.string.remove_ignored_app_message) + " " + ActivityTools.getAppNameFromPackage(getContext(), obj.getPackageName()))
                                 .setPositiveButton(_context.getString(R.string.accept_eula), new DialogInterface.OnClickListener()
                                 {
                                     @Override

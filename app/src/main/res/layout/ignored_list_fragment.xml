@@ -20,7 +20,8 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Medium Textgdgdgd"
             android:id="@+id/ignoredCounterText"
-            android:textColor="@color/info_icon_bottom_text"/>
+            android:textColor="@color/info_icon_bottom_text"
+            android:textSize="@dimen/ignored_counter_font_size"/>
 
     </LinearLayout>
 

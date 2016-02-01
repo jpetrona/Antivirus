@@ -21,9 +21,11 @@
     <string name="igonred_message_dialog">No existen aplicaciones en la lista de ignoradas</string>
     <string name="show_ignored_list_menu">Mostrar lista de ignoradas</string>
     <string name="ignored_counter">#1 Apps ignoradas</string>
-    <string name="remove_ignored_app_message"></string>
+    <string name="remove_ignored_app_message">Desea eliminar de la lista de ignorados </string>
     <string name="dialog_message_no_app_selected">Por favor seleccione al menos una aplicación para desinstalar</string>
     <string name="warning">Aviso</string>
-    <string name="dialog_message_exit">¿Desea salir de la aplicacion,?</string>
+    <string name="dialog_message_exit">¿Desea salir de la aplicación?</string>
     <string name="scanningText">Escaneando...</string>
+    <string name="execute_first_analysis">Ejecutar primer análisis para comprobar amenazas</string>
+    <string name="are_protected">Estás protegido</string>
 </resources>
