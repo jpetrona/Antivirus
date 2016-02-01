@@ -41,8 +41,7 @@ class Scanner
         //Check against whitelist
         for(PackageData pd : whiteListPackages)
         {
-            matches=pd.isPackageInListByName(whiteListPackages,packageName);
-            if(matches)
+            if(StringTools.stringMatchesMask(packageName,pd.getPackageName()))
                 return true;
         }
 
