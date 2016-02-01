@@ -71,9 +71,7 @@ public class MainFragment extends Fragment
     final int kScanningAppTime=100;
     final int kIconChangeToGoodOrBadTime =100;
 
-    PausableCountDownTimer _cdTimer =null;
-
-    /*Set<BadPackageData> _foundMenaces=null;*/
+    ScanningFileSystemAsyncTask _currentScanTask=null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -82,7 +80,7 @@ public class MainFragment extends Fragment
         View rootView = inflater.inflate(R.layout.main_fragment, container, false);
 
         _setupFragment(rootView);
-        setUIRiskState();
+
         return rootView;
     }
 
@@ -140,6 +138,8 @@ public class MainFragment extends Fragment
 
             }
         });
+
+        setUIRiskState();
 
         _resetFormLayout();
     }
@@ -272,12 +272,13 @@ public class MainFragment extends Fragment
             {
                 _configureScanningUI();
 
-                ScanningFileSystemAsyncTask task = new ScanningFileSystemAsyncTask(getMainActivity(), allPackages, tempBadResults);
-                task.setAsyncTaskCallback(new IOnActionFinished()
+                _currentScanTask = new ScanningFileSystemAsyncTask(getMainActivity(), allPackages, tempBadResults);
+                _currentScanTask.setAsyncTaskCallback(new IOnActionFinished()
                 {
                     @Override
                     public void onFinished()
                     {
+                        _currentScanTask=null;
                         if(tempBadResults.size()>0)
                         {
                             showResultFragment(new ArrayList<BadPackageData>(tempBadResults));
@@ -300,7 +301,7 @@ public class MainFragment extends Fragment
                     }
                 });
 
-                task.execute();
+                _currentScanTask.execute();
             }
 
             @Override
@@ -398,17 +399,19 @@ public class MainFragment extends Fragment
     @Override
     public void onPause()
     {
-        super.onResume();
-        if(_cdTimer!=null)
-            _cdTimer.pause();
+        super.onPause();
+        if(_currentScanTask!=null)
+            _currentScanTask.pause();
     }
 
     @Override
     public void onResume()
     {
         super.onResume();
-        if(_cdTimer!=null)
-            _cdTimer.start();
+        if(_currentScanTask!=null)
+            _currentScanTask.resume();
+        else
+            setUIRiskState();
     }
 
     void setUIRiskState()

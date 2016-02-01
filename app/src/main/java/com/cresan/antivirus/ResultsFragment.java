@@ -46,7 +46,7 @@ public class ResultsFragment extends Fragment
     public void setData(AntivirusActivity antivirusActivity, List<BadPackageData> suspiciousAppList)
     {
         _suspiciousAppList=suspiciousAppList;
-        _resultAdapter=new ResultsAdapter(antivirusActivity, ResultsAdapter.buildBadPackageDataWrapper(_suspiciousAppList));
+        _resultAdapter=new ResultsAdapter(antivirusActivity, ResultsAdapter.buildBadPackageDataWrapper(_suspiciousAppList,null));
 
         _resultAdapter.setResultItemSelectedStateChangedListener(new IResultItemSelecteStateChanged()
         {
@@ -167,6 +167,7 @@ public class ResultsFragment extends Fragment
 
         MenacesCacheSet menacesCache = getMainActivity().getMenacesCacheSet();
 
+        /*
         List<BadPackageData> toDelete=new ArrayList<BadPackageData>();
 
         List<BadPackageData> selectedApps= _resultAdapter.getSelectedApps();
@@ -183,7 +184,11 @@ public class ResultsFragment extends Fragment
             }
         }
 
-        selectedApps.removeAll(toDelete);
+        selectedApps.removeAll(toDelete);*/
+
+
+        //Add new existant apps
+        _resultAdapter.refresh(new ArrayList<BadPackageData>(menacesCache.getSet()));
 
         _updateFoundThreatsText(_threatsFoundSummary, _resultAdapter.getCount());
 
@@ -204,14 +209,14 @@ public class ResultsFragment extends Fragment
     {
         // Cuando pulses el boton de info coger su posicion y pasarselo por la variable pos
         InfoAppFragment newFragment =(InfoAppFragment) getMainActivity().slideInFragment(AntivirusActivity.kInfoFragmnetTag);
-        newFragment.setAppEventListener(new IOnAppEvent()
+        /*newFragment.setAppEventListener(new IOnAppEvent()
         {
             @Override
             public void onAppUninstalled(BadPackageData uninstalledApp)
             {
                 _resultAdapter.removeByPackageData(uninstalledApp);
             }
-        });
+        });*/
         newFragment.setData(suspiciousApp);
 
 

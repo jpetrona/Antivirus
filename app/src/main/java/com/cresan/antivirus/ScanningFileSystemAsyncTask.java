@@ -39,6 +39,10 @@ public class ScanningFileSystemAsyncTask extends AsyncTask<Void,ScanningFileSyst
     TextView _bottomMenacesCounterText;
     TextView _bottomScannedAppsText;
 
+    boolean _isPaused=false;
+    public void pause() { _isPaused=true;}
+    public void resume() { _isPaused=false; }
+
     class DataToPublish
     {
         public int foundMenaces;
@@ -118,21 +122,24 @@ public class ScanningFileSystemAsyncTask extends AsyncTask<Void,ScanningFileSyst
             {
                 Thread.sleep(100);
 
-                pi=_packagesToScan.get(currentIndex);
+                if(!_isPaused)
+                {
+                    pi = _packagesToScan.get(currentIndex);
 
-                dtp.scannedFiles=currentIndex;
-                dtp.appName=pi.packageName;
-                dtp.icon= ActivityTools.getIconFromPackage(dtp.appName, _activity);
-                dtp.totalFiles=_packagesToScan.size();
+                    dtp.scannedFiles = currentIndex;
+                    dtp.appName = pi.packageName;
+                    dtp.icon = ActivityTools.getIconFromPackage(dtp.appName, _activity);
+                    dtp.totalFiles = _packagesToScan.size();
 
-                boolean b=isPackageInMenacesSet(dtp.appName);
-                if(b)
-                    dtp.foundMenaces++;
+                    boolean b = isPackageInMenacesSet(dtp.appName);
+                    if (b)
+                        dtp.foundMenaces++;
 
-                publishProgress(dtp);
+                    publishProgress(dtp);
 
-                ++scannedApps;
-                ++currentIndex;
+                    ++scannedApps;
+                    ++currentIndex;
+                }
             }
         }
         catch(InterruptedException ex)

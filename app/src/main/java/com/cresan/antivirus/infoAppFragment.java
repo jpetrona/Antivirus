@@ -29,7 +29,7 @@ public class InfoAppFragment extends Fragment
     BadPackageData _suspiciousApp = null;
     boolean  _uninstallingPackage = false;
 
-    IOnAppEvent _appEventListener = null;
+/*    IOnAppEvent _appEventListener = null;
 
     public void setAppEventListener(IOnAppEvent appEventListener)
     {
@@ -37,7 +37,7 @@ public class InfoAppFragment extends Fragment
         _appEventListener = appEventListener;
 
     }
-
+*/
 
     AntivirusActivity getMainActivity()
     {
@@ -107,12 +107,12 @@ public class InfoAppFragment extends Fragment
                                 menacesCacheSet.removePackage(_suspiciousApp);
                                 menacesCacheSet.writeData();
 
-                                //Se llama este listener aunque no sea semánticamente lo que pasa (desinstalar app)
+                               /* //Se llama este listener aunque no sea semánticamente lo que pasa (desinstalar app)
                                 //Porque asi aprovechamos y lo quita de la lista.
                                 if(_appEventListener!=null && _suspiciousApp !=null)
                                 {
                                     _appEventListener.onAppUninstalled(_suspiciousApp);
-                                }
+                                }*/
 
                                 getMainActivity().goBack();
 
@@ -146,19 +146,46 @@ public class InfoAppFragment extends Fragment
     {
         super.onResume();
 
-        if( _uninstallingPackage==true && _suspiciousApp!=null )
-        {
-            if(_appEventListener!=null && !ActivityTools.isPackageInstalled(getMainActivity(),_suspiciousApp.getPackageName()))
-            {
-                _appEventListener.onAppUninstalled(_suspiciousApp);
+        AntivirusActivity antivirusActivity=getMainActivity();
 
-                MenacesCacheSet menacesCacheSet=getMainActivity().getMenacesCacheSet();
-                menacesCacheSet.removePackage(_suspiciousApp);
-                menacesCacheSet.writeData();
+        //Returned from an uninstallation
+        if( _uninstallingPackage==true)
+        {
+            if(_suspiciousApp!=null)
+            {
+                if (!ActivityTools.isPackageInstalled(getMainActivity(), _suspiciousApp.getPackageName()))
+                {
+                    /*if(_appEventListener!=null)
+                        _appEventListener.onAppUninstalled(_suspiciousApp);*/
+
+                    MenacesCacheSet menacesCacheSet = antivirusActivity.getMenacesCacheSet();
+                    menacesCacheSet.removePackage(_suspiciousApp);
+                    menacesCacheSet.writeData();
+                }
             }
 
             _uninstallingPackage=false;
             getMainActivity().goBack();
+
+        }
+        else
+        {
+            //User could have deleted app from file sytem while in this screen.
+            //Check if it exists. If not update menacesCacheSet
+            MenacesCacheSet menacesCacheSet=antivirusActivity.getMenacesCacheSet();
+            if(!menacesCacheSet.checkIfPackageInList(_suspiciousApp.getPackageName()))
+            {
+                //It is in menaces cacheset. Check if it is really in the system
+                if(!ActivityTools.isPackageInstalled(antivirusActivity, _suspiciousApp.getPackageName()))
+                {
+                    //If it isn't remove it
+                    menacesCacheSet = antivirusActivity.getMenacesCacheSet();
+                    menacesCacheSet.removePackage(_suspiciousApp);
+                    menacesCacheSet.writeData();
+                }
+
+                antivirusActivity.goBack();
+            }
         }
     }
 

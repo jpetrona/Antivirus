@@ -30,7 +30,6 @@ public class ResultsAdapter extends ArrayAdapter<BadPackageDataWrapper>
     private List<BadPackageDataWrapper> _values =null;
 
     private IResultItemSelecteStateChanged _onItemChangedStateListener =null;
-
     public void setResultItemSelectedStateChangedListener(IResultItemSelecteStateChanged listemer) { _onItemChangedStateListener =listemer; }
 
     public void removeApps(List<BadPackageDataWrapper> appsToRemove)
@@ -61,9 +60,21 @@ public class ResultsAdapter extends ArrayAdapter<BadPackageDataWrapper>
 
     }
 
-    public static List<BadPackageDataWrapper> buildBadPackageDataWrapper(List<BadPackageData> bpdl)
+    public void refresh(List<BadPackageData> bpdl)
     {
-        List<BadPackageDataWrapper> bpdw=new ArrayList<BadPackageDataWrapper>();
+        buildBadPackageDataWrapper(bpdl, _values);
+        notifyDataSetChanged();
+    }
+
+    public static List<BadPackageDataWrapper> buildBadPackageDataWrapper(List<BadPackageData> bpdl,
+                                                                         List<BadPackageDataWrapper> recycleList)
+    {
+        List<BadPackageDataWrapper> bpdw=recycleList;
+
+        if(bpdw==null)
+            bpdw=new ArrayList<BadPackageDataWrapper>();
+        else
+            recycleList.clear();
 
         for(BadPackageData bpd: bpdl)
         {
@@ -105,7 +116,8 @@ public class ResultsAdapter extends ArrayAdapter<BadPackageDataWrapper>
             @Override
             public void onClick(View v)
             {
-                _onItemChangedStateListener.onItemSelected(obj.bpd);
+                if(_onItemChangedStateListener!=null)
+                    _onItemChangedStateListener.onItemSelected(obj.bpd);
             }
         });
         imageView.setOnClickListener(new View.OnClickListener()
@@ -113,7 +125,8 @@ public class ResultsAdapter extends ArrayAdapter<BadPackageDataWrapper>
             @Override
             public void onClick(View v)
             {
-                _onItemChangedStateListener.onItemSelected(obj.bpd);
+                if(_onItemChangedStateListener!=null)
+                    _onItemChangedStateListener.onItemSelected(obj.bpd);
             }
         });
 

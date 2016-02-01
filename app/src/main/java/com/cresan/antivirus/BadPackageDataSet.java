@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -31,6 +32,10 @@ public class BadPackageDataSet
     private Set<BadPackageData> _set;
     Set<BadPackageData> getSet() {return _set;}
     void setSet(Set<BadPackageData> set) { _set=set;}
+
+    IDataSetChangesListener _dataSetChangesListener=null;
+    public void setDataSetChangesListener(IDataSetChangesListener listener)  { _dataSetChangesListener=listener;   }
+    public void unregisterDataSetChangesListener() { _dataSetChangesListener=null;}
 
     String _filePath=null;
 
@@ -75,18 +80,57 @@ public class BadPackageDataSet
     public void addPackage(BadPackageData pd)
     {
         _set.add(pd);
+
+        if (_dataSetChangesListener != null)
+            _dataSetChangesListener.onSetChanged();
     }
 
-    public void addPackages(Set<BadPackageData> packagesDataToAdd) { _set.addAll(packagesDataToAdd);}
-
-    public void removePackage(BadPackageData pd)
+    public void addPackages(Set<BadPackageData> packagesDataToAdd)
     {
-        _set.remove(pd);
+        _set.addAll(packagesDataToAdd);
+        if(_dataSetChangesListener!=null)
+            _dataSetChangesListener.onSetChanged();
+    }
+
+
+    public boolean removePackage(BadPackageData pd)
+    {
+        boolean b=_set.remove(pd);
+        if(b)
+        {
+            if (_dataSetChangesListener != null)
+                _dataSetChangesListener.onSetChanged();
+        }
+        return b;
+    }
+
+    public boolean removePackage(String packageName)
+    {
+        boolean found=false;
+        int index=0;
+
+        Iterator<BadPackageData> iterator=_set.iterator();
+        BadPackageData bpdTemp=null;
+        BadPackageData bpd=null;
+        while(!found && iterator.hasNext())
+        {
+            bpdTemp=iterator.next();
+            if(bpdTemp.getPackageName().equals(packageName))
+                bpd=bpdTemp;
+        }
+
+        if(bpd!=null)
+            return removePackage(bpd);
+        else
+            return false;
     }
 
     public void clear()
     {
         _set.clear();
+
+        if (_dataSetChangesListener != null)
+            _dataSetChangesListener.onSetChanged();
     }
 
     public int getMenaceCount() {return _set.size(); }
@@ -140,4 +184,6 @@ public class BadPackageDataSet
             e.printStackTrace();
         }
     }
+
+
 }

@@ -76,11 +76,22 @@ public class MonitorShieldService extends Service
 
             public void OnPackageRemoved(Intent intent)
             {
+                String packageName = intent.getData().getSchemeSpecificPart();
+                boolean removed=_menacesCacheSet.removePackage(packageName);
+                if(removed)
+                    Log.e(_logTag,">>>>>>>>>>>>>>>>>>>  The application "+packageName+" was removed from menace list because it was uninstalled.");
+                else
+                    Log.e(_logTag,">>>>>>>>>>>>>>>>>>>  The application "+packageName+" could no be removed from menaceCache while being uninstalled. ERRRRRORRRRRRRR!!!!!!");
+
+                _menacesCacheSet.writeData();
+
             }
         });
 
-        IntentFilter packageFilter = new IntentFilter("android.intent.action.PACKAGE_ADDED");
-        packageFilter.addAction("android.intent.action.PACKAGE_INSTALL");
+        IntentFilter packageFilter = new IntentFilter();
+        packageFilter.addAction(Intent.ACTION_PACKAGE_ADDED);
+        packageFilter.addAction(Intent.ACTION_PACKAGE_REMOVED);
+
         packageFilter.addDataScheme("package");
         this.registerReceiver(_packageBroadcastReceiver, packageFilter);
 

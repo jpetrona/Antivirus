@@ -181,6 +181,8 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
 		}
 	};
 
+
+    boolean _bound=false;
     private ServiceConnection _serviceConnection = new ServiceConnection()
     {
         @Override
@@ -244,27 +246,7 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
 
         getSupportActionBar();
 
-		//Start service
-		if(!ServiceTools.isServiceRunning(this,MonitorShieldService.class))
-		{
-            Log.d(_logTag, "=====> AntivirusActivity:onCreate: Starting MonitorShieldService because it was not running.");
-            Intent i = new Intent(this, MonitorShieldService.class);
-            startService(i);
-
-            //Bind to service
-            bindService(i,_serviceConnection, Context.BIND_AUTO_CREATE);
-		}
-        else
-        {
-            Log.d(_logTag, "=====> AntivirusActivity:onCreate: No need to start MonitorShieldService because it as running previously.");
-            Intent i = new Intent(this, MonitorShieldService.class);
-
-            //Bind to service
-            bindService(i,_serviceConnection, Context.BIND_AUTO_CREATE);
-        }
-
-
-        android.support.v7.app.ActionBar bar=getSupportActionBar();
+		android.support.v7.app.ActionBar bar=getSupportActionBar();
         bar.setDisplayHomeAsUpEnabled(true);
 
 
@@ -350,11 +332,6 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
 
     }
 
-    public void onStart()
-	{
-		super.onStart();
-
-	}
 
 	/*protected AppData _deserializeAppData()
 	{
@@ -544,6 +521,44 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
 
         }
     }
+
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+
+        //Start service
+        if(!ServiceTools.isServiceRunning(this,MonitorShieldService.class))
+        {
+            Log.d(_logTag, "=====> AntivirusActivity:onCreate: Starting MonitorShieldService because it was not running.");
+            Intent i = new Intent(this, MonitorShieldService.class);
+            startService(i);
+
+            //Bind to service
+            getApplicationContext().bindService(i, _serviceConnection, Context.BIND_AUTO_CREATE);
+        }
+        else
+        {
+            Log.d(_logTag, "=====> AntivirusActivity:onCreate: No need to start MonitorShieldService because it as running previously.");
+            Intent i = new Intent(this, MonitorShieldService.class);
+
+            //Bind to service
+            getApplicationContext().bindService(i,_serviceConnection, Context.BIND_AUTO_CREATE);
+        }
+    }
+
+    @Override
+    public void onStop()
+    {
+        super.onStop();
+        // Unbind from the service
+        if (_bound)
+        {
+            unbindService(_serviceConnection);
+            _bound = false;
+        }
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
