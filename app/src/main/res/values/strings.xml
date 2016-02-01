@@ -42,4 +42,6 @@
     <string name="igonred_message_dialog">Do not exist applications in ignore list</string>
     <string name="show_ignored_list_menu">Show ignored list</string>
     <string name="scanningText">Scanning...</string>
+    <string name="execute_first_analysis">Run first analysis to check threats</string>
+    <string name="are_protected">You are protected</string>
 </resources>

@@ -29,15 +29,8 @@ public class InfoAppFragment extends Fragment
     BadPackageData _suspiciousApp = null;
     boolean  _uninstallingPackage = false;
 
-/*    IOnAppEvent _appEventListener = null;
 
-    public void setAppEventListener(IOnAppEvent appEventListener)
-    {
-
-        _appEventListener = appEventListener;
-
-    }
-*/
+    private Button _button = null;
 
     AntivirusActivity getMainActivity()
     {
@@ -66,19 +59,22 @@ public class InfoAppFragment extends Fragment
         TextView warningLevel = (TextView) view.findViewById(R.id.warningLevel);
         ImageView iconApp = (ImageView) view.findViewById(R.id.iconGeneral);
         Drawable s = ActivityTools.getIconFromPackage(_suspiciousApp.getPackageName(), getContext());
-        Button button = (Button) view.findViewById(R.id.buttonUninstall);
-        Button buttonTrust = (Button) view.findViewById(R.id.buttonTrust);
+        _button = (Button) view.findViewById(R.id.buttonUninstall);
+        final Button buttonTrust = (Button) view.findViewById(R.id.buttonTrust);
 
 
-        button.setOnClickListener(new View.OnClickListener()
+        _button.setOnClickListener(new View.OnClickListener()
         {
+
             @Override
             public void onClick(View v)
             {
+
                 _uninstallingPackage = true;
                 Uri uri = Uri.fromParts("package", _suspiciousApp.getPackageName(), null);
                 Intent it = new Intent(Intent.ACTION_DELETE, uri);
                 startActivity(it);
+                _button.setEnabled(false);
             }
         });
 
@@ -87,6 +83,7 @@ public class InfoAppFragment extends Fragment
             @Override
             public void onClick(View v)
             {
+                buttonTrust.setEnabled(false);
 
                 new AlertDialog.Builder(getContext())
                         .setTitle(getString(R.string.warning))
@@ -96,6 +93,7 @@ public class InfoAppFragment extends Fragment
                             @Override
                             public void onClick(DialogInterface dialog, int which)
                             {
+
                                 UserWhiteList userWhiteList=getMainActivity().getUserWhiteList();
 
                                 //PackageData pdo=new PackageData(_suspiciousApp.getPackageName());
@@ -115,7 +113,7 @@ public class InfoAppFragment extends Fragment
                                 }*/
 
                                 getMainActivity().goBack();
-
+                                buttonTrust.setEnabled(true);
                             }
                         }).setNegativeButton("no", new DialogInterface.OnClickListener()
                 {
@@ -123,7 +121,7 @@ public class InfoAppFragment extends Fragment
                     @Override
                     public void onClick(DialogInterface dialog, int which)
                     {
-
+                        buttonTrust.setEnabled(true);
                     }
                 }).show();
 
@@ -187,6 +185,9 @@ public class InfoAppFragment extends Fragment
                 antivirusActivity.goBack();
             }
         }
+
+        // Esto lo hacemos aqui porque no hay otra manera de volverlo a pasar a true, ya que el boton de desinstalar tira un dialogo del sistema y no nuestro.
+        _button.setEnabled(true);
     }
 
 }

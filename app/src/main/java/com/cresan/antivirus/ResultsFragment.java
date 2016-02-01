@@ -76,7 +76,7 @@ public class ResultsFragment extends Fragment
             @Override
             public void onClick(View v)
             {
-
+                _buttonRemove.setEnabled(false);
                 List<BadPackageData> selectedApps= _resultAdapter.getSelectedApps();
                 if(selectedApps.size() > 0)
                 {
@@ -89,6 +89,7 @@ public class ResultsFragment extends Fragment
 
                         Log.i("LISTA", "Lista: " + pck);
                     }
+
                 }else
                 {
 
@@ -100,7 +101,7 @@ public class ResultsFragment extends Fragment
                                 @Override
                                 public void onClick(DialogInterface dialog, int which)
                                 {
-
+                                    _buttonRemove.setEnabled(true);
 
                                 }
                             }).show();
@@ -165,6 +166,8 @@ public class ResultsFragment extends Fragment
     {
         super.onResume();
 
+        // Esto esta aqui para poder volver el boton de desinstalaciones en lote a true.
+        _buttonRemove.setEnabled(true);
         MenacesCacheSet menacesCache = getMainActivity().getMenacesCacheSet();
 
         /*

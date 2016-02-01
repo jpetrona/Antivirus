@@ -24,6 +24,7 @@ import com.tech.applications.coretools.BatteryData;
 import com.tech.applications.coretools.BatteryTools;
 import com.tech.applications.coretools.NetworkTools;
 import com.tech.applications.coretools.StringTools;
+import com.tech.applications.coretools.ViewTools;
 import com.tech.applications.coretools.time.PausableCountDownTimer;
 
 import at.grabner.circleprogress.CircleProgressView;
@@ -278,8 +279,8 @@ public class MainFragment extends Fragment
                     @Override
                     public void onFinished()
                     {
-                        _currentScanTask=null;
-                        if(tempBadResults.size()>0)
+                        _currentScanTask = null;
+                        if (tempBadResults.size() > 0)
                         {
                             showResultFragment(new ArrayList<BadPackageData>(tempBadResults));
 
@@ -292,8 +293,7 @@ public class MainFragment extends Fragment
                                     _configureNonScanningUI();
                                 }
                             }, 400);
-                        }
-                        else
+                        } else
                         {
                             _playNoMenacesAnimationFound();
                         }
@@ -425,7 +425,7 @@ public class MainFragment extends Fragment
             if(!firstScanDone)
             {
                 _riskIcon.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.shield_medium_risk_icon));
-                _topMenacesCounterText.setText("Ejecutar primer analisis para comprobar amenazas");
+                _topMenacesCounterText.setText(R.string.execute_first_analysis);
                 _deviceRiskPanel.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.MediumRiskColor));
                 _resolvePersistProblems.setVisibility(View.GONE);
             }
@@ -461,7 +461,7 @@ public class MainFragment extends Fragment
 
         _riskIcon.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.shield_protected_icon));
         _deviceRiskPanel.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.ProtectedRiskColor));
-        _topMenacesCounterText.setText("Estas protegido");
+        _topMenacesCounterText.setText(R.string.are_protected);
        _resolvePersistProblems.setVisibility(View.GONE);
 
 
@@ -475,6 +475,7 @@ public class MainFragment extends Fragment
         _deviceRiskPanel.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.MediumRiskColor));
         _updateFoundThreatsText(_topMenacesCounterText, menaces);
        _resolvePersistProblems.setVisibility(View.VISIBLE);
+        ViewTools.setViewBackgroundDrawable(_resolvePersistProblems, ContextCompat.getDrawable(getContext(), R.drawable.resolve_button_medium_risk));
 
     }
 
@@ -486,6 +487,7 @@ public class MainFragment extends Fragment
         _deviceRiskPanel.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.HighRiskColor));
         _updateFoundThreatsText(_topMenacesCounterText, menaces);
         _resolvePersistProblems.setVisibility(View.VISIBLE);
+        ViewTools.setViewBackgroundDrawable(_resolvePersistProblems, ContextCompat.getDrawable(getContext(), R.drawable.resolve_button_selector));
     }
 
 
