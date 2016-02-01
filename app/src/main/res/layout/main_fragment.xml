@@ -58,8 +58,7 @@
                         app:cpv_rimWidth="15.0dip"
                         app:cpv_contourSize="0.0dip"
                         app:cpv_seekMode="false"
-                        app:cpv_unitPosition="right_bottom"
-                        />
+                        app:cpv_unitPosition="right_bottom"/>
 
                     <FrameLayout
                         android:layout_width="match_parent"
