@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Antivirus</string>
-    <string name="no_inet_no_app">Repair Battery Life needs a data connection to operate. Please enable Wifi or 3G and try again.</string>
+    <string name="app_name">AMS Antivirus</string>
+    <string name="no_inet_no_app">AMS Antivirus needs a data connection to operate. Please enable Wifi or 3G and try again.</string>
     <string name="quit_app">Quit</string>
     <string name="information">Information</string>
     <string name="vote">Rate Us!</string>
