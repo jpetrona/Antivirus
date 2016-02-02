@@ -314,7 +314,7 @@ public class MonitorShieldService extends Service
         if(whiteListed)
         {
             NotificationTools.notificatePush(MonitorShieldService.this, 0xFF00, _appIcon,
-                    appName + " is a trusted application.", appName, "App " + appName + " is a trusted application verified by antivirus.", openAppIntent);
+                    appName + " " + R.string.trusted_message, appName, "App " + appName + " " + R.string.trusted_by_app, openAppIntent);
         }
         else
         {
@@ -322,7 +322,7 @@ public class MonitorShieldService extends Service
             if(_userWhiteList.checkIfPackageInList(packageName))
             {
                 NotificationTools.notificatePush(MonitorShieldService.this, 0xFF00, _appIcon,
-                        appName + " is a trusted application.", appName, "App " + appName + " is a trusted application verified by user.", openAppIntent);
+                        appName + " " + R.string.trusted_message, appName, "App " + appName + " " + R.string.trusted_by_user, openAppIntent);
             }
             else
             {
@@ -359,12 +359,12 @@ public class MonitorShieldService extends Service
                         }
 
                         NotificationTools.notificatePush(MonitorShieldService.this, 0xFF00, _appIcon,
-                                appName + " needs to be scanned.", appName, "Click to scan menaces", toExecuteIntent);
+                                appName + " " + R.string.has_been_scanned, appName, getString(R.string.enter_to_solve_problems), toExecuteIntent);
 
                     }
                     else
                         NotificationTools.notificatePush(MonitorShieldService.this, 0xFF00, _appIcon,
-                            appName + " is secure.", appName, "Has no threats.", toExecuteIntent);
+                            appName + " " + R.string.is_secure, appName, getString(R.string.has_no_threats), toExecuteIntent);
                 }
             }
         }
