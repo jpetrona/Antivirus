@@ -317,7 +317,7 @@ public class MonitorShieldService extends Service
         if(whiteListed)
         {
             NotificationTools.notificatePush(MonitorShieldService.this, 0xFF00, _appIcon,
-                    appName + " " + R.string.trusted_message, appName, "App " + appName + " " + R.string.trusted_by_app, openAppIntent);
+                    appName + " " + getString(R.string.trusted_message), appName, "App " + appName + " " + getString(R.string.trusted_by_app), openAppIntent);
         }
         else
         {
@@ -325,7 +325,7 @@ public class MonitorShieldService extends Service
             if(_userWhiteList.checkIfPackageInList(packageName))
             {
                 NotificationTools.notificatePush(MonitorShieldService.this, 0xFF00, _appIcon,
-                        appName + " " + getString(R.string.trusted_message), appName, "App " + appName + " " + R.string.trusted_by_user, openAppIntent);
+                        appName + " " + getString(R.string.trusted_message), appName, "App " + appName + " " + getString(R.string.trusted_by_user), openAppIntent);
             }
             else
             {
