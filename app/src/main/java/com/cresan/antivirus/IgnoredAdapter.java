@@ -17,6 +17,7 @@ import com.cresan.androidprotector.R;
 import com.tech.applications.coretools.ActivityTools;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -64,24 +65,24 @@ public class IgnoredAdapter  extends ArrayAdapter<BadPackageData>
             {
                 new AlertDialog.Builder(getContext())
                         .setTitle(_context.getString(R.string.warning))
-                                .setMessage(_context.getString(R.string.remove_ignored_app_message) + " " + ActivityTools.getAppNameFromPackage(getContext(), obj.getPackageName()))
-                                .setPositiveButton(_context.getString(R.string.accept_eula), new DialogInterface.OnClickListener()
-                                {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which)
-                                    {
-                                        remove(obj);
-                                        _adapterListener.onItemRemoved(obj);
-                                    }
-                                }).setNegativeButton(_context.getString(R.string.cancel), new DialogInterface.OnClickListener()
-                                {
+                        .setMessage(_context.getString(R.string.remove_ignored_app_message) + " " + ActivityTools.getAppNameFromPackage(getContext(), obj.getPackageName()))
+                        .setPositiveButton(_context.getString(R.string.accept_eula), new DialogInterface.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which)
+                            {
+                                remove(obj);
+                                _adapterListener.onItemRemoved(obj);
+                            }
+                        }).setNegativeButton(_context.getString(R.string.cancel), new DialogInterface.OnClickListener()
+                {
 
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which)
-                                    {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
 
-                                    }
-                                }).show();
+                    }
+                }).show();
 
             }
         });
@@ -90,5 +91,11 @@ public class IgnoredAdapter  extends ArrayAdapter<BadPackageData>
         imageView.setImageDrawable(ActivityTools.getIconFromPackage(obj.getPackageName(), getContext()));
 
         return rowView;
+    }
+
+    public void refresh(List<BadPackageData> bpd)
+    {
+        clear();
+        addAll(bpd);
     }
 }

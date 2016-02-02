@@ -1,5 +1,6 @@
 package com.cresan.antivirus;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,10 +11,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.cresan.androidprotector.R;
+import com.tech.applications.coretools.ActivityTools;
 import com.tech.applications.coretools.StringTools;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -66,5 +69,34 @@ public class IgnoredListFragment extends Fragment
         String finalStr=getString(R.string.ignored_counter);
         finalStr= StringTools.fillParams(finalStr, "#", Integer.toString(appCount));
         textView.setText(finalStr);
+    }
+
+    static public List<BadPackageData> getIgnoredAndInstalledApps(Context context, List<BadPackageData> ignoredList)
+    {
+        //Create list of apps that are whitelisted and installed
+        List<BadPackageData> ignoredAppsInstalledOnSystem=new ArrayList<BadPackageData>();
+
+        for(BadPackageData bpd : ignoredList)
+        {
+            if(ActivityTools.isPackageInstalled(context, bpd.getPackageName()))
+                ignoredAppsInstalledOnSystem.add(bpd);
+        }
+
+        return ignoredAppsInstalledOnSystem;
+    }
+
+
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+
+        List<BadPackageData> list=getIgnoredAndInstalledApps(getMainActivity(), new ArrayList(getMainActivity().getUserWhiteList().getSet()));
+        _userWhiteList=list;
+        _ignoredAdapter.refresh(list);
+
+        _updateFoundThreatsText(_ignoredCounter,_userWhiteList.size());
+
     }
 }

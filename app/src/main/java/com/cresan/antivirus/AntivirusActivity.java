@@ -304,13 +304,7 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
     void showIgnoredFragment(List<BadPackageData> userWhiteList)
     {
         //Create list of apps that are whitelisted and installed
-        List<BadPackageData> ignoredAppsInstalledOnSystem=new ArrayList<BadPackageData>();
-
-        for(BadPackageData bpd : userWhiteList)
-        {
-            if(ActivityTools.isPackageInstalled(this,bpd.getPackageName()))
-                ignoredAppsInstalledOnSystem.add(bpd);
-        }
+        List<BadPackageData> ignoredAppsInstalledOnSystem=IgnoredListFragment.getIgnoredAndInstalledApps(this,userWhiteList);
 
 
         if(ignoredAppsInstalledOnSystem.size() > 0)
