@@ -62,7 +62,10 @@ public class MonitorShieldService extends Service
     {
         super.onCreate();
 
-        Log.i("CRESAN","################## Service OnCreate called");
+        Log.i("CRESAN", "################## Service OnCreate called");
+
+        /*NotificationTools.notificatePermanentPush(MonitorShieldService.this, 0xFF00, _appIcon, "", "", "",
+                new Intent(MonitorShieldService.this, AntivirusActivity.class));*/
 
         _packageBroadcastReceiver = new PackageBroadcastReceiver();
         _packageBroadcastReceiver.setPackageBroadcastListener(new IPackageChangesListener()
@@ -322,7 +325,7 @@ public class MonitorShieldService extends Service
             if(_userWhiteList.checkIfPackageInList(packageName))
             {
                 NotificationTools.notificatePush(MonitorShieldService.this, 0xFF00, _appIcon,
-                        appName + " " + R.string.trusted_message, appName, "App " + appName + " " + R.string.trusted_by_user, openAppIntent);
+                        appName + " " + getString(R.string.trusted_message), appName, "App " + appName + " " + R.string.trusted_by_user, openAppIntent);
             }
             else
             {
@@ -359,12 +362,12 @@ public class MonitorShieldService extends Service
                         }
 
                         NotificationTools.notificatePush(MonitorShieldService.this, 0xFF00, _appIcon,
-                                appName + " " + R.string.has_been_scanned, appName, getString(R.string.enter_to_solve_problems), toExecuteIntent);
+                                appName + " " + getString(R.string.has_been_scanned), appName, getString(R.string.enter_to_solve_problems), toExecuteIntent);
 
                     }
                     else
                         NotificationTools.notificatePush(MonitorShieldService.this, 0xFF00, _appIcon,
-                            appName + " " + R.string.is_secure, appName, getString(R.string.has_no_threats), toExecuteIntent);
+                            appName + " " + getString(R.string.is_secure), appName, getString(R.string.has_no_threats), toExecuteIntent);
                 }
             }
         }
