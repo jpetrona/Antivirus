@@ -53,7 +53,7 @@ public class MonitorShieldService extends Service
     public UserWhiteList getUserWhiteList() { return _userWhiteList;}
     MenacesCacheSet _menacesCacheSet =null;
     public MenacesCacheSet getMenacesCacheSet() { return _menacesCacheSet; }
-
+    private int _appIcon = R.mipmap.ic_launcher;
     IClientInterface _clientInterface=null;
     public void registerClient(IClientInterface clientInterface) { _clientInterface=clientInterface;}
 
@@ -313,7 +313,7 @@ public class MonitorShieldService extends Service
 
         if(whiteListed)
         {
-            NotificationTools.notificatePush(MonitorShieldService.this, 0xFF00, R.drawable.ic_launcher,
+            NotificationTools.notificatePush(MonitorShieldService.this, 0xFF00, _appIcon,
                     appName + " is a trusted application.", appName, "App " + appName + " is a trusted application verified by antivirus.", openAppIntent);
         }
         else
@@ -321,7 +321,7 @@ public class MonitorShieldService extends Service
             //We have it in our white package list
             if(_userWhiteList.checkIfPackageInList(packageName))
             {
-                NotificationTools.notificatePush(MonitorShieldService.this, 0xFF00, R.drawable.ic_launcher,
+                NotificationTools.notificatePush(MonitorShieldService.this, 0xFF00, _appIcon,
                         appName + " is a trusted application.", appName, "App " + appName + " is a trusted application verified by user.", openAppIntent);
             }
             else
@@ -358,12 +358,12 @@ public class MonitorShieldService extends Service
                             _clientInterface.onMonitorFoundMenace(bpbr);
                         }
 
-                        NotificationTools.notificatePush(MonitorShieldService.this, 0xFF00, R.drawable.ic_launcher,
+                        NotificationTools.notificatePush(MonitorShieldService.this, 0xFF00, _appIcon,
                                 appName + " needs to be scanned.", appName, "Click to scan menaces", toExecuteIntent);
 
                     }
                     else
-                        NotificationTools.notificatePush(MonitorShieldService.this, 0xFF00, R.drawable.ic_launcher,
+                        NotificationTools.notificatePush(MonitorShieldService.this, 0xFF00, _appIcon,
                             appName + " is secure.", appName, "Has no threats.", toExecuteIntent);
                 }
             }

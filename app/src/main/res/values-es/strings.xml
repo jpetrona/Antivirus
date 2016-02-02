@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Antivirus</string>
-    <string name="no_inet_no_app">Reparar batería necesita de una conexión a internet para funcionar. Activa el 3G o WIFI y vuelve a intentarlo.</string>
+    <string name="app_name">AMS Antivirus</string>
+    <string name="no_inet_no_app">AMS Antivirus necesita de una conexión a internet para funcionar. Activa el 3G o WIFI y vuelve a intentarlo.</string>
     <string name="quit_app">Salir</string>
     <string name="information">Información</string>
     <string name="vote">Puntuanos!</string>
