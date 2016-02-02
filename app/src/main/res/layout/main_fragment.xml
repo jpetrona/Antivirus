@@ -170,6 +170,18 @@
                     android:textColor="@color/SecondaryTextColor"
                     android:textSize="@dimen/text_scan_button_font_size"/>
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Último scan: 1 Semana"
+                    android:layout_below="@id/runAntivirusNow"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="20dp"
+                    android:id="@+id/lastScanText"
+                    android:textColor="#ffffff"
+                    android:textSize="@dimen/counters_font_size"/>
+
             </RelativeLayout>
 
             <RelativeLayout

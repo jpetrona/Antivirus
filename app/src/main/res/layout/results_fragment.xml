@@ -42,7 +42,7 @@
         android:layout_height="0dp"
         android:layout_weight="1.5"
         android:background="@color/SecondaryColor"
-        android:gravity="center_vertical|center_horizontal">
+        >
 
         <Button
             android:id="@+id/btnKill"

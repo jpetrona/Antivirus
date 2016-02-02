@@ -50,8 +50,8 @@
     <string name="trusted_by_user">Medium Risk</string>
     <string name="trusted_message">is a trusted application.</string>
     <string name="has_been_scanned">has problems.</string>
-    <string name="is_secure">is secure.</string>
-    <string name="has_no_threats">Has no problems.</string>
+    <string name="is_secure">is safe to open.</string>
+    <string name="has_no_threats">is safe to open.</string>
     <string name="enter_to_solve_problems">has problems, click to resolve problems.</string>
     <string name="eula_text">We use device identifiers to personalice content and ads, to provide social media features and to analyse our traffic. We also share such identifiers and other information from your device with our social media, advertising and analytics partners.</string>
 </resources>
