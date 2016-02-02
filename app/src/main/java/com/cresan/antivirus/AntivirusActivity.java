@@ -401,11 +401,10 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
         }, 20000);
 	}
 
-
 	void _showVoteUs()
 	{
 		final AppData appData=AppData.getInstance(this);
-        if (appData.getVoted())
+        if (!appData.getVoted())
 		{
 			AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
 
