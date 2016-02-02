@@ -9,12 +9,23 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Welcome to AMS Antivirus"
+        android:id="@+id/textView"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="10dp"
+        android:textColor="#ffffff"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Texto eula"
+        android:text="@string/eula_text"
         android:id="@+id/textView2"
         android:layout_marginBottom="100dp"
         android:textColor="#ffffff"
-        android:textSize="@dimen/eula_font_size"/>
+        android:textSize="@dimen/eula_font_size"
+        android:gravity="center_horizontal"/>
 
     <Button
         android:layout_width="@dimen/eula_button_widht"
