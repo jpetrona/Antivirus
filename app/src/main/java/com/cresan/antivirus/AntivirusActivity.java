@@ -286,20 +286,7 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
 
                 UserWhiteList userWhiteList=getUserWhiteList();
                 Set<BadPackageData> packageData =  userWhiteList.getSet();
-                if(packageData.size() > 0)
                 showIgnoredFragment(new ArrayList<BadPackageData>(packageData));
-                else
-                    new AlertDialog.Builder(this)
-                            .setTitle(this.getString(R.string.warning))
-                            .setMessage(this.getString(R.string.igonred_message_dialog))
-                            .setPositiveButton(this.getString(R.string.accept_eula), new DialogInterface.OnClickListener()
-                            {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which)
-                                {
-
-                                }
-                            }).show();
                 Log.d("ign", "IGNORED BUTTON MENU");
                 return true;
             case R.id.RateUs:
@@ -316,8 +303,36 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
 
     void showIgnoredFragment(List<BadPackageData> userWhiteList)
     {
-        IgnoredListFragment newFragment= (IgnoredListFragment) this.slideInFragment(AntivirusActivity.kIgnoredFragmentTag);
-        newFragment.setData(userWhiteList);
+        //Create list of apps that are whitelisted and installed
+        List<BadPackageData> ignoredAppsInstalledOnSystem=new ArrayList<BadPackageData>();
+
+        for(BadPackageData bpd : userWhiteList)
+        {
+            if(ActivityTools.isPackageInstalled(this,bpd.getPackageName()))
+                ignoredAppsInstalledOnSystem.add(bpd);
+        }
+
+
+        if(ignoredAppsInstalledOnSystem.size() > 0)
+        {
+            IgnoredListFragment newFragment= (IgnoredListFragment) this.slideInFragment(AntivirusActivity.kIgnoredFragmentTag);
+            newFragment.setData(userWhiteList);
+        }
+        else
+        {
+            new AlertDialog.Builder(this)
+                    .setTitle(this.getString(R.string.warning))
+                    .setMessage(this.getString(R.string.igonred_message_dialog))
+                    .setPositiveButton(this.getString(R.string.accept_eula), new DialogInterface.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which)
+                        {
+
+                        }
+                    }).show();
+        }
+
     }
 
     @Override
