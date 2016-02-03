@@ -15,8 +15,8 @@
 
         <ImageView
             android:id="@+id/logo"
-            android:layout_width="50px"
-            android:layout_height="match_parent"
+            android:layout_width="@dimen/icon_ignoredList_size"
+            android:layout_height="@dimen/icon_ignoredList_size"
             android:layout_marginRight="5dp"
             android:src="@mipmap/ic_launcher"
             android:layout_weight="0.03">
@@ -27,7 +27,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:paddingLeft="10dp"
             android:id="@+id/linearLayout">
 
             <TextView
@@ -39,8 +38,9 @@
                 android:maxLines="1"
                 android:singleLine="true"
                 android:textColor="@color/info_icon_bottom_text"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textSize="@dimen/title_app_font_size"
+                android:textStyle="bold"
+                android:text="Google traductor "/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -56,7 +56,7 @@
                     android:layout_weight="1"
                     android:singleLine="true"
                     android:textColor="#e21616"
-                    android:textSize="14sp"
+                    android:textSize="@dimen/riskType_font_size"
                     android:textStyle="bold"
                     android:text="Potencialmente dañina" />
 
@@ -66,11 +66,13 @@
 
 
         <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:id="@+id/checkBox"
             android:checked="true"
             android:focusable="false"
-            android:layout_gravity="center_vertical"/>
+            android:layout_gravity="center_vertical"
+            android:allowUndo="false"
+            />
     </LinearLayout>
 </LinearLayout>

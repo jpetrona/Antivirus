@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@color/SecondaryColor"
@@ -34,7 +35,9 @@
         android:divider="@color/DividerColor"
         android:dividerHeight="0.5dp"
         android:drawSelectorOnTop="true"
-        android:background="@color/SecondaryColor"/>
+        android:background="@color/SecondaryColor"
+        tools:listitem = "@layout/ignored_adapter"
+        />
 
 
 </LinearLayout>

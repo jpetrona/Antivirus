@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@color/SecondaryColor"
@@ -13,7 +14,7 @@
         android:orientation="horizontal"
         android:background="@color/SecondaryColor"
         android:layout_weight="0.15"
-        android:padding="10dp">
+        android:padding="@dimen/padding_app_info">
 
         <ImageView
             android:id="@+id/iconGeneral"
@@ -40,7 +41,7 @@
                 android:maxLines="1"
                 android:singleLine="true"
                 android:textColor="@color/info_icon_bottom_text"
-                android:textSize="30sp"
+                android:textSize="@dimen/title_app_info"
                 android:textStyle="bold"
                 android:text="NAME APP"
                 android:layout_weight="0.5"/>
@@ -51,7 +52,7 @@
                 android:layout_height="wrap_content"
                 android:singleLine="true"
                 android:textColor="#e21616"
-                android:textSize="25sp"
+                android:textSize="@dimen/riskType_app_info"
                 android:textStyle="bold"
                 android:text="RIESGO ALTO"
                 android:layout_weight="0.5"/>
@@ -65,23 +66,25 @@
                 >
 
                 <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/button_trust_widht"
+                    android:layout_height="@dimen/button_trust_height"
                     android:text="@string/trust"
                     android:id="@+id/buttonTrust"
                     android:layout_gravity="right"
                     android:background="#00ffffff"
                     android:textColor="@color/PrimaryColor"
-                    android:layout_marginRight="10dp"/>
+                    android:layout_marginRight="10dp"
+                    android:textSize="@dimen/button_trust_font_size"/>
 
                 <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/button_trust_widht"
+                    android:layout_height="@dimen/button_trust_height"
                     android:text="@string/uninstall"
                     android:id="@+id/buttonUninstall"
                     android:layout_gravity="right"
                     android:background="#00ffffff"
-                    android:textColor="@color/PrimaryColor"/>
+                    android:textColor="@color/PrimaryColor"
+                    android:textSize="@dimen/button_trust_font_size"/>
             </LinearLayout>
 
         </LinearLayout>
@@ -92,6 +95,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/listView"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        tools:listitem = "@layout/warnings_adapter"/>
 
 </LinearLayout>
