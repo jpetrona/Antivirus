@@ -42,15 +42,12 @@
         android:layout_height="0dp"
         android:layout_weight="1.5"
         android:background="@color/SecondaryColor"
-        >
+        android:gravity="center_horizontal">
 
         <Button
             android:id="@+id/btnKill"
             android:layout_width="@dimen/resolve_problems_widht"
             android:layout_height="@dimen/resolve_problems_height"
-            android:layout_marginLeft="40dp"
-            android:layout_marginRight="40dp"
-            android:layout_marginTop="3dp"
             android:background="@drawable/calibrate_button_selector"
             android:text="@string/resolve_problems"
             android:textColor="@color/SecondaryTextColor"
