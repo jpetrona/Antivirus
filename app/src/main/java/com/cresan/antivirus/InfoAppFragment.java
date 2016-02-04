@@ -202,7 +202,7 @@ public class InfoAppFragment extends Fragment
                     MenacesCacheSet menaceCacheSet= getMainActivity().getMenacesCacheSet();
                     menaceCacheSet.removeItem(_problem);
                     menaceCacheSet.writeToJSON();
-                    
+
                     getMainActivity().goBack();
                    // _updateFoundThreatsText(_ignoredCounter,_userWhiteList.getItemCount());
 

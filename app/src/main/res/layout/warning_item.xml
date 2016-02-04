@@ -39,9 +39,8 @@
                     android:layout_width="@dimen/icon_ignoredList_size"
                     android:layout_height="@dimen/icon_ignoredList_size"
                     android:src="@mipmap/ic_launcher"
-                    android:layout_gravity="center_vertical"
                     android:adjustViewBounds="true"
-                    />
+                    android:layout_gravity="top"/>
 
                 <TextView
                     android:layout_width="0dp"
