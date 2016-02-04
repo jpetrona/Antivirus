@@ -13,7 +13,7 @@ import org.json.JSONObject;
 /**
  * Created by hexdump on 15/01/16.
  */
-public class DebugUSBEnabledProblem implements IProblem
+public class DebugUSBEnabledProblem extends SystemProblem
 {
     static final String kUSBProblemType ="USB";
     static public final String kSerializationType="usb";
@@ -25,40 +25,17 @@ public class DebugUSBEnabledProblem implements IProblem
     final int kWhiteListRemoveText=R.string.usb_remove_whitelist_message;
     final boolean kUSBIsDangerousMenace=false;
 
-
-
     //Factory method
     public DebugUSBEnabledProblem()
     {
     }
 
-    public String getSystemProblemType() { return kUSBProblemType; }
+    //public String getSystemProblemType() { return kUSBProblemType; }
 
     public ProblemType getType() { return ProblemType.SystemProblem;}
 
-    public JSONObject buildJSONObject() throws JSONException
-    {
-        JSONObject jsonObj=new JSONObject();
-        jsonObj.put("type",kSerializationType);
+    public String getSerializationTypeString() {return kSerializationType; }
 
-        return jsonObj;
-    }
-
-    public void loadFromJSON(JSONObject appObject)
-    {
-        try
-        {
-            String systemTypeOrdinal = appObject.getString("type");
-        }
-        catch(Exception ex)
-        {
-            ex.printStackTrace();
-        }
-    }
-
-    public void writeToJSON(String filePath)
-    {
-    }
 
     public String getWhiteListOnAddDescription(Context context)
     {
@@ -90,8 +67,4 @@ public class DebugUSBEnabledProblem implements IProblem
         return false;
     }
     
-    static public boolean existsInSystem(Context context)
-    {
-        return ActivityTools.checkIfUSBDebugIsEnabled(context);
-    }
 }

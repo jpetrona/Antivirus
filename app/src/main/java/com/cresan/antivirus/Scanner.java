@@ -321,7 +321,7 @@ class Scanner
 
     public static Set<IProblem> scanSystemProblems(Context context,Set<IProblem> setToUpdate)
     {
-        if(DebugUSBEnabledProblem.existsInSystem(context))
+        if(ActivityTools.checkIfUSBDebugIsEnabled(context))
         {
             DebugUSBEnabledProblem problem=new DebugUSBEnabledProblem();
             setToUpdate.add(problem);

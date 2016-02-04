@@ -14,41 +14,32 @@ import org.json.JSONObject;
  */
 public abstract class SystemProblem implements IProblem
 {
-    public String _systemProblemType;
 
     //Factory method
     public SystemProblem()
     {
     }
 
-    public SystemProblem(String systemProblemType)
-    {
-        _systemProblemType=systemProblemType;
-    }
-
-    public String getSystemProblemType() { return _systemProblemType; }
-
     public ProblemType getType() { return ProblemType.SystemProblem;}
 
     public JSONObject buildJSONObject() throws JSONException
     {
         JSONObject jsonObj=new JSONObject();
-        jsonObj.put("systemtype",_systemProblemType);
+        jsonObj.put("type",getSerializationTypeString());
 
         return jsonObj;
     }
 
     public void loadFromJSON(JSONObject appObject)
     {
-        try
+        /*try
         {
-            String systemTypeOrdinal = appObject.getString("systemtype");
-            _systemProblemType=systemTypeOrdinal;
+            String systemTypeOrdinal = appObject.getString("type");
         }
         catch(Exception ex)
         {
             ex.printStackTrace();
-        }
+        }*/
     }
 
     public void writeToJSON(String filePath)
@@ -60,7 +51,6 @@ public abstract class SystemProblem implements IProblem
     abstract public String getTitle(Context context);
     abstract public String getDescription(Context context);
     abstract public Drawable getIcon(Context context);
-    abstract public boolean isDangerous();
-    abstract public boolean existsInSystem();
+    abstract public String getSerializationTypeString();
 
 }
