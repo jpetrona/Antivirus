@@ -1,5 +1,9 @@
 package com.cresan.antivirus;
 
+import android.content.Context;
+
+import com.tech.applications.coretools.ActivityTools;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -52,6 +56,11 @@ public class AppProblem extends PackageData implements IProblem
         }
 
         return false;
+    }
+
+    public boolean problemExists(Context context)
+    {
+        return ActivityTools.isPackageInstalled(context, getPackageName());
     }
 
     public JSONObject buildJSONObject() throws JSONException

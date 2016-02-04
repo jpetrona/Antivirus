@@ -71,4 +71,9 @@ public class UnknownAppEnabledProblem extends  SystemProblem
     {
         return false;
     }
+
+    public boolean problemExists(Context context)
+    {
+        return ActivityTools.checkIfUnknownAppIsEnabled(context);
+    }
 }

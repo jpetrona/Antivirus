@@ -90,16 +90,11 @@ public class IgnoredAdapter  extends ArrayAdapter<IProblem>
                 {
                     AppProblem appProblem = (AppProblem) obj;
                     dialogMessage = _context.getString(R.string.remove_ignored_app_message) + " " + ActivityTools.getAppNameFromPackage(getContext(), appProblem.getPackageName());
-
-                    textView.setText(ActivityTools.getAppNameFromPackage(getContext(), appProblem.getPackageName()));
-                    imageView.setImageDrawable(ActivityTools.getIconFromPackage(appProblem.getPackageName(), getContext()));
-                } else
+                }
+                else
                 {
                     SystemProblem sp=((SystemProblem) obj);
                     dialogMessage = sp.getWhiteListOnRemoveDescription(_context);
-
-                    textView.setText(ActivityTools.getAppNameFromPackage(getContext(), sp.getTitle(getContext())));
-                    imageView.setImageDrawable(sp.getIcon(getContext()));
                 }
 
                 builder.setMessage(dialogMessage);
@@ -107,6 +102,18 @@ public class IgnoredAdapter  extends ArrayAdapter<IProblem>
 
             }
         });
+
+        if (obj.getType() == IProblem.ProblemType.AppProblem)
+        {
+            AppProblem appProblem = (AppProblem) obj;
+            textView.setText(ActivityTools.getAppNameFromPackage(getContext(), appProblem.getPackageName()));
+            imageView.setImageDrawable(ActivityTools.getIconFromPackage(appProblem.getPackageName(), getContext()));
+        } else
+        {
+            SystemProblem sp=((SystemProblem) obj);
+            textView.setText(ActivityTools.getAppNameFromPackage(getContext(), sp.getTitle(getContext())));
+            imageView.setImageDrawable(sp.getIcon(getContext()));
+        }
 
         return rowView;
     }

@@ -286,7 +286,6 @@ public class ResultsAdapter extends ArrayAdapter<IResultsAdapterItem>
     @Override
     public View getView(final int position, View convertView, ViewGroup parent)
     {
-        Log.e("Yeahhhh", "Created view for position: " + Integer.toString(position));
         final View rowView;
 
         if(convertView == null)
