@@ -16,7 +16,7 @@ class ResultsAdapterProblemItem extends ResultsAdapterItem
 
     public AppProblem getAppProblem() throws ClassCastException
     {
-        if(_problem.getClass()==AppProblem.class)
+        if(AppProblem.class.isAssignableFrom(_problem.getClass()))
             return (AppProblem)_problem;
         else
             throw new ClassCastException();
@@ -24,7 +24,7 @@ class ResultsAdapterProblemItem extends ResultsAdapterItem
 
     public SystemProblem getSystemProblem() throws ClassCastException
     {
-        if(_problem.getClass()==SystemProblem.class)
+        if(SystemProblem.class.isAssignableFrom(_problem.getClass()))
             return (SystemProblem)_problem;
         else
             throw new ClassCastException();
