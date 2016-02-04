@@ -2,6 +2,7 @@ package com.cresan.antivirus;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -285,7 +286,7 @@ public class ResultsAdapter extends ArrayAdapter<IResultsAdapterItem>
     @Override
     public View getView(final int position, View convertView, ViewGroup parent)
     {
-
+        Log.e("Yeahhhh", "Created view for position: " + Integer.toString(position));
         final View rowView;
 
         if(convertView == null)
@@ -294,23 +295,15 @@ public class ResultsAdapter extends ArrayAdapter<IResultsAdapterItem>
             rowView = convertView;
 
 
+
         _fillRowData(position, rowView);
-
-        /*final ResultsAdapterAppItem obj = _values.get(position);
-        TextView textView = (TextView) rowView.findViewById(R.id.Titlelabel);
-        TextView riskText = (TextView) rowView.findViewById(R.id.qualityApp);
-        ImageView imageView = (ImageView) rowView.findViewById(R.id.logo);
-        CheckBox checkBox = (CheckBox) rowView.findViewById(R.id.checkBox);
-        checkBox.setChecked(obj.checked);*/
-
-
 
         return rowView;
 
     }
 
     @Override
-    public int getViewTypeCount() { return 2; }
+    public int getViewTypeCount() { return 3; }
 
     @Override
     public int getItemViewType(int position)

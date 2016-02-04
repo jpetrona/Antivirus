@@ -46,6 +46,19 @@ public abstract class SystemProblem implements IProblem
     {
     }
 
+    public int hashCode()
+    {
+        return (int) this.getClass().hashCode();
+    }
+
+    public boolean equals(Object o)
+    {
+        if(o == null)
+            return false;
+
+        return o.getClass()==this.getClass();
+    }
+
     abstract public String getWhiteListOnAddDescription(Context context);
     abstract public String getWhiteListOnRemoveDescription(Context context);
     abstract public String getTitle(Context context);

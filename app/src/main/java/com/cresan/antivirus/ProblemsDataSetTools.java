@@ -79,4 +79,17 @@ public class ProblemsDataSetTools
 
         return false;
     }
+/*
+    static boolean isSystemProblemInCollection(Class<? extends SystemProblem> problem, Collection<IProblem> problems)
+    {
+        for(IProblem p : problems)
+        {
+            if(p.getType()== IProblem.ProblemType.SystemProblem && p.getClass()==problem.getClass())
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }*/
 }
