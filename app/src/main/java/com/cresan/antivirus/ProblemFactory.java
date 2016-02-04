@@ -16,6 +16,9 @@ public class ProblemFactory implements IFactory<IProblem>
             case AppProblem.kSerializationType:
                 problem= new AppProblem();
                 break;
+            case UnknownAppEnabledProblem.kSerializationType:
+                problem= new UnknownAppEnabledProblem();
+                break;
             default:
                 throw new IllegalArgumentException("Unknown node type creating IProblem");
         }
