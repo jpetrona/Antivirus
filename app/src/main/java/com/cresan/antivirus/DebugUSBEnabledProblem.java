@@ -70,7 +70,13 @@ public class DebugUSBEnabledProblem extends SystemProblem
 
     public Drawable getSubIcon(Context context)
     {
-        return ContextCompat.getDrawable(context,R.drawable.gear);
+        return ContextCompat.getDrawable(context, R.drawable.gear);
+    }
+
+    public void doAction(Context context)
+    {
+        ActivityTools.openDeveloperSettings(context);
+
     }
 
     public boolean isDangerous()

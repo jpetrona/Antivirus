@@ -67,5 +67,6 @@ public abstract class SystemProblem implements IProblem
     abstract public Drawable getIcon(Context context);
     abstract public Drawable getSubIcon(Context context);
     abstract public String getSerializationTypeString();
+    abstract public void doAction(Context context);
 
 }

@@ -180,6 +180,8 @@ public class InfoAppFragment extends Fragment
                 public void onClick(View v)
                 {
                     // Aqui el codigo para abrir la pantalla de configuracion del sistema RECUERDA QUE EN EL ACTIVITY TOOLS TIENES LAS FUNCIONES YA CREADAS.
+
+                    ((SystemProblem) _problem).doAction(getContext());
                 }
             });
 

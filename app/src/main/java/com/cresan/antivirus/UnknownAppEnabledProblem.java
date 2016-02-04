@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 
 import com.cresan.androidprotector.R;
+import com.tech.applications.coretools.ActivityTools;
 
 /**
  * Created by Magic Frame on 04/02/2016.
@@ -61,6 +62,11 @@ public class UnknownAppEnabledProblem extends  SystemProblem
     }
     public Drawable getSubIcon(Context context) {return ContextCompat.getDrawable(context,R.drawable.gear);}
 
+    public void doAction(Context context)
+    {
+        ActivityTools.openSecuritySettings(context);
+
+    }
     public boolean isDangerous()
     {
         return false;
