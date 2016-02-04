@@ -1,6 +1,3 @@
-/**
- * Created by hexdump on 27/01/16.
- */
 package com.cresan.antivirus;
 
 import android.content.Context;
@@ -15,19 +12,21 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-
 /**
- * Created by hexdump on 22/01/16.
+ * Created by hexdump on 03/02/16.
  */
-/*public class BadPackageDataSet
+
+/*
+public class ProblemDataSet
 {
-    private Set<AppProblem> _set;
-    Set<AppProblem> getSet() {return _set;}
-    void setSet(Set<AppProblem> set) { _set=set;}
+    private Set<IProblem> _set;
+    Set<IProblem> getSet() {return _set;}
+    void setSet(Set<IProblem> set) { _set=set;}
 
     IDataSetChangesListener _dataSetChangesListener=null;
     public void setDataSetChangesListener(IDataSetChangesListener listener)  { _dataSetChangesListener=listener;   }
@@ -37,10 +36,10 @@ import java.util.Set;
 
     Context _context= null;
 
-    public BadPackageDataSet(Context context, String serializeFileName)
+    public ProblemDataSet(Context context, String serializeFileName)
     {
         _context=context;
-        _set=new HashSet<AppProblem>();
+        _set=new HashSet<IProblem>();
         _filePath= MediaTools.getInternalDataPath(_context)+ File.separatorChar+serializeFileName;
 
         //Generate file if it does not exist
@@ -62,18 +61,21 @@ import java.util.Set;
             loadData();
     }
 
-    boolean checkIfPackageInList(String packageName)
+    static boolean checkIfPackageInCollection(String packageName, Collection<IProblem> problems)
     {
-        for(AppProblem bpd : _set)
+        for(IProblem p : problems)
         {
-            if(bpd.getPackageName().equals(packageName))
-                return true;
+            if(p.getType()== IProblem.ProblemType.AppProblem)
+            {
+                if(((AppProblem)p).getPackageName().equals(packageName))
+                    return true;
+            }
         }
 
         return false;
     }
 
-    public void addPackage(AppProblem pd)
+    public void addPackage(IProblem pd)
     {
         _set.add(pd);
 
@@ -81,7 +83,7 @@ import java.util.Set;
             _dataSetChangesListener.onSetChanged();
     }
 
-    public void addPackages(Set<AppProblem> packagesDataToAdd)
+    public void addItems(Set<IProblem> packagesDataToAdd)
     {
         _set.addAll(packagesDataToAdd);
         if(_dataSetChangesListener!=null)
@@ -89,7 +91,7 @@ import java.util.Set;
     }
 
 
-    public boolean removePackage(AppProblem pd)
+    public boolean removeItem(IProblem pd)
     {
         boolean b=_set.remove(pd);
         if(b)
@@ -100,27 +102,6 @@ import java.util.Set;
         return b;
     }
 
-    public boolean removePackage(String packageName)
-    {
-        boolean found=false;
-        int index=0;
-
-        Iterator<AppProblem> iterator=_set.iterator();
-        AppProblem bpdTemp=null;
-        AppProblem bpd=null;
-        while(!found && iterator.hasNext())
-        {
-            bpdTemp=iterator.next();
-            if(bpdTemp.getPackageName().equals(packageName))
-                bpd=bpdTemp;
-        }
-
-        if(bpd!=null)
-            return removePackage(bpd);
-        else
-            return false;
-    }
-
     public void clear()
     {
         _set.clear();
@@ -129,7 +110,8 @@ import java.util.Set;
             _dataSetChangesListener.onSetChanged();
     }
 
-    public int getMenaceCount() {return _set.size(); }
+    public int getItemCount() {return _set.size(); }
+
     //Load WhiteList
     public void loadData()
     {
@@ -160,7 +142,7 @@ import java.util.Set;
         {
             JSONObject jo;
             JSONArray jsonArray=new JSONArray();
-            for(AppProblem pd : _set)
+            for(IProblem pd : _set)
             {
                 jo=pd.buildJSONObject();
                 jsonArray.put(jo);
@@ -182,4 +164,5 @@ import java.util.Set;
     }
 
 
-}*/
+}
+*/

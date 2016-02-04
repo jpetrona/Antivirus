@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Debug;
 
 import com.tech.applications.coretools.ActivityTools;
 import com.tech.applications.coretools.StringTools;
@@ -48,9 +49,9 @@ class Scanner
         return matches;
     }
 
-    //In setToUpdate we receive a set of BadPackageData ready to be update with newly detected menaces
-    public static Set<BadPackageData> scanForBlackListedActivityApps(List<PackageInfo> packagesToSearch, Set<PackageData> blackListedActivityPackages,
-                                                                        Set<BadPackageData> setToUpdate)
+    //In setToUpdate we receive a set of AppProblem ready to be update with newly detected menaces
+    public static Set<IProblem> scanForBlackListedActivityApps(List<PackageInfo> packagesToSearch, Set<PackageData> blackListedActivityPackages,
+                                                                        Set<IProblem> setToUpdate)
     {
         List<ActivityInfo> subResult=new ArrayList<ActivityInfo>();
 
@@ -68,10 +69,10 @@ class Scanner
                 if(subResult.size()>0)
                 {
                     //Update or create new if it does not exist
-                    BadPackageData bprd=getBadPackageResultByPackageName(setToUpdate, pi.packageName);
+                    AppProblem bprd=getBadPackageResultByPackageName(setToUpdate, pi.packageName);
                     if(bprd==null)
                     {
-                        bprd = new BadPackageData(pi.packageName);
+                        bprd = new AppProblem(pi.packageName);
                         setToUpdate.add(bprd);
                     }
 
@@ -85,7 +86,7 @@ class Scanner
         return setToUpdate;
     }
 
-    public static BadPackageData scanForBlackListedActivityApp(PackageInfo pi,BadPackageData bprdToFill,
+    public static AppProblem scanForBlackListedActivityApp(PackageInfo pi,AppProblem bprdToFill,
                                                                      Set<PackageData> blackListedActivityPackages, List<ActivityInfo> arrayToRecycle)
 
     {
@@ -107,7 +108,7 @@ class Scanner
         return bprdToFill;
     }
 
-    public static BadPackageData scanForBlackListedActivityApp(Context context, String packageName, Set<PackageData> blackListedActivityPackages)
+    public static AppProblem scanForBlackListedActivityApp(Context context, String packageName, Set<PackageData> blackListedActivityPackages)
     {
         PackageInfo pi=null;
         try
@@ -122,7 +123,7 @@ class Scanner
         if(pi==null)
             return null;
 
-        BadPackageData bprd=new BadPackageData(pi.packageName);
+        AppProblem bprd=new AppProblem(pi.packageName);
 
         List<ActivityInfo> arrayToRecycle=new ArrayList<ActivityInfo>();
 
@@ -133,11 +134,11 @@ class Scanner
     }
 
 
-    //In setToUpdate we receive a set of BadPackageData ready to be update with newly detected menaces
-    public static Set<BadPackageData> scanForSuspiciousPermissionsApps(List<PackageInfo> packagesToSearch, Set<PermissionData> suspiciousPermissions,
-                                                                          Set<BadPackageData> setToUpdate)
+    //In setToUpdate we receive a set of AppProblem ready to be update with newly detected menaces
+    public static Set<IProblem> scanForSuspiciousPermissionsApps(List<PackageInfo> packagesToSearch, Set<PermissionData> suspiciousPermissions,
+                                                                          Set<IProblem> setToUpdate)
     {
-        BadPackageData bprd=null;
+        AppProblem bprd=null;
 
         for(PackageInfo pi : packagesToSearch)
         {
@@ -145,7 +146,7 @@ class Scanner
             bprd=getBadPackageResultByPackageName(setToUpdate,pi.packageName);
 
             if(bprd==null)
-                bprd=new BadPackageData(pi.packageName);
+                bprd=new AppProblem(pi.packageName);
 
             scanForSuspiciousPermissionsApp(pi, bprd, suspiciousPermissions);
 
@@ -157,7 +158,7 @@ class Scanner
         return setToUpdate;
     }
 
-    public static BadPackageData scanForSuspiciousPermissionsApp(PackageInfo pi, BadPackageData bprdToFill,Set<PermissionData> suspiciousPermissions)
+    public static AppProblem scanForSuspiciousPermissionsApp(PackageInfo pi, AppProblem bprdToFill,Set<PermissionData> suspiciousPermissions)
     {
         for(PermissionData permData : suspiciousPermissions)
         {
@@ -170,9 +171,9 @@ class Scanner
         return bprdToFill;
     }
 
-    public static BadPackageData scanForSuspiciousPermissionsApp(Context context, String packageName, Set<PermissionData> suspiciousPermissions)
+    public static AppProblem scanForSuspiciousPermissionsApp(Context context, String packageName, Set<PermissionData> suspiciousPermissions)
     {
-        BadPackageData bprd=null;
+        AppProblem bprd=null;
 
         PackageInfo pi=null;
         try
@@ -187,21 +188,24 @@ class Scanner
         if(pi==null)
             return null;
 
-        bprd=new BadPackageData(pi.packageName);
+        bprd=new AppProblem(pi.packageName);
 
         return scanForSuspiciousPermissionsApp(pi,bprd,suspiciousPermissions);
     }
 
 
-    public static BadPackageData getBadPackageResultByPackageName(Set<BadPackageData> prd, String packageName)
+    public static AppProblem getBadPackageResultByPackageName(Set<IProblem> prd, String packageName)
     {
-        BadPackageData result=null;
+        AppProblem result=null;
 
-        for (BadPackageData p : prd)
+        AppProblem temp=null;
+        for (IProblem p : prd)
         {
-            if(p.getPackageName().equals(packageName))
+            if(p.getType()== IProblem.ProblemType.AppProblem)
             {
-                result=p;
+                temp=(AppProblem)p;
+                if(temp.getPackageName().equals(packageName))
+                    result=temp;
                 break;
             }
         }
@@ -272,7 +276,7 @@ class Scanner
         return result;
     }
 
-    public static Set<BadPackageData> scanInstalledAppsFromGooglePlay(Context context,List<PackageInfo> packagesToSearch, Set<BadPackageData> setToUpdate)
+    public static Set<IProblem> scanInstalledAppsFromGooglePlay(Context context,List<PackageInfo> packagesToSearch, Set<IProblem> setToUpdate)
     {
         //Check against whitelist
         for(PackageInfo pi : packagesToSearch)
@@ -280,10 +284,10 @@ class Scanner
             if(!ActivityTools.checkIfAppWasInstalledThroughGooglePlay(context,pi.packageName))
             {
                 //Update or create new if it does not exist
-                BadPackageData bprd=Scanner.getBadPackageResultByPackageName(setToUpdate, pi.packageName);
+                AppProblem bprd=Scanner.getBadPackageResultByPackageName(setToUpdate, pi.packageName);
                 if(bprd==null)
                 {
-                    bprd = new BadPackageData(pi.packageName);
+                    bprd = new AppProblem(pi.packageName);
                     setToUpdate.add(bprd);
                 }
 
@@ -291,7 +295,7 @@ class Scanner
             }
             else
             {
-                BadPackageData bprd=Scanner.getBadPackageResultByPackageName(setToUpdate, pi.packageName);
+                AppProblem bprd=Scanner.getBadPackageResultByPackageName(setToUpdate, pi.packageName);
                 if(bprd!=null)
                     bprd.setInstalledThroughGooglePlay(true);
             }
@@ -301,7 +305,7 @@ class Scanner
     }
 
 
-    protected static BadPackageData scanInstalledAppFromGooglePlay(Context context,BadPackageData bprd)
+    protected static AppProblem scanInstalledAppFromGooglePlay(Context context,AppProblem bprd)
     {
         if(!ActivityTools.checkIfAppWasInstalledThroughGooglePlay(context,bprd.getPackageName()))
         {
@@ -313,5 +317,16 @@ class Scanner
         }
 
         return bprd;
+    }
+
+    public static Set<IProblem> scanSystemProblems(Context context,Set<IProblem> setToUpdate)
+    {
+        if(DebugUSBEnabledProblem.existsInSystem(context))
+        {
+            DebugUSBEnabledProblem problem=new DebugUSBEnabledProblem();
+            setToUpdate.add(problem);
+        }
+
+        return setToUpdate;
     }
 }

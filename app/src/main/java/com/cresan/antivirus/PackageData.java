@@ -23,6 +23,9 @@ public class PackageData
     public String getPackageName() { return _packageName; }
     public void setPackageName(String packageName) { _packageName=packageName;}
 
+    //Factory method
+    public PackageData() {}
+
     public PackageData(String packageName)
     {
         setPackageName(packageName);
@@ -49,14 +52,14 @@ public class PackageData
         return jsonObj;
     }
 
-    /*public BadPackageData createBadPackageResultData(Context context)
+    /*public AppProblem createBadPackageResultData(Context context)
     {
         try
         {
             PackageInfo pi = ActivityTools.getPackageInfo(context,getPackageName(),PackageManager.GET_ACTIVITIES | PackageManager.GET_PERMISSIONS);
             if(pi!=null)
             {
-                BadPackageData bprd = new BadPackageData(pi.packageName);
+                AppProblem bprd = new AppProblem(pi.packageName);
                 return bprd;
             }
             else

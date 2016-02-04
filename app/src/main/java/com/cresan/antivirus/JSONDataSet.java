@@ -1,6 +1,3 @@
-/**
- * Created by hexdump on 27/01/16.
- */
 package com.cresan.antivirus;
 
 import android.content.Context;
@@ -15,32 +12,41 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
-
 /**
- * Created by hexdump on 22/01/16.
+ * Created by hexdump on 03/02/16.
  */
-/*public class BadPackageDataSet
+abstract public class JSONDataSet<T extends IJSONSerializer> implements IDataSet<T>
 {
-    private Set<AppProblem> _set;
-    Set<AppProblem> getSet() {return _set;}
-    void setSet(Set<AppProblem> set) { _set=set;}
+
+    public int getItemCount() {return _set.size(); }
+
+    private Set<T> _set;
+    public Set<T> getSet() {return _set;}
+    void setSet(Set<T> set) { _set=set;}
+
+    String _filePath=null;
+    Context _context= null;
+
+    IFactory<T> _nodeFactory=null;
 
     IDataSetChangesListener _dataSetChangesListener=null;
     public void setDataSetChangesListener(IDataSetChangesListener listener)  { _dataSetChangesListener=listener;   }
     public void unregisterDataSetChangesListener() { _dataSetChangesListener=null;}
 
-    String _filePath=null;
+    private JSONDataSet()
+    {
+    }
 
-    Context _context= null;
-
-    public BadPackageDataSet(Context context, String serializeFileName)
+    public JSONDataSet(Context context, String serializeFileName, IFactory<T> nodeFactory)
     {
         _context=context;
-        _set=new HashSet<AppProblem>();
+        _nodeFactory=nodeFactory;
+        _set=new HashSet<T>();
         _filePath= MediaTools.getInternalDataPath(_context)+ File.separatorChar+serializeFileName;
 
         //Generate file if it does not exist
@@ -59,79 +65,11 @@ import java.util.Set;
             }
         }
         else
-            loadData();
+            loadFromJSON();
     }
 
-    boolean checkIfPackageInList(String packageName)
-    {
-        for(AppProblem bpd : _set)
-        {
-            if(bpd.getPackageName().equals(packageName))
-                return true;
-        }
-
-        return false;
-    }
-
-    public void addPackage(AppProblem pd)
-    {
-        _set.add(pd);
-
-        if (_dataSetChangesListener != null)
-            _dataSetChangesListener.onSetChanged();
-    }
-
-    public void addPackages(Set<AppProblem> packagesDataToAdd)
-    {
-        _set.addAll(packagesDataToAdd);
-        if(_dataSetChangesListener!=null)
-            _dataSetChangesListener.onSetChanged();
-    }
-
-
-    public boolean removePackage(AppProblem pd)
-    {
-        boolean b=_set.remove(pd);
-        if(b)
-        {
-            if (_dataSetChangesListener != null)
-                _dataSetChangesListener.onSetChanged();
-        }
-        return b;
-    }
-
-    public boolean removePackage(String packageName)
-    {
-        boolean found=false;
-        int index=0;
-
-        Iterator<AppProblem> iterator=_set.iterator();
-        AppProblem bpdTemp=null;
-        AppProblem bpd=null;
-        while(!found && iterator.hasNext())
-        {
-            bpdTemp=iterator.next();
-            if(bpdTemp.getPackageName().equals(packageName))
-                bpd=bpdTemp;
-        }
-
-        if(bpd!=null)
-            return removePackage(bpd);
-        else
-            return false;
-    }
-
-    public void clear()
-    {
-        _set.clear();
-
-        if (_dataSetChangesListener != null)
-            _dataSetChangesListener.onSetChanged();
-    }
-
-    public int getMenaceCount() {return _set.size(); }
     //Load WhiteList
-    public void loadData()
+    public void loadFromJSON()
     {
         try
         {
@@ -143,7 +81,7 @@ import java.util.Set;
             for (int i = 0; i < badAppsArray.length(); i++)
             {
                 JSONObject badAppObj = badAppsArray.getJSONObject(i);
-                AppProblem bpd = new AppProblem("tempname");
+                T bpd = _nodeFactory.createInstance(badAppObj.getString("type"));
                 bpd.loadFromJSON(badAppObj);
                 _set.add(bpd);
             }
@@ -154,13 +92,13 @@ import java.util.Set;
     }
 
     //Load WhiteList
-    public synchronized void writeData()
+    public synchronized void writeToJSON()
     {
         try
         {
             JSONObject jo;
             JSONArray jsonArray=new JSONArray();
-            for(AppProblem pd : _set)
+            for(T pd : _set)
             {
                 jo=pd.buildJSONObject();
                 jsonArray.put(jo);
@@ -169,7 +107,7 @@ import java.util.Set;
             JSONObject rootObj=new JSONObject();
             rootObj.put("data",jsonArray);
 
-            FileTools.writeTextFile(_filePath,rootObj.toString());
+            FileTools.writeTextFile(_filePath, rootObj.toString());
         }
         catch (JSONException e)
         {
@@ -181,5 +119,37 @@ import java.util.Set;
         }
     }
 
+    public boolean addItem(T item)
+    {
+        boolean b=_set.add(item);
 
-}*/
+        if(b)
+        {
+            if (_dataSetChangesListener != null)
+                _dataSetChangesListener.onSetChanged();
+        }
+        return b;
+    }
+    public boolean removeItem(T item)
+    {
+        boolean b=_set.remove(item);
+        if(b)
+        {
+            if (_dataSetChangesListener != null)
+                _dataSetChangesListener.onSetChanged();
+        }
+        return b;
+    }
+
+    public boolean addItems(Collection<? extends T> item)
+    {
+        boolean b=_set.addAll(item);
+
+        if(b)
+        {
+            if (_dataSetChangesListener != null)
+                _dataSetChangesListener.onSetChanged();
+        }
+        return b;
+    }
+}

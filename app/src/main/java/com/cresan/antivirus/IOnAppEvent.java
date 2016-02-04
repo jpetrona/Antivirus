@@ -6,7 +6,7 @@ package com.cresan.antivirus;
 public interface IOnAppEvent
 {
 
-    public void onAppUninstalled(BadPackageData uninstalledApp);
+    public void onAppUninstalled(AppProblem uninstalledApp);
 
 
 

@@ -56,4 +56,7 @@
     <string name="eula_text">We use device identifiers to personalice content and ads, to provide social media features and to analyse our traffic. We also share such identifiers and other information from your device with our social media, advertising and analytics partners.</string>
     <string name="usb_message">No es recomendable que active la depuración por USB a menos que use el dispositivo para desarrollar software. Pulse el botón de resolver y desactive la depuración por USB para proteger el dispositivo.</string>
     <string name="usb_title">Configuración no segura</string>
+    <string name="system_app_usb_menace_title">USB Connection</string>
+    <string name="usb_add_whitelist_message">Do you want to add USB Notification to white list?</string>
+    <string name="usb_remove_whitelist_message">Do you want to remove USB Notification from white list?</string>
 </resources>

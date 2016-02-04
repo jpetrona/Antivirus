@@ -23,75 +23,255 @@ import java.util.List;
  * Created by Magic Frame on 13/01/2016.
  */
 
-public class ResultsAdapter extends ArrayAdapter<BadPackageDataWrapper>
+public class ResultsAdapter extends ArrayAdapter<IResultsAdapterItem>
 {
+    final int kHEADER_TYPE=0;
+    final int kAPP_TYPE=1;
+    final int kSYSTEM_TYPE=2;
 
     Context _context;
 
-    private List<BadPackageDataWrapper> _values =null;
+    int _appHeaderIndex=-1;
+    int _systemMenacesIndex=-1;
+
+    private List<IResultsAdapterItem> _selectedProblems=new ArrayList<IResultsAdapterItem>();
 
     private IResultItemSelecteStateChanged _onItemChangedStateListener =null;
     public void setResultItemSelectedStateChangedListener(IResultItemSelecteStateChanged listemer) { _onItemChangedStateListener =listemer; }
 
-    public void removeApps(List<BadPackageDataWrapper> appsToRemove)
+    /*public void removeApps(List<IProblem> appsToRemove)
     {
         _values.removeAll(appsToRemove);
         notifyDataSetChanged();
-    }
+    }*/
 
-    public List<BadPackageData> getSelectedApps()
+    public List<IProblem> getSelectedProblems()
     {
-        List<BadPackageData> bpdl=new ArrayList<BadPackageData>();
+        List<IProblem> bpdl=new ArrayList<IProblem>();
 
-        for(BadPackageDataWrapper bpdw : _values)
+        int itemCount=getCount();
+        int index=0;
+
+        IResultsAdapterItem rai=null;
+        for(int i=0; i<itemCount; ++i)
         {
-            if(bpdw.checked)
-                bpdl.add(bpdw.bpd);
+            rai=getItem(i);
+            if(rai.getType()!=IResultsAdapterItem.ResultsAdapterItemType.Header)
+            {
+                ResultsAdapterProblemItem rapi=(ResultsAdapterProblemItem) rai;
+                if (rapi.getChecked())
+                    bpdl.add(rapi.getProblem());
+            }
         }
+
 
         return bpdl;
     }
 
-    public ResultsAdapter(Context context, List<BadPackageDataWrapper> values)
+    public ResultsAdapter(Context context, List<IProblem> problems)
     {
-        super(context, R.layout.list_apps,values);
+        super(context, R.layout.results_list_app_item,new ArrayList<IResultsAdapterItem>());
 
         _context=context;
-        _values=values;
 
+        refreshByProblems(problems);
     }
 
-    public void refresh(List<BadPackageData> bpdl)
+    public void refreshByProblems(List<IProblem> bpdl)
     {
-        buildBadPackageDataWrapper(bpdl, _values);
-        notifyDataSetChanged();
+        clear();
+
+        _appHeaderIndex=0;
+
+        ResultsAdapterHeaderItem headerItem=new ResultsAdapterHeaderItem("Applications");
+        add(headerItem);
+
+        List<IProblem> appProblems=ProblemsDataSetTools.getAppProblems(bpdl);
+        _addProblems(appProblems);
+
+        _systemMenacesIndex=getCount();
+        headerItem=new ResultsAdapterHeaderItem("System");
+        add(headerItem);
+
+        List<IProblem> systemProblems=ProblemsDataSetTools.getSystemProblems(bpdl);
+        _addProblems(systemProblems);
     }
 
-    public static List<BadPackageDataWrapper> buildBadPackageDataWrapper(List<BadPackageData> bpdl,
-                                                                         List<BadPackageDataWrapper> recycleList)
+    public void refreshByResults(List<ResultsAdapterItem> rail)
     {
-        List<BadPackageDataWrapper> bpdw=recycleList;
+        clear();
+        addAll(rail);
+    }
+
+
+
+    public void _addProblems(List<IProblem> problems)
+    {
+        ResultsAdapterProblemItem rapi=null;
+        for(IProblem p : problems)
+        {
+            rapi=new ResultsAdapterProblemItem(p);
+            add(rapi);
+        }
+    }
+
+/*
+    public static List<ResultsAdapterProblemItem> buildResultItemsFromProblems(List<IProblem> bpdl,
+                                                                         List<ResultsAdapterProblemItem> recycleList)
+    {
+        List<ResultsAdapterProblemItem> bpdw=recycleList;
 
         if(bpdw==null)
-            bpdw=new ArrayList<BadPackageDataWrapper>();
+            bpdw=new ArrayList<ResultsAdapterProblemItem>();
         else
             recycleList.clear();
 
-        for(BadPackageData bpd: bpdl)
+        for(IProblem bpd: bpdl)
         {
-            bpdw.add(new BadPackageDataWrapper(bpd,false));
+            bpdw.add(new ResultsAdapterAppItem(bpd,false));
         }
-
-
-
         return bpdw;
-    }
-
+    }*/
+/*
     public void removeByPackageData(PackageData pd)
     {
-        BadPackageDataWrapper bpdw= BadPackageDataWrapper.findByPackageDataInstance(pd, _values);
+        IResultsAdapterItem bpdw= ResultsAdapterAppItem.findByPackageName(pd.getPackageName(), _values);
         remove(bpdw);
     }
+*/
+    public View _createView(final int position, ViewGroup parent)
+    {
+        int layoutId=-1;
+
+        if(position==_appHeaderIndex || position==_systemMenacesIndex)
+            layoutId=R.layout.results_list_header;
+        else if(position<_systemMenacesIndex)
+            layoutId=R.layout.results_list_app_item;
+        else
+            layoutId=R.layout.results_list_system_item;
+
+        LayoutInflater inflater = (LayoutInflater) _context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View v=inflater.inflate(layoutId, parent, false);
+
+        return v;
+
+    }
+
+    public void _fillRowData(int position, View rootView)
+    {
+        if(position==_appHeaderIndex || position==_systemMenacesIndex)
+        {
+            ResultsAdapterHeaderItem obj = (ResultsAdapterHeaderItem)getItem(position);
+            ResultsAdapterHeaderItem header=(ResultsAdapterHeaderItem) obj;
+            TextView headerText=(TextView) rootView.findViewById(R.id.Titlelabel);
+            headerText.setText(header.getDescription());
+        }
+        else if(position<_systemMenacesIndex)
+        {
+            final ResultsAdapterProblemItem ri  = (ResultsAdapterProblemItem)getItem(position);
+            final AppProblem ap=ri.getAppProblem();
+
+            TextView textView = (TextView) rootView.findViewById(R.id.Titlelabel);
+            TextView riskText = (TextView) rootView.findViewById(R.id.qualityApp);
+            ImageView imageView = (ImageView) rootView.findViewById(R.id.logo);
+            CheckBox checkBox = (CheckBox) rootView.findViewById(R.id.checkBox);
+            checkBox.setChecked(ri.getChecked());
+
+            if(ap.isDangerous())
+            {
+                riskText.setTextColor(ContextCompat.getColor(getContext(),R.color.HighRiskColor));
+                riskText.setText(R.string.high_risk);
+            }
+            else
+            {
+                riskText.setTextColor(ContextCompat.getColor(getContext(),R.color.MediumRiskColor));
+                riskText.setText(R.string.medium_risk);
+            }
+
+            LinearLayout linearLayout = (LinearLayout) rootView.findViewById(R.id.linearLayout);
+            linearLayout.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if(_onItemChangedStateListener!=null)
+                        _onItemChangedStateListener.onItemSelected(ap);
+                }
+            });
+            imageView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (_onItemChangedStateListener != null)
+                        _onItemChangedStateListener.onItemSelected(ap);
+                }
+            });
+
+
+
+            checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+            {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+                {
+                    ri.setChecked(isChecked);
+                    if (_onItemChangedStateListener != null)
+                    {
+                        _onItemChangedStateListener.onItemSelectedStateChanged(isChecked, ap);
+                    }
+                }
+            });
+
+            textView.setText(ActivityTools.getAppNameFromPackage(getContext(), ap.getPackageName()));
+            imageView.setImageDrawable(ActivityTools.getIconFromPackage(ap.getPackageName(), getContext()));
+        }
+        else
+        {
+            final ResultsAdapterProblemItem ri  = (ResultsAdapterProblemItem)getItem(position);
+            final SystemProblem sp=ri.getSystemProblem();
+
+            TextView textView = (TextView) rootView.findViewById(R.id.Titlelabel);
+            TextView riskText = (TextView) rootView.findViewById(R.id.qualityApp);
+            ImageView imageView = (ImageView) rootView.findViewById(R.id.logo);
+            CheckBox checkBox = (CheckBox) rootView.findViewById(R.id.checkBox);
+
+            if(sp.isDangerous())
+            {
+                riskText.setTextColor(ContextCompat.getColor(getContext(),R.color.HighRiskColor));
+                riskText.setText(R.string.high_risk);
+            }
+            else
+            {
+                riskText.setTextColor(ContextCompat.getColor(getContext(),R.color.MediumRiskColor));
+                riskText.setText(R.string.medium_risk);
+            }
+
+            LinearLayout linearLayout = (LinearLayout) rootView.findViewById(R.id.linearLayout);
+            linearLayout.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if(_onItemChangedStateListener!=null)
+                        _onItemChangedStateListener.onItemSelected(sp);
+                }
+            });
+            imageView.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    if (_onItemChangedStateListener != null)
+                        _onItemChangedStateListener.onItemSelected(sp);
+                }
+            });
+
+            textView.setText(sp.getDescription(getContext()));
+            imageView.setImageDrawable(sp.getIcon(getContext()));
+        }
+    }
+
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent)
@@ -100,83 +280,37 @@ public class ResultsAdapter extends ArrayAdapter<BadPackageDataWrapper>
         final View rowView;
 
         if(convertView == null)
-        {
-            LayoutInflater inflater = (LayoutInflater) _context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            rowView = inflater.inflate(R.layout.list_apps, parent, false);
-        }else
-        {
+            rowView=_createView(position,parent);
+        else
             rowView = convertView;
 
-        }
-        final BadPackageDataWrapper obj = _values.get(position);
+
+        _fillRowData(position, rowView);
+
+        /*final ResultsAdapterAppItem obj = _values.get(position);
         TextView textView = (TextView) rowView.findViewById(R.id.Titlelabel);
         TextView riskText = (TextView) rowView.findViewById(R.id.qualityApp);
         ImageView imageView = (ImageView) rowView.findViewById(R.id.logo);
         CheckBox checkBox = (CheckBox) rowView.findViewById(R.id.checkBox);
-        checkBox.setChecked(obj.checked);
-
-        if(obj.bpd.isDangerousMenace())
-        {
-            riskText.setTextColor(ContextCompat.getColor(getContext(),R.color.HighRiskColor));
-            riskText.setText(R.string.high_risk);
-        }
-        else
-        {
-            riskText.setTextColor(ContextCompat.getColor(getContext(),R.color.MediumRiskColor));
-            riskText.setText(R.string.medium_risk);
-        }
-
-        LinearLayout linearLayout = (LinearLayout) rowView.findViewById(R.id.linearLayout);
-        linearLayout.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if(_onItemChangedStateListener!=null)
-                    _onItemChangedStateListener.onItemSelected(obj.bpd);
-            }
-        });
-        imageView.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                if(_onItemChangedStateListener!=null)
-                    _onItemChangedStateListener.onItemSelected(obj.bpd);
-            }
-        });
-
-       /* Button button = (Button) rowView.findViewById(R.id.buttonInfo);
-
-        button.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                showInfoAppFragment(obj);
-
-            }
-        });*/
-
-        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
-        {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
-            {
-                obj.checked=isChecked;
-                if(_onItemChangedStateListener != null)
-                {
-                    _onItemChangedStateListener.onItemSelectedStateChanged(isChecked,obj.bpd);
-                }
-            }
-        });
+        checkBox.setChecked(obj.checked);*/
 
 
-
-        textView.setText(ActivityTools.getAppNameFromPackage(getContext(), obj.bpd.getPackageName()));
-        imageView.setImageDrawable(ActivityTools.getIconFromPackage(obj.bpd.getPackageName(), getContext()));
 
         return rowView;
 
+    }
+
+    @Override
+    public int getViewTypeCount() { return 2; }
+
+    @Override
+    public int getItemViewType(int position)
+    {
+        if(position==_appHeaderIndex || position==_systemMenacesIndex)
+            return kHEADER_TYPE;
+        else if(position<_systemMenacesIndex)
+            return kAPP_TYPE;
+        else
+            return kSYSTEM_TYPE;
     }
 }

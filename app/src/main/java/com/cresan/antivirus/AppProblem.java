@@ -1,7 +1,5 @@
 package com.cresan.antivirus;
 
-import android.content.pm.PackageInfo;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -12,12 +10,23 @@ import java.util.Set;
 /**
  * Created by hexdump on 15/01/16.
  */
-public class BadPackageData extends PackageData
+public class AppProblem extends PackageData implements IProblem
 {
-    public BadPackageData(String packageName)
+    static final String kSerializationType="app";
+
+    //Factory method
+    public AppProblem()
+    {
+    }
+
+    public AppProblem(String packageName)
     {
         super(packageName);
     }
+
+
+
+    public IProblem.ProblemType getType() { return IProblem.ProblemType.SystemProblem;}
 
     private Set<ActivityData> _activities=new HashSet<ActivityData>();
     public void addActivityData(ActivityData activityData)  { _activities.add(activityData);  }
@@ -31,13 +40,12 @@ public class BadPackageData extends PackageData
     public boolean getInstalledThroughGooglePlay() { return _installedThroughGooglePlay; }
     public void setInstalledThroughGooglePlay(boolean installed) { _installedThroughGooglePlay=installed;}
 
-
     public boolean isMenace()
     {
         return !getInstalledThroughGooglePlay() || getActivityData().size()>0 || getPermissionData().size()>0;
     }
 
-    public boolean isDangerousMenace()
+    public boolean isDangerous()
     {
         for(PermissionData pd : _permissions)
         {
@@ -51,6 +59,8 @@ public class BadPackageData extends PackageData
     public JSONObject buildJSONObject() throws JSONException
     {
         JSONObject jsonObj=new JSONObject();
+
+        jsonObj.put("type",kSerializationType);
         jsonObj.put("packageName",getPackageName());
 
         //Add activities
@@ -132,5 +142,9 @@ public class BadPackageData extends PackageData
         {
             ex.printStackTrace();
         }
+    }
+
+    public void writeToJSON(String filePath)
+    {
     }
 }

@@ -5,7 +5,7 @@ package com.cresan.antivirus;
  */
 public interface IDataSetChangesListener
 {
-    //void onItemRemoved(BadPackageData bpd);
-    //void onItemAdded(BadPackageData bpd);
+    //void onItemRemoved(AppProblem bpd);
+    //void onItemAdded(AppProblem bpd);
     void onSetChanged();
 }

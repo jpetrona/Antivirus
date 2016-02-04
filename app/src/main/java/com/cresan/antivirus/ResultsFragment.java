@@ -1,7 +1,6 @@
 package com.cresan.antivirus;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -33,8 +32,7 @@ public class ResultsFragment extends Fragment
 
     AntivirusActivity getMainActivity() {return (AntivirusActivity) getActivity();}
 
-    //String[] packagename = new String[]{"com.magic.sanfulgencio","com.dropbox.android","com.appspot.swisscodemonkeys.detector","com.nolanlawson.logcat"};
-    List<BadPackageData> _suspiciousAppList=null;
+    List<IProblem> _problems =null;
 
     private ListView _listview;
     private Button _buttonRemove;
@@ -43,20 +41,20 @@ public class ResultsFragment extends Fragment
 
     TextView _threatsFoundSummary=null;
 
-    public void setData(AntivirusActivity antivirusActivity, List<BadPackageData> suspiciousAppList)
+    public void setData(AntivirusActivity antivirusActivity, List<IProblem> problems)
     {
-        _suspiciousAppList=suspiciousAppList;
-        _resultAdapter=new ResultsAdapter(antivirusActivity, ResultsAdapter.buildBadPackageDataWrapper(_suspiciousAppList,null));
+        _problems =problems;
+        _resultAdapter=new ResultsAdapter(antivirusActivity, problems);
 
         _resultAdapter.setResultItemSelectedStateChangedListener(new IResultItemSelecteStateChanged()
         {
             @Override
-            public void onItemSelectedStateChanged(boolean isChecked, BadPackageData bpd)
+            public void onItemSelectedStateChanged(boolean isChecked, IProblem bpd)
             {
             }
 
             @Override
-            public void onItemSelected(BadPackageData bpd)
+            public void onItemSelected(IProblem bpd)
             {
                 showInfoAppFragment(bpd);
             }
@@ -77,17 +75,21 @@ public class ResultsFragment extends Fragment
             public void onClick(View v)
             {
                 _buttonRemove.setEnabled(false);
-                List<BadPackageData> selectedApps= _resultAdapter.getSelectedApps();
+                List<IProblem> selectedApps= _resultAdapter.getSelectedProblems();
                 if(selectedApps.size() > 0)
                 {
-
-                    for (BadPackageData pck : selectedApps)
+                    for (IProblem pck : selectedApps)
                     {
-                        Uri uri = Uri.fromParts("package", pck.getPackageName(), null);
-                        Intent it = new Intent(Intent.ACTION_DELETE, uri);
-                        startActivity(it);
+                        if(pck.getType()== IProblem.ProblemType.AppProblem)
+                        {
+                            Uri uri = Uri.fromParts("package", ((AppProblem) pck).getPackageName(), null);
+                            Intent it = new Intent(Intent.ACTION_DELETE, uri);
+                            startActivity(it);
 
-                        Log.i("LISTA", "Lista: " + pck);
+                            Log.i("LISTA", "Lista: " + pck);
+                        }
+                        else
+                            Log.e(_logTag,"We received a selected problem that was not an app problem. Only app problems can be multiselected");
                     }
 
                 }else
@@ -134,11 +136,11 @@ public class ResultsFragment extends Fragment
     {
         _listview = (ListView) view.findViewById(R.id.list);
 
-        /*_resultAdapter=new ResultsAdapter(getMainActivity(), _suspiciousAppList, getMainActivity());
+        /*_resultAdapter=new ResultsAdapter(getMainActivity(), _problems, getMainActivity());
         _resultAdapter.setResultItemSelectedStateChangedListener(new IResultItemSelecteStateChanged()
         {
             @Override
-            public void onItemSelectedStateChanged(boolean isChecked, BadPackageDataWrapper bpdw)
+            public void onItemSelectedStateChanged(boolean isChecked, ResultsAdapterAppItem bpdw)
             {
                 if (isChecked)
                 {
@@ -171,11 +173,11 @@ public class ResultsFragment extends Fragment
         MenacesCacheSet menacesCache = getMainActivity().getMenacesCacheSet();
 
         /*
-        List<BadPackageData> toDelete=new ArrayList<BadPackageData>();
+        List<AppProblem> toDelete=new ArrayList<AppProblem>();
 
-        List<BadPackageData> selectedApps= _resultAdapter.getSelectedApps();
+        List<AppProblem> selectedApps= _resultAdapter.getSelectedApps();
 
-        for (BadPackageData pd : selectedApps )
+        for (AppProblem pd : selectedApps )
         {
             if(!ActivityTools.isPackageInstalled(getMainActivity(), pd.getPackageName()))
             {
@@ -191,11 +193,11 @@ public class ResultsFragment extends Fragment
 
 
         //Add new existant apps
-        _resultAdapter.refresh(new ArrayList<BadPackageData>(menacesCache.getSet()));
+        _resultAdapter.refreshByProblems(new ArrayList<IProblem>(menacesCache.getSet()));
 
         _updateFoundThreatsText(_threatsFoundSummary, _resultAdapter.getCount());
 
-        if(menacesCache.getMenaceCount()<=0)
+        if(menacesCache.getItemCount()<=0)
         {
             getMainActivity().goBack();
         }
@@ -208,19 +210,19 @@ public class ResultsFragment extends Fragment
         textView.setText(finalStr);
     }
 
-    void showInfoAppFragment(final BadPackageData suspiciousApp)
+    void showInfoAppFragment(final IProblem problem)
     {
         // Cuando pulses el boton de info coger su posicion y pasarselo por la variable pos
         InfoAppFragment newFragment =(InfoAppFragment) getMainActivity().slideInFragment(AntivirusActivity.kInfoFragmnetTag);
         /*newFragment.setAppEventListener(new IOnAppEvent()
         {
             @Override
-            public void onAppUninstalled(BadPackageData uninstalledApp)
+            public void onAppUninstalled(AppProblem uninstalledApp)
             {
                 _resultAdapter.removeByPackageData(uninstalledApp);
             }
         });*/
-        newFragment.setData(suspiciousApp);
+        newFragment.setData(problem);
 
 
     }

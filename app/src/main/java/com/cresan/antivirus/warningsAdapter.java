@@ -24,12 +24,12 @@ import java.util.Set;
 public class WarningsAdapter extends ArrayAdapter<WarningData>
 {
     private final Context _context;
-    private BadPackageData _resultData=null;
+    private AppProblem _resultData=null;
     private List<WarningData> _convertedData=null;
 
-    public WarningsAdapter(Context context, BadPackageData resultData)
+    public WarningsAdapter(Context context, AppProblem resultData)
     {
-        super(context, R.layout.warnings_adapter);
+        super(context, R.layout.warning_item);
 
         _context=context;
         _resultData=resultData;
@@ -40,7 +40,7 @@ public class WarningsAdapter extends ArrayAdapter<WarningData>
         notifyDataSetChanged();
     }
 
-    public List<WarningData> _fillDataArray(BadPackageData bp)
+    public List<WarningData> _fillDataArray(AppProblem bp)
     {
         List<WarningData> wdl=new ArrayList<WarningData>();
 
@@ -89,7 +89,7 @@ public class WarningsAdapter extends ArrayAdapter<WarningData>
         if(convertView == null)
         {
             LayoutInflater inflater = (LayoutInflater) _context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            rowView = inflater.inflate(R.layout.warnings_adapter, parent, false);
+            rowView = inflater.inflate(R.layout.warning_item, parent, false);
         }else
         {
             rowView = convertView;

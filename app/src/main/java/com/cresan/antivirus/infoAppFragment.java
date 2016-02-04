@@ -27,7 +27,7 @@ public class InfoAppFragment extends Fragment
 
     public static ListView _listview;
 
-    BadPackageData _suspiciousApp = null;
+    IProblem _problem = null;
     boolean  _uninstallingPackage = false;
 
 
@@ -38,9 +38,9 @@ public class InfoAppFragment extends Fragment
         return (AntivirusActivity) getActivity();
     }
 
-    public void setData(BadPackageData suspiciousAppList)
+    public void setData(IProblem suspiciousAppList)
     {
-        _suspiciousApp = suspiciousAppList;
+        _problem = suspiciousAppList;
 
     }
 
@@ -59,7 +59,7 @@ public class InfoAppFragment extends Fragment
         TextView textView = (TextView) view.findViewById(R.id.titleApp);
         TextView warningLevel = (TextView) view.findViewById(R.id.warningLevel);
 
-        if(_suspiciousApp.isDangerousMenace())
+        if(_problem.isDangerous())
         {
             warningLevel.setTextColor(ContextCompat.getColor(getContext(),R.color.HighRiskColor));
             warningLevel.setText(R.string.high_risk);
@@ -70,85 +70,88 @@ public class InfoAppFragment extends Fragment
             warningLevel.setText(R.string.medium_risk);
         }
 
-
-        ImageView iconApp = (ImageView) view.findViewById(R.id.iconGeneral);
-        Drawable s = ActivityTools.getIconFromPackage(_suspiciousApp.getPackageName(), getContext());
-        _button = (Button) view.findViewById(R.id.buttonUninstall);
-        final Button buttonTrust = (Button) view.findViewById(R.id.buttonTrust);
-
-
-        _button.setOnClickListener(new View.OnClickListener()
+        if(_problem.getType()== IProblem.ProblemType.AppProblem)
         {
+            final AppProblem appProblem=(AppProblem) _problem;
+            ImageView iconApp = (ImageView) view.findViewById(R.id.iconGeneral);
+            Drawable s = ActivityTools.getIconFromPackage(appProblem.getPackageName(), getContext());
+            _button = (Button) view.findViewById(R.id.buttonUninstall);
+            final Button buttonTrust = (Button) view.findViewById(R.id.buttonTrust);
 
-            @Override
-            public void onClick(View v)
+
+            _button.setOnClickListener(new View.OnClickListener()
             {
 
-                _uninstallingPackage = true;
-                Uri uri = Uri.fromParts("package", _suspiciousApp.getPackageName(), null);
-                Intent it = new Intent(Intent.ACTION_DELETE, uri);
-                startActivity(it);
-                _button.setEnabled(false);
-            }
-        });
-
-        buttonTrust.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                buttonTrust.setEnabled(false);
-
-                new AlertDialog.Builder(getContext())
-                        .setTitle(getString(R.string.warning))
-                        .setMessage(getString(R.string.dialog_trust_app))
-                        .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which)
-                            {
-
-                                UserWhiteList userWhiteList=getMainActivity().getUserWhiteList();
-
-                                //PackageData pdo=new PackageData(_suspiciousApp.getPackageName());
-
-                                userWhiteList.addPackage(_suspiciousApp);
-                                userWhiteList.writeData();
-
-                                MenacesCacheSet menacesCacheSet=getMainActivity().getMenacesCacheSet();
-                                menacesCacheSet.removePackage(_suspiciousApp);
-                                menacesCacheSet.writeData();
-
-                               /* //Se llama este listener aunque no sea semánticamente lo que pasa (desinstalar app)
-                                //Porque asi aprovechamos y lo quita de la lista.
-                                if(_appEventListener!=null && _suspiciousApp !=null)
-                                {
-                                    _appEventListener.onAppUninstalled(_suspiciousApp);
-                                }*/
-
-                                getMainActivity().goBack();
-                                buttonTrust.setEnabled(true);
-                            }
-                        }).setNegativeButton("no", new DialogInterface.OnClickListener()
+                @Override
+                public void onClick(View v)
                 {
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
+                    _uninstallingPackage = true;
+                    Uri uri = Uri.fromParts("package", appProblem.getPackageName(), null);
+                    Intent it = new Intent(Intent.ACTION_DELETE, uri);
+                    startActivity(it);
+                    _button.setEnabled(false);
+                }
+            });
+
+            buttonTrust.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    buttonTrust.setEnabled(false);
+
+                    new AlertDialog.Builder(getContext())
+                            .setTitle(getString(R.string.warning))
+                            .setMessage(getString(R.string.dialog_trust_app))
+                            .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener()
+                            {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which)
+                                {
+
+                                    UserWhiteList userWhiteList = getMainActivity().getUserWhiteList();
+
+                                    //PackageData pdo=new PackageData(_suspiciousApp.getPackageName());
+
+                                    userWhiteList.addItem(appProblem);
+                                    userWhiteList.writeToJSON();
+
+                                    MenacesCacheSet menacesCacheSet = getMainActivity().getMenacesCacheSet();
+                                    menacesCacheSet.removeItem(appProblem);
+                                    menacesCacheSet.writeToJSON();
+
+                                   /* //Se llama este listener aunque no sea semánticamente lo que pasa (desinstalar app)
+                                    //Porque asi aprovechamos y lo quita de la lista.
+                                    if(_appEventListener!=null && _suspiciousApp !=null)
+                                    {
+                                        _appEventListener.onAppUninstalled(_suspiciousApp);
+                                    }*/
+
+                                    getMainActivity().goBack();
+                                    buttonTrust.setEnabled(true);
+                                }
+                            }).setNegativeButton("no", new DialogInterface.OnClickListener()
                     {
-                        buttonTrust.setEnabled(true);
-                    }
-                }).show();
 
-            }
-        });
+                        @Override
+                        public void onClick(DialogInterface dialog, int which)
+                        {
+                            buttonTrust.setEnabled(true);
+                        }
+                    }).show();
 
-        textView.setText(ActivityTools.getAppNameFromPackage(getContext(), _suspiciousApp.getPackageName()));
-        iconApp.setImageDrawable(s);
+                }
+            });
+
+            textView.setText(ActivityTools.getAppNameFromPackage(getContext(), appProblem.getPackageName()));
+            iconApp.setImageDrawable(s);
 
 
-        _listview = (ListView) view.findViewById(R.id.listView);
+            _listview = (ListView) view.findViewById(R.id.listView);
 
-        _listview.setAdapter(new WarningsAdapter(getMainActivity(), _suspiciousApp));
+            _listview.setAdapter(new WarningsAdapter(getMainActivity(), appProblem));
+        }
 
 
     }
@@ -163,16 +166,18 @@ public class InfoAppFragment extends Fragment
         //Returned from an uninstallation
         if( _uninstallingPackage==true)
         {
-            if(_suspiciousApp!=null)
+            if(_problem!=null)
             {
-                if (!ActivityTools.isPackageInstalled(getMainActivity(), _suspiciousApp.getPackageName()))
+                final AppProblem appProblem=(AppProblem) _problem;
+
+                if (!ActivityTools.isPackageInstalled(getMainActivity(), appProblem.getPackageName()))
                 {
                     /*if(_appEventListener!=null)
                         _appEventListener.onAppUninstalled(_suspiciousApp);*/
 
                     MenacesCacheSet menacesCacheSet = antivirusActivity.getMenacesCacheSet();
-                    menacesCacheSet.removePackage(_suspiciousApp);
-                    menacesCacheSet.writeData();
+                    menacesCacheSet.removeItem(appProblem);
+                    menacesCacheSet.writeToJSON();
                 }
             }
 
@@ -185,15 +190,16 @@ public class InfoAppFragment extends Fragment
             //User could have deleted app from file sytem while in this screen.
             //Check if it exists. If not update menacesCacheSet
             MenacesCacheSet menacesCacheSet=antivirusActivity.getMenacesCacheSet();
-            if(!menacesCacheSet.checkIfPackageInList(_suspiciousApp.getPackageName()))
+            final AppProblem appProblem=(AppProblem) _problem;
+            if(!ProblemsDataSetTools.checkIfPackageInCollection(appProblem.getPackageName(),menacesCacheSet.getSet()))
             {
                 //It is in menaces cacheset. Check if it is really in the system
-                if(!ActivityTools.isPackageInstalled(antivirusActivity, _suspiciousApp.getPackageName()))
+                if(!ActivityTools.isPackageInstalled(antivirusActivity, appProblem.getPackageName()))
                 {
                     //If it isn't remove it
                     menacesCacheSet = antivirusActivity.getMenacesCacheSet();
-                    menacesCacheSet.removePackage(_suspiciousApp);
-                    menacesCacheSet.writeData();
+                    menacesCacheSet.removeItem(appProblem);
+                    menacesCacheSet.writeToJSON();
                 }
 
                 antivirusActivity.goBack();

@@ -2,7 +2,6 @@ package com.cresan.antivirus;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,8 +12,6 @@ import android.widget.TextView;
 import com.cresan.androidprotector.R;
 import com.tech.applications.coretools.ActivityTools;
 import com.tech.applications.coretools.StringTools;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,11 +24,11 @@ public class IgnoredListFragment extends Fragment
 
     AntivirusActivity getMainActivity() {return (AntivirusActivity) getActivity();}
     IgnoredAdapter _ignoredAdapter =null;
-    List<BadPackageData> _userWhiteList =null;
+    List<IProblem> _userWhiteList =null;
     private ListView _listView;
     private TextView _ignoredCounter;
 
-    public void setData(List<BadPackageData> userWhiteList)
+    public void setData(List<IProblem> userWhiteList)
     {
         _userWhiteList = userWhiteList;
     }
@@ -45,17 +42,17 @@ public class IgnoredListFragment extends Fragment
         _ignoredAdapter=new IgnoredAdapter(getMainActivity(), _userWhiteList);
         _ignoredCounter = (TextView) rootView.findViewById(R.id.ignoredCounterText);
 
-        _ignoredAdapter.setOnAdapterItemRemovedListener(new IOnAdapterItemRemoved<BadPackageData>()
+        _ignoredAdapter.setOnAdapterItemRemovedListener(new IOnAdapterItemRemoved<IProblem>()
         {
             @Override
-            public void onItemRemoved(BadPackageData item)
+            public void onItemRemoved(IProblem item)
             {
                 UserWhiteList userWhiteList= getMainActivity().getUserWhiteList();
                 MenacesCacheSet menaceCacheSet= getMainActivity().getMenacesCacheSet();
-                userWhiteList.removePackage(item);
-                userWhiteList.writeData();
-                menaceCacheSet.addPackage(item);
-                menaceCacheSet.writeData();
+                userWhiteList.removeItem(item);
+                userWhiteList.writeToJSON();
+                menaceCacheSet.addItem(item);
+                menaceCacheSet.writeToJSON();
                 _updateFoundThreatsText(_ignoredCounter,_userWhiteList.size());
             }
         });
@@ -71,18 +68,26 @@ public class IgnoredListFragment extends Fragment
         textView.setText(finalStr);
     }
 
-    static public List<BadPackageData> getIgnoredAndInstalledApps(Context context, List<BadPackageData> ignoredList)
+
+    //getExistant problems
+    static public List<IProblem> getExistingProblems(Context context, List<IProblem> ignoredList)
     {
         //Create list of apps that are whitelisted and installed
-        List<BadPackageData> ignoredAppsInstalledOnSystem=new ArrayList<BadPackageData>();
+        List<IProblem> existingProblems=new ArrayList<IProblem>();
 
-        for(BadPackageData bpd : ignoredList)
+        for(IProblem p : ignoredList)
         {
-            if(ActivityTools.isPackageInstalled(context, bpd.getPackageName()))
-                ignoredAppsInstalledOnSystem.add(bpd);
+            if(p.getType()== IProblem.ProblemType.AppProblem)
+            {
+                AppProblem appProblem= (AppProblem) p;
+                if(ActivityTools.isPackageInstalled(context, appProblem.getPackageName()))
+                    existingProblems.add(appProblem);
+            }
+            else
+                existingProblems.add(p);
         }
 
-        return ignoredAppsInstalledOnSystem;
+        return existingProblems;
     }
 
 
@@ -92,7 +97,7 @@ public class IgnoredListFragment extends Fragment
     {
         super.onResume();
 
-        List<BadPackageData> list=getIgnoredAndInstalledApps(getMainActivity(), new ArrayList(getMainActivity().getUserWhiteList().getSet()));
+        List<IProblem> list=getExistingProblems(getMainActivity(), new ArrayList(getMainActivity().getUserWhiteList().getSet()));
         _userWhiteList=list;
         _ignoredAdapter.refresh(list);
 

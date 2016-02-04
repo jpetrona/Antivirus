@@ -23,22 +23,13 @@ import java.util.Set;
 /**
  * Created by hexdump on 22/01/16.
  */
+/*
 public class PackageDataSet
 {
     private Set<PackageData> _set;
     Set<PackageData> getSet() {return _set;}
     void setSet(Set<PackageData> set) { _set=set;}
 
-    /*void setSetWithBadPackageList(Set<BadPackageResultData> bpdl)
-    {
-        _set.clear();
-        for(BadPackageResultData bpd : bpdl)
-        {
-            PackageData pd=new PackageData();
-            pd.setPackageName(bpd.getPackageName());
-            _set.add(pd);
-        }
-    }*/
 
     String _filePath=null;
 
@@ -167,3 +158,4 @@ public class PackageDataSet
         return trimmedPackageList;
     }
 }
+*/

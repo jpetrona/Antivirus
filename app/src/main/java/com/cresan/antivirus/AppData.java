@@ -60,10 +60,10 @@ public class AppData implements Serializable
 
     /*List<String> _pendingMenaces=null;
     public List<String> getPendingMenaces() { return _pendingMenaces; }
-    public void setPendingMenaces(Set<BadPackageData> bprdl)
+    public void setPendingMenaces(Set<AppProblem> bprdl)
 	{
 		_pendingMenaces=new ArrayList<String>();
-		for(BadPackageData bprd : bprdl)
+		for(AppProblem bprd : bprdl)
 		{
 			_pendingMenaces.add(bprd.getPackageName());
 		}

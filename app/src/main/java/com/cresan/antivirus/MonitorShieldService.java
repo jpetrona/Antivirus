@@ -24,6 +24,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -80,13 +81,13 @@ public class MonitorShieldService extends Service
             public void OnPackageRemoved(Intent intent)
             {
                 String packageName = intent.getData().getSchemeSpecificPart();
-                boolean removed=_menacesCacheSet.removePackage(packageName);
+                boolean removed=_menacesCacheSet.removeAppProblemByPackage(packageName);
                 if(removed)
                     Log.e(_logTag,">>>>>>>>>>>>>>>>>>>  The application "+packageName+" was removed from menace list because it was uninstalled.");
                 else
                     Log.e(_logTag,">>>>>>>>>>>>>>>>>>>  The application "+packageName+" could no be removed from menaceCache while being uninstalled. ERRRRRORRRRRRRR!!!!!!");
 
-                _menacesCacheSet.writeData();
+                _menacesCacheSet.writeToJSON();
 
             }
         });
@@ -129,9 +130,9 @@ public class MonitorShieldService extends Service
     public interface IClientInterface
     {
         //Called when a menace is found by the watchdog
-        public void onMonitorFoundMenace(BadPackageData menace);
+        public void onMonitorFoundMenace(IProblem menace);
         //All packages to scan can be useful if the client wants to do for example some animation to cheat :P
-        public void onScanResult(List<PackageInfo> allPackages, Set<BadPackageData> menacesFound);
+        public void onScanResult(List<PackageInfo> allPackages, Set<IProblem> menacesFound);
     }
 
     private void _loadDataFiles()
@@ -248,17 +249,17 @@ public class MonitorShieldService extends Service
         List<PackageInfo> nonSystemApps=ActivityTools.getNonSystemApps(this,allPackages);
 
         //Packages with problems will be stored here
-        Set<BadPackageData> tempBadResults=new HashSet<BadPackageData>();
+        Set<IProblem> tempBadResults=new HashSet<IProblem>();
 
         //Filter white listed apps
         List<PackageInfo> potentialBadApps=_removeWhiteListPackagesFromPackageList(nonSystemApps, _whiteListPackages);
-        potentialBadApps=_removeWhiteListPackagesFromPackageList(potentialBadApps, _userWhiteList.getSet());
+        potentialBadApps=_removeWhiteListPackagesFromPackageList(potentialBadApps, _userWhiteList.getAppProblemSet());
 
         Scanner.scanForBlackListedActivityApps(potentialBadApps, _blackListActivities, tempBadResults);
         Scanner.scanForSuspiciousPermissionsApps(potentialBadApps, _suspiciousPermissions, tempBadResults);
         Scanner.scanInstalledAppsFromGooglePlay(this, potentialBadApps, tempBadResults);
-
-        /*for (BadPackageData p : tempBadResults)
+        Scanner.scanSystemProblems(this, tempBadResults);
+        /*for (AppProblem p : tempBadResults)
         {
             Log.d(_logTag, "======PACKAGE "+p.getPackageName()+" GPlay install: "+p.getInstalledThroughGooglePlay());
             if(p.getActivityData().size()>0)
@@ -281,7 +282,7 @@ public class MonitorShieldService extends Service
             Log.d(_logTag," ");
         }
 
-        showResultFragment(new ArrayList<BadPackageData>(tempBadResults));*/
+        showResultFragment(new ArrayList<AppProblem>(tempBadResults));*/
 
         //Pasamos esto por ahora para que no se pete el tema
         //List<PackageInfo> _packagesInfo=new ArrayList<PackageInfo>();
@@ -290,9 +291,10 @@ public class MonitorShieldService extends Service
         //_packagesInfo.add(allPackages.get(2));
 
         //Merge results with non resolved previous ones and serialize
-        Log.e(_logTag,"----------------------> Numero de aplicciones escaneadas: "+allPackages.size());
-        _menacesCacheSet.addPackages(tempBadResults);
-        _menacesCacheSet.writeData();
+        Log.e(_logTag, "----------------------> Numero de aplicciones escaneadas: " + allPackages.size());
+
+        _menacesCacheSet.addItems(tempBadResults);
+        _menacesCacheSet.writeToJSON();
 
         if(_clientInterface!=null)
             _clientInterface.onScanResult(allPackages,tempBadResults);
@@ -322,7 +324,7 @@ public class MonitorShieldService extends Service
         else
         {
             //We have it in our white package list
-            if(_userWhiteList.checkIfPackageInList(packageName))
+            if(ProblemsDataSetTools.checkIfPackageInCollection(packageName, _userWhiteList.getSet()))
             {
                 NotificationTools.notificatePush(MonitorShieldService.this, 0xFF00, _appIcon,
                         appName + " " + getString(R.string.trusted_message), appName, "App " + appName + " " + getString(R.string.trusted_by_user), openAppIntent);
@@ -341,7 +343,7 @@ public class MonitorShieldService extends Service
 
                 if(pi!=null)
                 {
-                    BadPackageData bpbr=new BadPackageData(pi.packageName);
+                    AppProblem bpbr=new AppProblem(pi.packageName);
                     List<ActivityInfo> recycleList=new ArrayList<ActivityInfo>();
                     Scanner.scanForBlackListedActivityApp(pi, bpbr, _blackListActivities, recycleList);
                     Scanner.scanForSuspiciousPermissionsApp(pi, bpbr, _suspiciousPermissions);
@@ -352,8 +354,8 @@ public class MonitorShieldService extends Service
                         //Do not scan if we haven't done any
                         if(appData.getFirstScanDone())
                         {
-                            _menacesCacheSet.addPackage(bpbr);
-                            _menacesCacheSet.writeData();
+                            _menacesCacheSet.addItem(bpbr);
+                            _menacesCacheSet.writeToJSON();
                         }
 
                         if(_clientInterface!=null)

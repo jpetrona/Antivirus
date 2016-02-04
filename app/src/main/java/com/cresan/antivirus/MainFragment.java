@@ -20,12 +20,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.cresan.androidprotector.R;
-import com.tech.applications.coretools.BatteryData;
-import com.tech.applications.coretools.BatteryTools;
 import com.tech.applications.coretools.NetworkTools;
 import com.tech.applications.coretools.StringTools;
 import com.tech.applications.coretools.ViewTools;
-import com.tech.applications.coretools.time.PausableCountDownTimer;
 
 import at.grabner.circleprogress.CircleProgressView;
 
@@ -106,12 +103,12 @@ public class MainFragment extends Fragment
             @Override
             public void onClick(View v)
             {
-                Set<BadPackageData> foundMenaces=getMainActivity().getBadResultPackageDataFromMenaceSet();
+                Set<IProblem> foundMenaces=getMainActivity().getProblemsFromMenaceSet();
 
                 if (foundMenaces !=null && foundMenaces.size() !=0)
                 {
 
-                    showResultFragment(new ArrayList<BadPackageData>(foundMenaces));
+                    showResultFragment(new ArrayList<IProblem>(foundMenaces));
 
                 }
             }
@@ -161,12 +158,12 @@ public class MainFragment extends Fragment
         getMainActivity().startMonitorScan(new MonitorShieldService.IClientInterface()
         {
             @Override
-            public void onMonitorFoundMenace(BadPackageData menace)
+            public void onMonitorFoundMenace(IProblem menace)
             {
             }
 
             @Override
-            public void onScanResult(List<PackageInfo> allPacakgesToScan, Set<BadPackageData> scanResult)
+            public void onScanResult(List<PackageInfo> allPacakgesToScan, Set<IProblem> scanResult)
             {
                 AppData appData = getMainActivity().getAppData();
                 appData.setFirstScanDone(true);
@@ -253,7 +250,7 @@ public class MainFragment extends Fragment
         oa1.start();
     }
 
-    private void _startScanningAnimation(final List<PackageInfo> allPackages, final Set<BadPackageData> tempBadResults)
+    private void _startScanningAnimation(final List<PackageInfo> allPackages, final Set<IProblem> tempBadResults)
     {
         //Animate the button exit
         ObjectAnimator oa1 = ObjectAnimator.ofFloat(_buttonContainer, "translationX",
@@ -273,7 +270,9 @@ public class MainFragment extends Fragment
             {
                 _configureScanningUI();
 
-                _currentScanTask = new ScanningFileSystemAsyncTask(getMainActivity(), allPackages, tempBadResults);
+                List<IProblem> appProblems=ProblemsDataSetTools.getAppProblems(tempBadResults);
+
+                _currentScanTask = new ScanningFileSystemAsyncTask(getMainActivity(), allPackages, appProblems);
                 _currentScanTask.setAsyncTaskCallback(new IOnActionFinished()
                 {
                     @Override
@@ -282,7 +281,7 @@ public class MainFragment extends Fragment
                         _currentScanTask = null;
                         if (tempBadResults.size() > 0)
                         {
-                            showResultFragment(new ArrayList<BadPackageData>(tempBadResults));
+                            showResultFragment(new ArrayList<IProblem>(tempBadResults));
 
                             Handler handler = new Handler();
                             handler.postDelayed(new Runnable()
@@ -390,10 +389,10 @@ public class MainFragment extends Fragment
         oa.setInterpolator(new LinearInterpolator());
         oa.start();
     }
-    void showResultFragment(List<BadPackageData> suspiciousApps)
+    void showResultFragment(List<IProblem> problems)
     {
         ResultsFragment newFragment= (ResultsFragment) getMainActivity().slideInFragment(AntivirusActivity.kResultFragmentTag);
-        newFragment.setData(getMainActivity(), suspiciousApps);
+        newFragment.setData(getMainActivity(), problems);
     }
 
     @Override
@@ -417,7 +416,7 @@ public class MainFragment extends Fragment
     void setUIRiskState()
     {
         boolean firstScanDone =getMainActivity().getAppData().getFirstScanDone();
-        Set<BadPackageData> foundMenaces = getMainActivity().getBadResultPackageDataFromMenaceSet();
+        Set<IProblem> foundMenaces = getMainActivity().getProblemsFromMenaceSet();
         boolean isDangerous = _isDangerousAppInSet(foundMenaces);
 
         if(foundMenaces.isEmpty() || foundMenaces==null)
@@ -444,11 +443,11 @@ public class MainFragment extends Fragment
         }
     }
 
-    private boolean _isDangerousAppInSet(Set<BadPackageData> set)
+    private boolean _isDangerousAppInSet(Set<IProblem> set)
     {
-        for(BadPackageData bprd : set)
+        for(IProblem bprd : set)
         {
-            if(bprd.isDangerousMenace())
+            if(bprd.isDangerous())
                 return true;
         }
 

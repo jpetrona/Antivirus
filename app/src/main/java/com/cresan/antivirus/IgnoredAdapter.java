@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,23 +15,21 @@ import android.widget.TextView;
 import com.cresan.androidprotector.R;
 import com.tech.applications.coretools.ActivityTools;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Magic Frame on 27/01/2016.
  */
-public class IgnoredAdapter  extends ArrayAdapter<BadPackageData>
+public class IgnoredAdapter  extends ArrayAdapter<IProblem>
 {
     private final Context _context;
-    private List<BadPackageData> _values =null;
+    private List<IProblem> _values =null;
     IOnAdapterItemRemoved _adapterListener=null;
     void setOnAdapterItemRemovedListener(IOnAdapterItemRemoved listener) { _adapterListener=listener;}
 
-    public IgnoredAdapter(Context context, List<BadPackageData> values)
+    public IgnoredAdapter(Context context, List<IProblem> values)
     {
-        super(context, R.layout.ignored_adapter,values);
+        super(context, R.layout.ignored_list_item, values);
         this._context = context;
         this._values = values;
     }
@@ -46,26 +43,29 @@ public class IgnoredAdapter  extends ArrayAdapter<BadPackageData>
         if(convertView == null)
         {
             LayoutInflater inflater = (LayoutInflater) _context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            rowView = inflater.inflate(R.layout.ignored_adapter, parent, false);
+            rowView = inflater.inflate(R.layout.ignored_list_item, parent, false);
         }else
         {
             rowView = convertView;
 
         }
 
-        final BadPackageData obj = _values.get(position);
+        final IProblem obj = _values.get(position);
 
-        TextView textView = (TextView) rowView.findViewById(R.id.nameAppIgnored);
-        ImageView imageView = (ImageView) rowView.findViewById(R.id.iconAppIgnored);
-        LinearLayout linearLayout = (LinearLayout) rowView.findViewById(R.id.linearLayoutAdapter);
+
+        final String dialogMessage=null;
+
+
+        final TextView textView = (TextView) rowView.findViewById(R.id.nameAppIgnored);
+        final ImageView imageView = (ImageView) rowView.findViewById(R.id.iconAppIgnored);
+        final LinearLayout linearLayout = (LinearLayout) rowView.findViewById(R.id.linearLayoutAdapter);
         linearLayout.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                new AlertDialog.Builder(getContext())
-                        .setTitle(_context.getString(R.string.warning))
-                        .setMessage(_context.getString(R.string.remove_ignored_app_message) + " " + ActivityTools.getAppNameFromPackage(getContext(), obj.getPackageName()))
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle(_context.getString(R.string.warning))
                         .setPositiveButton(_context.getString(R.string.accept_eula), new DialogInterface.OnClickListener()
                         {
                             @Override
@@ -82,18 +82,36 @@ public class IgnoredAdapter  extends ArrayAdapter<BadPackageData>
                     {
 
                     }
-                }).show();
+                });
+
+                String dialogMessage = null;
+
+                if (obj.getType() == IProblem.ProblemType.AppProblem)
+                {
+                    AppProblem appProblem = (AppProblem) obj;
+                    dialogMessage = _context.getString(R.string.remove_ignored_app_message) + " " + ActivityTools.getAppNameFromPackage(getContext(), appProblem.getPackageName());
+
+                    textView.setText(ActivityTools.getAppNameFromPackage(getContext(), appProblem.getPackageName()));
+                    imageView.setImageDrawable(ActivityTools.getIconFromPackage(appProblem.getPackageName(), getContext()));
+                } else
+                {
+                    SystemProblem sp=((SystemProblem) obj);
+                    dialogMessage = sp.getWhiteListOnRemoveDescription(_context);
+
+                    textView.setText(ActivityTools.getAppNameFromPackage(getContext(), sp.getTitle(getContext())));
+                    imageView.setImageDrawable(sp.getIcon(getContext()));
+                }
+
+                builder.setMessage(dialogMessage);
+                builder.show();
 
             }
         });
 
-        textView.setText(ActivityTools.getAppNameFromPackage(getContext(), obj.getPackageName()));
-        imageView.setImageDrawable(ActivityTools.getIconFromPackage(obj.getPackageName(), getContext()));
-
         return rowView;
     }
 
-    public void refresh(List<BadPackageData> bpd)
+    public void refresh(List<IProblem> bpd)
     {
         clear();
         addAll(bpd);

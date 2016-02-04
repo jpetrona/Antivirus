@@ -1,7 +1,6 @@
 package com.cresan.antivirus;
 
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -10,14 +9,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.cresan.androidprotector.R;
-import com.cresan.antivirus.AntivirusActivity;
-import com.cresan.antivirus.BadPackageData;
-import com.cresan.antivirus.IOnActionFinished;
-import com.cresan.antivirus.MenacesCacheSet;
 import com.tech.applications.coretools.ActivityTools;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -71,15 +66,22 @@ public class ScanningFileSystemAsyncTask extends AsyncTask<Void,ScanningFileSyst
 
     Context _activity;
     List<PackageInfo> _packagesToScan;
-    Set<BadPackageData> _menaces;
+    Collection<AppProblem> _menaces;
 
     Random _random=new Random();
 
-    public ScanningFileSystemAsyncTask(AntivirusActivity activity, List<PackageInfo> allPackages, Set<BadPackageData> menaces)
+    public ScanningFileSystemAsyncTask(AntivirusActivity activity, List<PackageInfo> allPackages, Collection<IProblem> menaces)
     {
         _activity=activity;
         _packagesToScan = allPackages;
-        _menaces=menaces;
+
+        //Just get AppMenaces
+        _menaces=new ArrayList<AppProblem>();
+        for(IProblem p:menaces)
+        {
+            if(p.getType()== IProblem.ProblemType.AppProblem)
+                _menaces.add((AppProblem)p);
+        }
 
         _progressPanelIconImageView =(ImageView)activity.findViewById(R.id.animationProgressPanelIconImageView);
         _progressPanelTextView =(TextView)activity.findViewById(R.id.animationProgressPanelTextView);;
@@ -152,7 +154,7 @@ public class ScanningFileSystemAsyncTask extends AsyncTask<Void,ScanningFileSyst
 
     boolean isPackageInMenacesSet(String packageName)
     {
-        for(BadPackageData menace : _menaces)
+        for(AppProblem menace : _menaces)
         {
             if(menace.getPackageName().equals(packageName))
                 return true;

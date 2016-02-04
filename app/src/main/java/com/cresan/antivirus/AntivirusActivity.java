@@ -1,6 +1,5 @@
 package com.cresan.antivirus;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,12 +24,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.Button;
 
 
@@ -107,7 +104,7 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
     {
         return _serviceInstance.getUserWhiteList();
     }
-    public Set<BadPackageData> getBadResultPackageDataFromMenaceSet() { return _serviceInstance.getMenacesCacheSet().getSet(); }
+    public Set<IProblem> getProblemsFromMenaceSet() { return _serviceInstance.getMenacesCacheSet().getSet(); }
     public MenacesCacheSet getMenacesCacheSet() { return _serviceInstance.getMenacesCacheSet(); }
 
     final String bannerAdUnit="";
@@ -212,12 +209,12 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
     public void setMonitorServiceListener(MonitorShieldService.IClientInterface listener) { _appMonitorServiceListener=listener;}
 
     //Called when a menace is found by the watchdog
-    public void onMonitorFoundMenace(BadPackageData menace)
+    public void onMonitorFoundMenace(IProblem menace)
     {
         if(_appMonitorServiceListener!=null)
             _appMonitorServiceListener.onMonitorFoundMenace(menace);
     }
-    public void onScanResult(List<PackageInfo> allPacakgesToScan,Set<BadPackageData> scanResult)
+    public void onScanResult(List<PackageInfo> allPacakgesToScan,Set<IProblem> scanResult)
     {
         if(_appMonitorServiceListener!=null)
             _appMonitorServiceListener.onScanResult(allPacakgesToScan, scanResult);
@@ -285,8 +282,8 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
             case R.id.ignoredListButton:
 
                 UserWhiteList userWhiteList=getUserWhiteList();
-                Set<BadPackageData> packageData =  userWhiteList.getSet();
-                showIgnoredFragment(new ArrayList<BadPackageData>(packageData));
+                Set<IProblem> packageData =  userWhiteList.getSet();
+                showIgnoredFragment(new ArrayList<IProblem>(packageData));
                 Log.d("ign", "IGNORED BUTTON MENU");
                 return true;
             case R.id.RateUs:
@@ -301,10 +298,10 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
         }
     }
 
-    void showIgnoredFragment(List<BadPackageData> userWhiteList)
+    void showIgnoredFragment(List<IProblem> userWhiteList)
     {
         //Create list of apps that are whitelisted and installed
-        List<BadPackageData> ignoredAppsInstalledOnSystem=IgnoredListFragment.getIgnoredAndInstalledApps(this,userWhiteList);
+        List<IProblem> ignoredAppsInstalledOnSystem=IgnoredListFragment.getExistingProblems(this, userWhiteList);
 
 
         if(ignoredAppsInstalledOnSystem.size() > 0)
