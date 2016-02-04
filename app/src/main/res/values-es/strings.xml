@@ -30,4 +30,18 @@
     <string name="are_protected">Estás protegido</string>
     <string name="high_risk">Riesgo Alto</string>
     <string name="medium_risk">Riesgo Medio</string>
+    <string name="usb_message">No es recomendable que active la depuración por USB a menos que use el dispositivo para desarrollar software. Pulse el botón de resolver y desactive la depuración por USB para proteger el dispositivo.</string>
+    <string name="ignored_setting">Ignorar configuración</string>
+    <string name="enter_to_solve_problems">tiene problemas, click para resolver los problemas.</string>
+    <string name="has_been_scanned">tiene problemas.</string>
+    <string name="has_no_threats">es segura para abrir.</string>
+    <string name="is_secure">es segura para abrir.</string>
+   <string name="open_setting">Abrir ajustes</string>
+    <string name="title_permission">Comparte información personal</string>
+    <string name="title_ads">Muestra anuncios</string>
+    <string name="title_installedGPlay">Fuente desconocida</string>
+    <string name="trusted_by_user">Riesgo Medio</string>
+    <string name="trusted_by_app">es una aplicación de confianza verificada por AMS Antivirus.</string>
+    <string name="trusted_message">es una aplicación de confianza.</string>
+    <string name="usb_title">Configuración no segura.</string>
 </resources>

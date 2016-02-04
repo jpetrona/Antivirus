@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -29,7 +30,8 @@ public class InfoAppFragment extends Fragment
 
     BadPackageData _suspiciousApp = null;
     boolean  _uninstallingPackage = false;
-
+    private LinearLayout _containerButtonsApp = null;
+    private LinearLayout _containerBuuttonsConfig = null;
 
     private Button _button = null;
 
@@ -75,7 +77,33 @@ public class InfoAppFragment extends Fragment
         Drawable s = ActivityTools.getIconFromPackage(_suspiciousApp.getPackageName(), getContext());
         _button = (Button) view.findViewById(R.id.buttonUninstall);
         final Button buttonTrust = (Button) view.findViewById(R.id.buttonTrust);
+        Button buttonOpenSetting = (Button) view.findViewById(R.id.buuttonOpenSettings);
+        Button buttonIgnoredSetting = (Button) view.findViewById(R.id.buttonIgnoreConfig);
 
+        // Este es el contenedor que tiene contiende los botones para las acciones cuando se trata de una APP
+        _containerButtonsApp = (LinearLayout) view.findViewById(R.id.buttonsAppContainer);
+
+        // Este es el contenedor que tiene contiende los botones para las acciones cuando se trata de una amenazas por configuracion.
+        _containerBuuttonsConfig = (LinearLayout) view.findViewById(R.id.buttonsConfigContainer);
+
+        buttonOpenSetting.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                // Aqui el codigo para abrir la pantalla de configuracion del sistema RECUERDA QUE EN EL ACTIVITY TOOLS TIENES LAS FUNCIONES YA CREADAS.
+            }
+        });
+
+
+        buttonIgnoredSetting.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                // Aqui para ignorar la configuracion
+            }
+        });
 
         _button.setOnClickListener(new View.OnClickListener()
         {
