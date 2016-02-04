@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -29,6 +30,8 @@ public class InfoAppFragment extends Fragment
 
     IProblem _problem = null;
     boolean  _uninstallingPackage = false;
+    private LinearLayout _containerButtonsApp = null;
+    private LinearLayout _containerBuuttonsConfig = null;
 
 
     private Button _button = null;
@@ -191,7 +194,7 @@ public class InfoAppFragment extends Fragment
             //Check if it exists. If not update menacesCacheSet
             MenacesCacheSet menacesCacheSet=antivirusActivity.getMenacesCacheSet();
             final AppProblem appProblem=(AppProblem) _problem;
-            if(!ProblemsDataSetTools.checkIfPackageInCollection(appProblem.getPackageName(),menacesCacheSet.getSet()))
+            if(!ProblemsDataSetTools.checkIfPackageInCollection(appProblem.getPackageName(), menacesCacheSet.getSet()))
             {
                 //It is in menaces cacheset. Check if it is really in the system
                 if(!ActivityTools.isPackageInstalled(antivirusActivity, appProblem.getPackageName()))

@@ -29,4 +29,13 @@
     <dimen name="resolve_problems_widht">300dp</dimen>
     <dimen name="resolve_problems_height">50dp</dimen>
     <dimen name="resolve_problems_font_size">18dp</dimen>
+    <dimen name="icon_ignoredList_size">50dp</dimen>
+    <dimen name="riskType_font_size">14dp</dimen>
+    <dimen name="title_app_font_size">18dp</dimen>
+    <dimen name="title_app_info">30dp</dimen>
+    <dimen name="riskType_app_info">24dp</dimen>
+    <dimen name="button_trust_widht">90dp</dimen>
+    <dimen name="button_trust_height">40dp</dimen>
+    <dimen name="button_trust_font_size">14dp</dimen>
+    <dimen name="padding_app_info">10dp</dimen>
 </resources>

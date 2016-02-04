@@ -20,12 +20,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.15"
-                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="Uso de la bateria en segundo plano"
                 android:textColor="@color/info_icon_bottom_text"
                 android:id="@+id/titleWarning"
                 android:textStyle="bold"
-                android:paddingLeft="8dp"/>
+                android:paddingLeft="8dp"
+                android:textSize="@dimen/title_app_font_size"/>
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -34,22 +34,23 @@
 
                 <ImageView
                     android:id="@+id/iconWarning"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/icon_ignoredList_size"
+                    android:layout_height="@dimen/icon_ignoredList_size"
                     android:src="@mipmap/ic_launcher"
-                    android:layout_weight="0.25"
-                    android:layout_gravity="center_vertical"/>
+                    android:layout_gravity="center_vertical"
+                    android:adjustViewBounds="true"
+                    />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="Bajo nivel de uso"
                     android:id="@+id/messageWarning"
                     android:gravity="center_vertical"
                     android:textColor="@color/info_icon_bottom_text"
-                    android:layout_gravity="center_vertical"/>
+                    android:layout_gravity="center_vertical"
+                    android:textSize="@dimen/title_app_font_size"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
