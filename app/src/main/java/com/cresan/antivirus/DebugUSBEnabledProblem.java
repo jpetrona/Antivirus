@@ -15,9 +15,11 @@ import org.json.JSONObject;
  */
 public class DebugUSBEnabledProblem extends SystemProblem
 {
-    static final String kUSBProblemType ="USB";
     static public final String kSerializationType="usb";
 
+
+    //Esto si quiers lo puedes poner  dentro de las funciones directamente. Es como debería haber sido
+    //En vez de crearte aquí las constantes
     final int kUsbIconResId= R.drawable.usb_icon;
     final int kUsbDescriptionId=R.string.usb_message;
     final int kUsbTitleId=R.string.system_app_usb_menace_title;
