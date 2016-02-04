@@ -24,9 +24,7 @@ public class AppProblem extends PackageData implements IProblem
         super(packageName);
     }
 
-
-
-    public IProblem.ProblemType getType() { return IProblem.ProblemType.SystemProblem;}
+    public IProblem.ProblemType getType() { return IProblem.ProblemType.AppProblem;}
 
     private Set<ActivityData> _activities=new HashSet<ActivityData>();
     public void addActivityData(ActivityData activityData)  { _activities.add(activityData);  }
