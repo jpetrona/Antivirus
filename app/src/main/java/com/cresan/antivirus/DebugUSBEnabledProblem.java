@@ -77,5 +77,10 @@ public class DebugUSBEnabledProblem extends SystemProblem
     {
         return false;
     }
+
+    public boolean problemExists(Context context)
+    {
+        return ActivityTools.checkIfUSBDebugIsEnabled(context);
+    }
     
 }

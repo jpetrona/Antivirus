@@ -1,6 +1,8 @@
 package com.cresan.antivirus;
 
 
+import android.content.Context;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -13,6 +15,7 @@ public interface IProblem extends IJSONSerializer
 
     public ProblemType getType();
     public boolean isDangerous();
+    public boolean problemExists(Context context);
 }
 
 

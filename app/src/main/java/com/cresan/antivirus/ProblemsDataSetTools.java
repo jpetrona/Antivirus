@@ -1,5 +1,7 @@
 package com.cresan.antivirus;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -79,6 +81,22 @@ public class ProblemsDataSetTools
 
         return false;
     }
+
+    static void removeNotExistingProblems(Context context, IDataSet<IProblem> dataSet)
+    {
+        ArrayList<IProblem> toRemove=new ArrayList<IProblem>();
+
+        Set<IProblem> problems=dataSet.getSet();
+
+        for(IProblem p: problems)
+        {
+            if(!p.problemExists(context))
+                toRemove.add(p);
+        }
+
+        problems.removeAll(toRemove);
+    }
+
 /*
     static boolean isSystemProblemInCollection(Class<? extends SystemProblem> problem, Collection<IProblem> problems)
     {

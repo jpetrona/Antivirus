@@ -283,8 +283,7 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
             case R.id.ignoredListButton:
 
                 UserWhiteList userWhiteList=getUserWhiteList();
-                Set<IProblem> packageData =  userWhiteList.getSet();
-                showIgnoredFragment(new ArrayList<IProblem>(packageData));
+                showIgnoredFragment(userWhiteList);
                 Log.d("ign", "IGNORED BUTTON MENU");
                 return true;
             case R.id.RateUs:
@@ -299,16 +298,16 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
         }
     }
 
-    void showIgnoredFragment(List<IProblem> userWhiteList)
+    void showIgnoredFragment(UserWhiteList userWhiteList)
     {
         //Create list of apps that are whitelisted and installed
-        List<IProblem> ignoredAppsInstalledOnSystem=IgnoredListFragment.getExistingProblems(this, userWhiteList);
+        List<IProblem> ignoredAppsInstalledOnSystem=IgnoredListFragment.getExistingProblems(this, new ArrayList<IProblem>(userWhiteList.getSet()));
 
 
         if(ignoredAppsInstalledOnSystem.size() > 0)
         {
             IgnoredListFragment newFragment= (IgnoredListFragment) this.slideInFragment(AntivirusActivity.kIgnoredFragmentTag);
-            newFragment.setData(userWhiteList);
+            newFragment.setData(this, userWhiteList);
         }
         else
         {
