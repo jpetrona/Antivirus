@@ -36,7 +36,7 @@
         android:dividerHeight="0.5dp"
         android:drawSelectorOnTop="true"
         android:background="@color/SecondaryColor"
-        tools:listitem = "@layout/list_apps"/>
+        tools:listitem = "@layout/ignored_list_item"/>
 
     <!-- Kill Button Container -->
     <LinearLayout

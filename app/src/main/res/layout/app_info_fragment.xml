@@ -128,6 +128,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/listView"
         android:layout_weight="1"
-        tools:listitem = "@layout/warnings_adapter"/>
+        tools:listitem = "@layout/results_list_app_item"/>
 
 </LinearLayout>
