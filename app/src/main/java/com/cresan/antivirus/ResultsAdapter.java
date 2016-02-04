@@ -32,7 +32,7 @@ public class ResultsAdapter extends ArrayAdapter<IResultsAdapterItem>
     Context _context;
 
     int _appHeaderIndex=-1;
-    int _systemMenacesIndex=-1;
+    int _systemMenacesHeaderIndex =-1;
 
     private List<IResultsAdapterItem> _selectedProblems=new ArrayList<IResultsAdapterItem>();
 
@@ -70,7 +70,7 @@ public class ResultsAdapter extends ArrayAdapter<IResultsAdapterItem>
 
     public ResultsAdapter(Context context, List<IProblem> problems)
     {
-        super(context, R.layout.results_list_app_item,new ArrayList<IResultsAdapterItem>());
+        super(context, R.layout.results_list_app_item, new ArrayList<IResultsAdapterItem>());
 
         _context=context;
 
@@ -81,20 +81,29 @@ public class ResultsAdapter extends ArrayAdapter<IResultsAdapterItem>
     {
         clear();
 
-        _appHeaderIndex=0;
-
-        ResultsAdapterHeaderItem headerItem=new ResultsAdapterHeaderItem("Applications");
-        add(headerItem);
-
         List<IProblem> appProblems=ProblemsDataSetTools.getAppProblems(bpdl);
-        _addProblems(appProblems);
 
-        _systemMenacesIndex=getCount();
-        headerItem=new ResultsAdapterHeaderItem("System");
-        add(headerItem);
+        if(appProblems.size()>0)
+        {
+            _appHeaderIndex=0;
+            ResultsAdapterHeaderItem headerItem=new ResultsAdapterHeaderItem("Applications");
+            add(headerItem);
+            _addProblems(appProblems);
+        }
+        else
+            _appHeaderIndex=-1;
 
         List<IProblem> systemProblems=ProblemsDataSetTools.getSystemProblems(bpdl);
-        _addProblems(systemProblems);
+
+        if(systemProblems.size()>0)
+        {
+            _systemMenacesHeaderIndex =getCount();
+            ResultsAdapterHeaderItem headerItem=new ResultsAdapterHeaderItem("System");
+            add(headerItem);
+            _addProblems(systemProblems);
+        }
+        else
+            _systemMenacesHeaderIndex=-1;
     }
 
     public void refreshByResults(List<ResultsAdapterItem> rail)
@@ -143,9 +152,9 @@ public class ResultsAdapter extends ArrayAdapter<IResultsAdapterItem>
     {
         int layoutId=-1;
 
-        if(position==_appHeaderIndex || position==_systemMenacesIndex)
+        if(position==_appHeaderIndex || position== _systemMenacesHeaderIndex)
             layoutId=R.layout.results_list_header;
-        else if(position<_systemMenacesIndex)
+        else if(position< _systemMenacesHeaderIndex)
             layoutId=R.layout.results_list_app_item;
         else
             layoutId=R.layout.results_list_system_item;
@@ -159,14 +168,14 @@ public class ResultsAdapter extends ArrayAdapter<IResultsAdapterItem>
 
     public void _fillRowData(int position, View rootView)
     {
-        if(position==_appHeaderIndex || position==_systemMenacesIndex)
+        if(position==_appHeaderIndex || position== _systemMenacesHeaderIndex)
         {
             ResultsAdapterHeaderItem obj = (ResultsAdapterHeaderItem)getItem(position);
             ResultsAdapterHeaderItem header=(ResultsAdapterHeaderItem) obj;
             TextView headerText=(TextView) rootView.findViewById(R.id.Titlelabel);
             headerText.setText(header.getDescription());
         }
-        else if(position<_systemMenacesIndex)
+        else if(position< _systemMenacesHeaderIndex)
         {
             final ResultsAdapterProblemItem ri  = (ResultsAdapterProblemItem)getItem(position);
             final AppProblem ap=ri.getAppProblem();
@@ -267,7 +276,7 @@ public class ResultsAdapter extends ArrayAdapter<IResultsAdapterItem>
                 }
             });
 
-            textView.setText(sp.getDescription(getContext()));
+            textView.setText(sp.getTitle(getContext()));
             imageView.setImageDrawable(sp.getIcon(getContext()));
         }
     }
@@ -306,11 +315,23 @@ public class ResultsAdapter extends ArrayAdapter<IResultsAdapterItem>
     @Override
     public int getItemViewType(int position)
     {
-        if(position==_appHeaderIndex || position==_systemMenacesIndex)
+        if(position==_appHeaderIndex || position== _systemMenacesHeaderIndex)
             return kHEADER_TYPE;
-        else if(position<_systemMenacesIndex)
+        else if(position< _systemMenacesHeaderIndex)
             return kAPP_TYPE;
         else
             return kSYSTEM_TYPE;
+    }
+
+
+    public int getRealCount()
+    {
+        int count=super.getCount();
+        if(_appHeaderIndex!=-1)
+            --count;
+        if(_systemMenacesHeaderIndex !=-1)
+            --count;
+
+        return count;
     }
 }

@@ -1,11 +1,13 @@
 package com.cresan.antivirus;
 
+import android.graphics.drawable.Drawable;
+
 /**
  * Created by hexdump on 19/01/16.
  */
 public class WarningData
 {
-    public int iconId=-1;
+    public Drawable icon=null;
     public String title=null;
     public String text=null;
 }

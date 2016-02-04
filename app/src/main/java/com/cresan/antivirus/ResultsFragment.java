@@ -195,7 +195,7 @@ public class ResultsFragment extends Fragment
         //Add new existant apps
         _resultAdapter.refreshByProblems(new ArrayList<IProblem>(menacesCache.getSet()));
 
-        _updateFoundThreatsText(_threatsFoundSummary, _resultAdapter.getCount());
+        _updateFoundThreatsText(_threatsFoundSummary, _resultAdapter.getRealCount());
 
         if(menacesCache.getItemCount()<=0)
         {

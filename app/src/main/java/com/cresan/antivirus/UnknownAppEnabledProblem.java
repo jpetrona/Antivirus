@@ -48,16 +48,18 @@ public class UnknownAppEnabledProblem extends  SystemProblem
     {
         return context.getString(kUnknownAppTitleId);
     }
+    public String getSubTitle(Context context) {return context.getString(R.string.usb_title);}
 
     public String getDescription(Context context)
     {
-        return context.getString(kUnknownAppDescriptionId);
+        return context.getString(R.string.unknownApp_message);
     }
 
     public Drawable getIcon(Context context)
     {
         return ContextCompat.getDrawable(context, kUnknownAppIconResId);
     }
+    public Drawable getSubIcon(Context context) {return ContextCompat.getDrawable(context,R.drawable.gear);}
 
     public boolean isDangerous()
     {

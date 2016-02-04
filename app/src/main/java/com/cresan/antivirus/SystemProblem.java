@@ -49,8 +49,10 @@ public abstract class SystemProblem implements IProblem
     abstract public String getWhiteListOnAddDescription(Context context);
     abstract public String getWhiteListOnRemoveDescription(Context context);
     abstract public String getTitle(Context context);
+    abstract public String getSubTitle(Context context);
     abstract public String getDescription(Context context);
     abstract public Drawable getIcon(Context context);
+    abstract public Drawable getSubIcon(Context context);
     abstract public String getSerializationTypeString();
 
 }

@@ -53,6 +53,10 @@ public class DebugUSBEnabledProblem extends SystemProblem
     {
         return context.getString(kUsbTitleId);
     }
+    public String getSubTitle(Context context)
+    {
+        return context.getString(R.string.usb_title);
+    }
 
     public String getDescription(Context context)
     {
@@ -61,7 +65,12 @@ public class DebugUSBEnabledProblem extends SystemProblem
 
     public Drawable getIcon(Context context)
     {
-        return ContextCompat.getDrawable(context,kUsbIconResId);
+        return ContextCompat.getDrawable(context, kUsbIconResId);
+    }
+
+    public Drawable getSubIcon(Context context)
+    {
+        return ContextCompat.getDrawable(context,R.drawable.gear);
     }
 
     public boolean isDangerous()

@@ -31,10 +31,10 @@ public class InfoAppFragment extends Fragment
     IProblem _problem = null;
     boolean  _uninstallingPackage = false;
     private LinearLayout _containerButtonsApp = null;
-    private LinearLayout _containerBuuttonsConfig = null;
+    private LinearLayout _containerButtonsSystem= null;
 
 
-    private Button _button = null;
+    private Button _uninstallButton = null;
 
     AntivirusActivity getMainActivity()
     {
@@ -58,9 +58,15 @@ public class InfoAppFragment extends Fragment
 
     protected void _setupFragment(View view)
     {
+        // Este es el contenedor que tiene contiende los botones para las acciones cuando se trata de una APP
+        _containerButtonsApp = (LinearLayout) view.findViewById(R.id.buttonsAppContainer);
+        // Este es el contenedor que tiene contiende los botones para las acciones cuando se trata de una amenazas poor
+        _containerButtonsSystem = (LinearLayout) view.findViewById(R.id.buttonsConfigContainer);
 
-        TextView textView = (TextView) view.findViewById(R.id.titleApp);
+        TextView appTitleTextView = (TextView) view.findViewById(R.id.titleApp);
         TextView warningLevel = (TextView) view.findViewById(R.id.warningLevel);
+        ImageView iconApp = (ImageView) view.findViewById(R.id.iconGeneral);
+        _listview = (ListView) view.findViewById(R.id.listView);
 
         if(_problem.isDangerous())
         {
@@ -75,14 +81,17 @@ public class InfoAppFragment extends Fragment
 
         if(_problem.getType()== IProblem.ProblemType.AppProblem)
         {
+            _containerButtonsApp.setVisibility(View.VISIBLE);
+            _containerButtonsSystem.setVisibility(View.INVISIBLE);
+
             final AppProblem appProblem=(AppProblem) _problem;
-            ImageView iconApp = (ImageView) view.findViewById(R.id.iconGeneral);
+
             Drawable s = ActivityTools.getIconFromPackage(appProblem.getPackageName(), getContext());
-            _button = (Button) view.findViewById(R.id.buttonUninstall);
+            _uninstallButton = (Button) view.findViewById(R.id.buttonUninstall);
             final Button buttonTrust = (Button) view.findViewById(R.id.buttonTrust);
 
 
-            _button.setOnClickListener(new View.OnClickListener()
+            _uninstallButton.setOnClickListener(new View.OnClickListener()
             {
 
                 @Override
@@ -93,7 +102,7 @@ public class InfoAppFragment extends Fragment
                     Uri uri = Uri.fromParts("package", appProblem.getPackageName(), null);
                     Intent it = new Intent(Intent.ACTION_DELETE, uri);
                     startActivity(it);
-                    _button.setEnabled(false);
+                    _uninstallButton.setEnabled(false);
                 }
             });
 
@@ -147,15 +156,45 @@ public class InfoAppFragment extends Fragment
                 }
             });
 
-            textView.setText(ActivityTools.getAppNameFromPackage(getContext(), appProblem.getPackageName()));
+            appTitleTextView.setText(ActivityTools.getAppNameFromPackage(getContext(), appProblem.getPackageName()));
             iconApp.setImageDrawable(s);
+        }
+        else
+        {
+            _containerButtonsApp.setVisibility(View.INVISIBLE);
+            _containerButtonsSystem.setVisibility(View.VISIBLE);
+
+            final SystemProblem systemProblem=(SystemProblem) _problem;
+
+            Drawable s = systemProblem.getIcon(getContext());
+            iconApp.setImageDrawable(s);
+            appTitleTextView.setText(systemProblem.getTitle(getContext()));
 
 
-            _listview = (ListView) view.findViewById(R.id.listView);
+            Button buttonOpenSetting = (Button) view.findViewById(R.id.buuttonOpenSettings);
+            Button buttonIgnoredSetting = (Button) view.findViewById(R.id.buttonIgnoreConfig);
 
-            _listview.setAdapter(new WarningsAdapter(getMainActivity(), appProblem));
+            buttonOpenSetting.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    // Aqui el codigo para abrir la pantalla de configuracion del sistema RECUERDA QUE EN EL ACTIVITY TOOLS TIENES LAS FUNCIONES YA CREADAS.
+                }
+            });
+
+
+            buttonIgnoredSetting.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    // Aqui para ignorar la configuracion
+                }
+            });
         }
 
+        _listview.setAdapter(new WarningsAdapter(getMainActivity(), _problem));
 
     }
 
@@ -188,7 +227,7 @@ public class InfoAppFragment extends Fragment
             getMainActivity().goBack();
 
         }
-        else
+        else if(_problem.getType()== IProblem.ProblemType.AppProblem)
         {
             //User could have deleted app from file sytem while in this screen.
             //Check if it exists. If not update menacesCacheSet
@@ -210,7 +249,9 @@ public class InfoAppFragment extends Fragment
         }
 
         // Esto lo hacemos aqui porque no hay otra manera de volverlo a pasar a true, ya que el boton de desinstalar tira un dialogo del sistema y no nuestro.
-        _button.setEnabled(true);
+        // Cuando lo que estamos viendo es un problema de sistema este bottón no se ha inicializado
+        if(_uninstallButton!=null)
+            _uninstallButton.setEnabled(true);
     }
 
 }

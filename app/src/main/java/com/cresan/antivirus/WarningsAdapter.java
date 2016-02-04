@@ -24,10 +24,10 @@ import java.util.Set;
 public class WarningsAdapter extends ArrayAdapter<WarningData>
 {
     private final Context _context;
-    private AppProblem _resultData=null;
+    private IProblem _resultData=null;
     private List<WarningData> _convertedData=null;
 
-    public WarningsAdapter(Context context, AppProblem resultData)
+    public WarningsAdapter(Context context, IProblem resultData)
     {
         super(context, R.layout.warning_item);
 
@@ -40,43 +40,59 @@ public class WarningsAdapter extends ArrayAdapter<WarningData>
         notifyDataSetChanged();
     }
 
-    public List<WarningData> _fillDataArray(AppProblem bp)
+    public List<WarningData> _fillDataArray(IProblem problem)
     {
         List<WarningData> wdl=new ArrayList<WarningData>();
 
-        Set<ActivityData> activityData=bp.getActivityData();
-
-        //for(ActivityData ad : activityData)
-        if(activityData.size()>0)
+        if(problem.getType()== IProblem.ProblemType.AppProblem)
         {
+            AppProblem bp=(AppProblem)problem;
+            Set<ActivityData> activityData=bp.getActivityData();
 
+            //for(ActivityData ad : activityData)
+            if(activityData.size()>0)
+            {
+
+                WarningData wd=new WarningData();
+                wd.icon=ContextCompat.getDrawable(_context, R.drawable.adware_icon);
+                wd.title=getContext().getResources().getString(R.string.title_ads);
+                wd.text=getContext().getResources().getString(R.string.ads_message);
+                wdl.add(wd);
+            }
+
+            Set<PermissionData> permissionDataList=bp.getPermissionData();
+            for(PermissionData ad : permissionDataList)
+            {
+                WarningData wd=new WarningData();
+                wd.icon=ContextCompat.getDrawable(_context, setPermissionIcon(ad.getPermissionName()));
+                wd.title=getContext().getResources().getString(R.string.title_permission);
+                wd.text=setPermissionMessage(ad.getPermissionName());
+                wdl.add(wd);
+            }
+
+            boolean installedGPlay=bp.getInstalledThroughGooglePlay();
+            if(!installedGPlay)
+            {
+                WarningData wd=new WarningData();
+                wd.icon=ContextCompat.getDrawable(_context, R.drawable.information);
+                wd.title=getContext().getResources().getString(R.string.title_installedGPlay);
+                wd.text=getContext().getResources().getString(R.string.installedGPlay_message);
+                wdl.add(wd);
+            }
+        }
+        else
+        {
+            SystemProblem bp=(SystemProblem)problem;
+
+            Context context=getContext();
             WarningData wd=new WarningData();
-            wd.iconId=R.drawable.adware_icon;
-            wd.title=getContext().getResources().getString(R.string.title_ads);
-            wd.text=getContext().getResources().getString(R.string.ads_message);
+            wd.icon=bp.getSubIcon(context);
+            wd.title=bp.getSubTitle(context);
+            wd.text=bp.getDescription(context);
             wdl.add(wd);
         }
 
-        Set<PermissionData> permissionDataList=bp.getPermissionData();
-        for(PermissionData ad : permissionDataList)
-        {
 
-            WarningData wd=new WarningData();
-            wd.iconId=setPermissionIcon(ad.getPermissionName());
-            wd.title=getContext().getResources().getString(R.string.title_permission);
-            wd.text=setPermissionMessage(ad.getPermissionName());
-            wdl.add(wd);
-        }
-
-        boolean installedGPlay=bp.getInstalledThroughGooglePlay();
-        if(!installedGPlay)
-        {
-            WarningData wd=new WarningData();
-            wd.iconId=R.drawable.information;
-            wd.title=getContext().getResources().getString(R.string.title_installedGPlay);
-            wd.text=getContext().getResources().getString(R.string.installedGPlay_message);
-            wdl.add(wd);
-        }
 
         return wdl;
     }
@@ -101,7 +117,7 @@ public class WarningsAdapter extends ArrayAdapter<WarningData>
         TextView messageView = (TextView) rowView.findViewById(R.id.messageWarning);
         ImageView iconView = (ImageView) rowView.findViewById(R.id.iconWarning);
 
-        iconView.setImageDrawable(ContextCompat.getDrawable(_context,obj.iconId));
+        iconView.setImageDrawable(obj.icon);
         titleView.setText(obj.title);
         messageView.setText(obj.text);
 
