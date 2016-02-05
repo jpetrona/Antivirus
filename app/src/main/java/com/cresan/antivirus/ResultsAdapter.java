@@ -118,7 +118,7 @@ public class ResultsAdapter extends ArrayAdapter<IResultsAdapterItem>
             TextView headerText=(TextView) rootView.findViewById(R.id.Titlelabel);
             headerText.setText(header.getDescription());
         }
-        else if(position< _systemMenacesHeaderIndex)
+        else if(_systemMenacesHeaderIndex==-1 || position< _systemMenacesHeaderIndex) //We are receiving something that is not a header and no system menaces
         {
             final ResultsAdapterProblemItem ri  = (ResultsAdapterProblemItem)getItem(position);
             final AppProblem ap=ri.getAppProblem();

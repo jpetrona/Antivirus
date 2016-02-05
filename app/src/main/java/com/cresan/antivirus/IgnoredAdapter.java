@@ -111,7 +111,7 @@ public class IgnoredAdapter  extends ArrayAdapter<IProblem>
         } else
         {
             SystemProblem sp=((SystemProblem) obj);
-            textView.setText(ActivityTools.getAppNameFromPackage(getContext(), sp.getTitle(getContext())));
+            textView.setText(sp.getTitle(getContext()));
             imageView.setImageDrawable(sp.getIcon(getContext()));
         }
 
