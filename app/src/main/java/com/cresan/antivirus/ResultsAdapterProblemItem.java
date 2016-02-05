@@ -3,7 +3,7 @@ package com.cresan.antivirus;
 /**
  * Created by hexdump on 29/01/16.
  */
-class ResultsAdapterProblemItem extends ResultsAdapterItem
+class ResultsAdapterProblemItem implements IResultsAdapterItem
 {
     IProblem _problem=null;
 

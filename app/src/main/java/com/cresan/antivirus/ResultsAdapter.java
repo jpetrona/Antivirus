@@ -2,15 +2,14 @@ package com.cresan.antivirus;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.cresan.androidprotector.R;
@@ -35,43 +34,12 @@ public class ResultsAdapter extends ArrayAdapter<IResultsAdapterItem>
     int _appHeaderIndex=-1;
     int _systemMenacesHeaderIndex =-1;
 
-    private List<IResultsAdapterItem> _selectedProblems=new ArrayList<IResultsAdapterItem>();
-
-    private IResultItemSelecteStateChanged _onItemChangedStateListener =null;
-    public void setResultItemSelectedStateChangedListener(IResultItemSelecteStateChanged listemer) { _onItemChangedStateListener =listemer; }
-
-    /*public void removeApps(List<IProblem> appsToRemove)
-    {
-        _values.removeAll(appsToRemove);
-        notifyDataSetChanged();
-    }*/
-
-    public List<IProblem> getSelectedProblems()
-    {
-        List<IProblem> bpdl=new ArrayList<IProblem>();
-
-        int itemCount=getCount();
-        int index=0;
-
-        IResultsAdapterItem rai=null;
-        for(int i=0; i<itemCount; ++i)
-        {
-            rai=getItem(i);
-            if(rai.getType()!=IResultsAdapterItem.ResultsAdapterItemType.Header)
-            {
-                ResultsAdapterProblemItem rapi=(ResultsAdapterProblemItem) rai;
-                if (rapi.getChecked())
-                    bpdl.add(rapi.getProblem());
-            }
-        }
-
-
-        return bpdl;
-    }
+    private IResultItemSelectedListener _onItemChangedStateListener =null;
+    public void setResultItemSelectedStateChangedListener(IResultItemSelectedListener listemer) { _onItemChangedStateListener =listemer; }
 
     public ResultsAdapter(Context context, List<IProblem> problems)
     {
-        super(context, R.layout.results_list_app_item, new ArrayList<IResultsAdapterItem>());
+        super(context, R.layout.results_list_item, new ArrayList<IResultsAdapterItem>());
 
         _context=context;
 
@@ -107,7 +75,7 @@ public class ResultsAdapter extends ArrayAdapter<IResultsAdapterItem>
             _systemMenacesHeaderIndex=-1;
     }
 
-    public void refreshByResults(List<ResultsAdapterItem> rail)
+    public void refreshByResults(List<IResultsAdapterItem> rail)
     {
         clear();
         addAll(rail);
@@ -125,40 +93,14 @@ public class ResultsAdapter extends ArrayAdapter<IResultsAdapterItem>
         }
     }
 
-/*
-    public static List<ResultsAdapterProblemItem> buildResultItemsFromProblems(List<IProblem> bpdl,
-                                                                         List<ResultsAdapterProblemItem> recycleList)
-    {
-        List<ResultsAdapterProblemItem> bpdw=recycleList;
-
-        if(bpdw==null)
-            bpdw=new ArrayList<ResultsAdapterProblemItem>();
-        else
-            recycleList.clear();
-
-        for(IProblem bpd: bpdl)
-        {
-            bpdw.add(new ResultsAdapterAppItem(bpd,false));
-        }
-        return bpdw;
-    }*/
-/*
-    public void removeByPackageData(PackageData pd)
-    {
-        IResultsAdapterItem bpdw= ResultsAdapterAppItem.findByPackageName(pd.getPackageName(), _values);
-        remove(bpdw);
-    }
-*/
     public View _createView(final int position, ViewGroup parent)
     {
         int layoutId=-1;
 
         if(position==_appHeaderIndex || position== _systemMenacesHeaderIndex)
             layoutId=R.layout.results_list_header;
-        else if(position< _systemMenacesHeaderIndex)
-            layoutId=R.layout.results_list_app_item;
         else
-            layoutId=R.layout.results_list_system_item;
+            layoutId=R.layout.results_list_item;
 
         LayoutInflater inflater = (LayoutInflater) _context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View v=inflater.inflate(layoutId, parent, false);
@@ -184,9 +126,6 @@ public class ResultsAdapter extends ArrayAdapter<IResultsAdapterItem>
             TextView textView = (TextView) rootView.findViewById(R.id.Titlelabel);
             TextView riskText = (TextView) rootView.findViewById(R.id.qualityApp);
             ImageView imageView = (ImageView) rootView.findViewById(R.id.logo);
-            CheckBox checkBox = (CheckBox) rootView.findViewById(R.id.checkBox);
-            checkBox.setChecked(ri.getChecked());
-
             if(ap.isDangerous())
             {
                 riskText.setTextColor(ContextCompat.getColor(getContext(),R.color.HighRiskColor));
@@ -198,13 +137,13 @@ public class ResultsAdapter extends ArrayAdapter<IResultsAdapterItem>
                 riskText.setText(R.string.medium_risk);
             }
 
-            LinearLayout linearLayout = (LinearLayout) rootView.findViewById(R.id.linearLayout);
-            linearLayout.setOnClickListener(new View.OnClickListener()
+            RelativeLayout relativeLayout = (RelativeLayout) rootView.findViewById(R.id.itemParent);
+            relativeLayout.setOnClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
                 {
-                    if(_onItemChangedStateListener!=null)
+                    if (_onItemChangedStateListener != null)
                         _onItemChangedStateListener.onItemSelected(ap);
                 }
             });
@@ -219,20 +158,6 @@ public class ResultsAdapter extends ArrayAdapter<IResultsAdapterItem>
             });
 
 
-
-            checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
-            {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
-                {
-                    ri.setChecked(isChecked);
-                    if (_onItemChangedStateListener != null)
-                    {
-                        _onItemChangedStateListener.onItemSelectedStateChanged(isChecked, ap);
-                    }
-                }
-            });
-
             textView.setText(ActivityTools.getAppNameFromPackage(getContext(), ap.getPackageName()));
             imageView.setImageDrawable(ActivityTools.getIconFromPackage(ap.getPackageName(), getContext()));
         }
@@ -244,7 +169,6 @@ public class ResultsAdapter extends ArrayAdapter<IResultsAdapterItem>
             TextView textView = (TextView) rootView.findViewById(R.id.Titlelabel);
             TextView riskText = (TextView) rootView.findViewById(R.id.qualityApp);
             ImageView imageView = (ImageView) rootView.findViewById(R.id.logo);
-            CheckBox checkBox = (CheckBox) rootView.findViewById(R.id.checkBox);
 
             if(sp.isDangerous())
             {
@@ -257,7 +181,7 @@ public class ResultsAdapter extends ArrayAdapter<IResultsAdapterItem>
                 riskText.setText(R.string.medium_risk);
             }
 
-            LinearLayout linearLayout = (LinearLayout) rootView.findViewById(R.id.linearLayout);
+            RelativeLayout linearLayout = (RelativeLayout) rootView.findViewById(R.id.itemParent);
             linearLayout.setOnClickListener(new View.OnClickListener()
             {
                 @Override

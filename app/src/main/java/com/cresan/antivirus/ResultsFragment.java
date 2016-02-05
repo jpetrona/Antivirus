@@ -35,7 +35,6 @@ public class ResultsFragment extends Fragment
     List<IProblem> _problems =null;
 
     private ListView _listview;
-    private Button _buttonRemove;
 
     ResultsAdapter _resultAdapter=null;
 
@@ -46,13 +45,8 @@ public class ResultsFragment extends Fragment
         _problems =problems;
         _resultAdapter=new ResultsAdapter(antivirusActivity, problems);
 
-        _resultAdapter.setResultItemSelectedStateChangedListener(new IResultItemSelecteStateChanged()
+        _resultAdapter.setResultItemSelectedStateChangedListener(new IResultItemSelectedListener()
         {
-            @Override
-            public void onItemSelectedStateChanged(boolean isChecked, IProblem bpd)
-            {
-            }
-
             @Override
             public void onItemSelected(IProblem bpd)
             {
@@ -66,54 +60,9 @@ public class ResultsFragment extends Fragment
                              Bundle savedInstanceState)
     {
         View rootView = inflater.inflate(R.layout.results_fragment, container, false);
-        _buttonRemove = (Button) rootView.findViewById(R.id.btnKill);
+
         _threatsFoundSummary = (TextView) rootView.findViewById(R.id.counterApps);
 
-        _buttonRemove.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                _buttonRemove.setEnabled(false);
-                List<IProblem> selectedApps= _resultAdapter.getSelectedProblems();
-                if(selectedApps.size() > 0)
-                {
-                    for (IProblem pck : selectedApps)
-                    {
-                        if(pck.getType()== IProblem.ProblemType.AppProblem)
-                        {
-                            Uri uri = Uri.fromParts("package", ((AppProblem) pck).getPackageName(), null);
-                            Intent it = new Intent(Intent.ACTION_DELETE, uri);
-                            startActivity(it);
-
-                            Log.i("LISTA", "Lista: " + pck);
-                        }
-                        else
-                            Log.e(_logTag,"We received a selected problem that was not an app problem. Only app problems can be multiselected");
-                    }
-
-                }else
-                {
-
-                    new AlertDialog.Builder(getContext())
-                            .setTitle(getString(R.string.warning))
-                            .setMessage(getString(R.string.dialog_message_no_app_selected))
-                            .setPositiveButton("Ok", new DialogInterface.OnClickListener()
-                            {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which)
-                                {
-                                    _buttonRemove.setEnabled(true);
-
-                                }
-                            }).show();
-
-
-
-
-                }
-            }
-        });
         _setupFragment(rootView);
 
         if(ActivityTools.checkIfUSBDebugIsEnabled(getContext()))
@@ -137,7 +86,7 @@ public class ResultsFragment extends Fragment
         _listview = (ListView) view.findViewById(R.id.list);
 
         /*_resultAdapter=new ResultsAdapter(getMainActivity(), _problems, getMainActivity());
-        _resultAdapter.setResultItemSelectedStateChangedListener(new IResultItemSelecteStateChanged()
+        _resultAdapter.setResultItemSelectedStateChangedListener(new IResultItemSelectedListener()
         {
             @Override
             public void onItemSelectedStateChanged(boolean isChecked, ResultsAdapterAppItem bpdw)
@@ -168,8 +117,6 @@ public class ResultsFragment extends Fragment
     {
         super.onResume();
 
-        // Esto esta aqui para poder volver el boton de desinstalaciones en lote a true.
-        _buttonRemove.setEnabled(true);
         MenacesCacheSet menacesCache = getMainActivity().getMenacesCacheSet();
 
         /*
