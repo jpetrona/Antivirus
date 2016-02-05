@@ -114,10 +114,14 @@ public class MainFragment extends Fragment
             {
               if(getMainActivity().canShowAd())
               {
+                  AntivirusActivity ma=getMainActivity();
+                  ma.getAppData().setLastAdDate(new DateTime());
+                  ma.getAppData().serialize(ma);
 
                   _requestDialogForAd(null,true);
 
-              }else
+              }
+              else
               {
 
                   _doActionResolveProblemsButton();
@@ -300,7 +304,7 @@ public class MainFragment extends Fragment
             {
                 _configureScanningUI();
 
-                List<IProblem> appProblems=ProblemsDataSetTools.getAppProblems(tempBadResults);
+                List<IProblem> appProblems = ProblemsDataSetTools.getAppProblems(tempBadResults);
 
                 _currentScanTask = new ScanningFileSystemAsyncTask(getMainActivity(), allPackages, appProblems);
                 _currentScanTask.setAsyncTaskCallback(new IOnActionFinished()
@@ -310,20 +314,20 @@ public class MainFragment extends Fragment
                     {
                         _currentScanTask = null;
 
-                        AppData appData=getMainActivity().getAppData();
+                        AppData appData = getMainActivity().getAppData();
                         appData.setLastScanDate(new DateTime());
                         appData.serialize(getContext());
 
                         if (getMainActivity().canShowAd())
                         {
-                            _requestDialogForAd(tempBadResults,false);
+                            _requestDialogForAd(tempBadResults, false);
 
                         } else
                         {
 
                             _doAfterScanWork(tempBadResults);
                         }
-                        
+
 
                     }
                 });
@@ -393,8 +397,8 @@ public class MainFragment extends Fragment
                 @Override
                 public void adFailed(HashMap<String, Object> appData)
                 {
-                    if(!isResolveButtonPressed)
-                    _doAfterScanWork(tempBadResults);
+                    if (!isResolveButtonPressed)
+                        _doAfterScanWork(tempBadResults);
                     else
                         _doActionResolveProblemsButton();
                 }
@@ -402,14 +406,13 @@ public class MainFragment extends Fragment
                 @Override
                 public void adShown(HashMap<String, Object> appData)
                 {
-
                 }
 
                 @Override
                 public void adHidden(HashMap<String, Object> appData)
                 {
 
-                    if(!isResolveButtonPressed)
+                    if (!isResolveButtonPressed)
                         _doAfterScanWork(tempBadResults);
                     else
                         _doActionResolveProblemsButton();
@@ -435,8 +438,6 @@ public class MainFragment extends Fragment
 
     void _requestDialogForAd(final Set<IProblem> tempBadResults, final boolean isResolveProblem)
     {
-
-
         new AlertDialog.Builder(getContext())
                 .setTitle(this.getString(R.string.warning))
                 .setMessage(this.getString(R.string.install_application))
