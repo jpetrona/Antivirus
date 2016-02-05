@@ -24,6 +24,10 @@ import com.tech.applications.coretools.NetworkTools;
 import com.tech.applications.coretools.StringTools;
 import com.tech.applications.coretools.ViewTools;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import at.grabner.circleprogress.CircleProgressView;
 
 import java.util.ArrayList;
@@ -60,6 +64,7 @@ public class MainFragment extends Fragment
     LinearLayout _deviceRiskPanel;
     LinearLayout _scanningProgressPanel;
     TextView _topMenacesCounterText;
+    TextView _lastScanText;
 
 
     private boolean firstScan = false;
@@ -136,6 +141,22 @@ public class MainFragment extends Fragment
 
             }
         });
+
+        _lastScanText=(TextView) root.findViewById(R.id.lastScanText);
+        DateTime time=getMainActivity().getAppData().getLastScanDate();
+        if(time != AppData.kNullDate)
+        {
+            DateTimeFormatter dtf= DateTimeFormat.forPattern("MM/dd/yyyy HH:mm:ss");
+            String str=StringTools.fillParams(getString(R.string.last_scanned),"#",dtf.print(time));
+            _lastScanText.setText(str);
+        }
+        else
+        {
+            String str=StringTools.fillParams(getString(R.string.last_scanned),"#", getString(R.string.never));
+            _lastScanText.setText(str);
+        }
+
+
 
         setUIRiskState();
 
@@ -279,6 +300,11 @@ public class MainFragment extends Fragment
                     public void onFinished()
                     {
                         _currentScanTask = null;
+
+                        AppData appData=getMainActivity().getAppData();
+                        appData.setLastScanDate(new DateTime());
+                        appData.serialize(getContext());
+
                         if (tempBadResults.size() > 0)
                         {
                             showResultFragment(new ArrayList<IProblem>(tempBadResults));

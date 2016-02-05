@@ -18,6 +18,8 @@ import android.util.Log;
 import com.tech.applications.coretools.MediaTools;
 import com.tech.applications.coretools.SerializationTools;
 
+import org.joda.time.DateTime;
+
 
 public class AppData implements Serializable
 {
@@ -36,6 +38,12 @@ public class AppData implements Serializable
 	private boolean _eulaAccepted=false;
 	public boolean getEulaAccepted() { return _eulaAccepted;}
 	public void setEulaAccepted(boolean eulaAccepted) { _eulaAccepted=eulaAccepted; }
+
+	transient static public DateTime kNullDate=new DateTime(1973,1,1,0,0);
+    private DateTime _lastScanDate;
+	public DateTime getLastScanDate() { return _lastScanDate;}
+	public void setLastScanDate(DateTime date) {_lastScanDate=date;}
+
 
 	static public boolean isAppDataInited() {return _instance!=null;}
 	static public  synchronized AppData getInstance(Context context)

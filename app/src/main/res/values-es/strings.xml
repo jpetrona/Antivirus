@@ -47,4 +47,6 @@
     <string name="applications_header_text">Aplicaciones</string>
     <string name="system_header_text">Sistema</string>
     <string name="system_app_usb_menace_title">Depuración por USB activada</string>
+    <string name="last_scanned">Último scan: #1</string>
+    <string name="never">Nunca</string>
 </resources>
