@@ -95,7 +95,7 @@ public class MainFragment extends Fragment
     {
 
         _progressPanelIconImageView =(ImageView)root.findViewById(R.id.animationProgressPanelIconImageView);
-        _progressPanelTextView =(TextView)root.findViewById(R.id.animationProgressPanelTextView);;
+        _progressPanelTextView =(TextView)root.findViewById(R.id.animationProgressPanelTextView);
         _circleProgressBar=(CircleProgressView) root.findViewById(R.id.circleView);
         _bottomMenacesCounterText=(TextView) root.findViewById(R.id.bottomFoundMenacesCount);
         _bottomScannedAppsText=(TextView) root.findViewById(R.id.bottomScannedApp);

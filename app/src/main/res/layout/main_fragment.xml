@@ -156,7 +156,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/buttonLayout"
-                android:visibility="invisible">
+                android:visibility="visible">
 
                 <Button
                     android:id="@+id/runAntivirusNow"
@@ -188,7 +188,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:id="@+id/animationProgressPanel"
-                android:visibility="visible">
+                android:visibility="invisible">
 
                 <TextView
                     android:id="@+id/animationProgressPanelTextView"
@@ -219,47 +219,77 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:background="#FF0000">
+                        >
 
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical|center_horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:text="203"
+                                android:id="@+id/bottomScannedApp"
+                                android:textColor="@color/ProtectedRiskColor"
+                                android:textSize="@dimen/counters_font_size"
+                                android:layout_centerVertical="true"
+                                android:layout_centerHorizontal="true"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:text="@string/scaned_text"
+                                android:id="@+id/scannedText"
+                                android:textColor="#ffffff"
+                                android:textSize="@dimen/last_scan_font_size"
+                                android:layout_below="@+id/textView3"
+                                android:layout_alignLeft="@+id/textView3"
+                                android:layout_alignStart="@+id/textView3"/>
+                        </LinearLayout>
                     </RelativeLayout>
 
                     <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:background="#00FF00">
+                        >
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical|center_horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:text="20"
+                                android:id="@+id/bottomFoundMenacesCount"
+                                android:textColor="@color/HighRiskColor"
+                                android:textSize="@dimen/counters_font_size"
+                                android:layout_centerVertical="true"
+                                android:layout_centerHorizontal="true"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceMedium"
+                                android:text="@string/menacesText"
+                                android:id="@+id/menacesText"
+                                android:textColor="#ffffff"
+                                android:textSize="@dimen/last_scan_font_size"
+                                android:layout_centerVertical="true"
+                                android:layout_centerHorizontal="true"/>
+                        </LinearLayout>
 
                     </RelativeLayout>
 
-                    <!--
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="Scaneadas: 203"
-                        android:id="@+id/bottomScannedApp"
-                        android:layout_marginBottom="27dp"
-                        android:layout_alignParentBottom="true"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true"
-                        android:layout_marginLeft="33dp"
-                        android:layout_marginStart="33dp"
-                        android:textColor="@color/ProtectedRiskColor"
-                        android:textSize="@dimen/counters_font_size"/>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="Amenazas: 20"
-                        android:id="@+id/bottomFoundMenacesCount"
-                        android:layout_alignTop="@+id/bottomScannedApp"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginRight="32dp"
-                        android:layout_marginEnd="32dp"
-                        android:textColor="@color/HighRiskColor"
-                        android:textSize="@dimen/counters_font_size"/> -->
                 </LinearLayout>
 
             </RelativeLayout>
