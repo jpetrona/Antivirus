@@ -55,7 +55,7 @@ public class ResultsAdapter extends ArrayAdapter<IResultsAdapterItem>
         if(appProblems.size()>0)
         {
             _appHeaderIndex=0;
-            ResultsAdapterHeaderItem headerItem=new ResultsAdapterHeaderItem("Applications");
+            ResultsAdapterHeaderItem headerItem=new ResultsAdapterHeaderItem(_context.getString(R.string.applications_header_text));
             add(headerItem);
             _addProblems(appProblems);
         }
@@ -67,7 +67,7 @@ public class ResultsAdapter extends ArrayAdapter<IResultsAdapterItem>
         if(systemProblems.size()>0)
         {
             _systemMenacesHeaderIndex =getCount();
-            ResultsAdapterHeaderItem headerItem=new ResultsAdapterHeaderItem("System");
+            ResultsAdapterHeaderItem headerItem=new ResultsAdapterHeaderItem(_context.getString(R.string.system_header_text));
             add(headerItem);
             _addProblems(systemProblems);
         }

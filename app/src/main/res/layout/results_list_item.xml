@@ -10,7 +10,7 @@
             android:id="@+id/logo"
             android:layout_width="@dimen/icon_ignoredList_size"
             android:layout_height="@dimen/icon_ignoredList_size"
-            android:layout_marginRight="5dp"
+            android:layout_marginRight="@dimen/test"
             android:layout_alignParentLeft="true"
             android:src="@mipmap/ic_launcher">
         </ImageView>
@@ -58,5 +58,6 @@
         android:textColor="@color/info_icon_bottom_text"
         android:textSize="@dimen/title_app_font_size"
         android:textStyle="bold"
-        android:text=">"/>
+        android:text=">"
+        android:layout_marginRight="5dp"/>
 </RelativeLayout>

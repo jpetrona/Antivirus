@@ -61,7 +61,7 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_weight="0.5"
                 android:gravity="end"
                 android:id ="@+id/buttonsAppContainer"
                 android:visibility="visible">
@@ -92,7 +92,7 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_weight="0.5"
                 android:gravity="end"
                 android:id="@+id/buttonsConfigContainer"
                 android:visibility="gone">

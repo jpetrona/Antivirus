@@ -82,7 +82,7 @@ public class InfoAppFragment extends Fragment
         if(_problem.getType()== IProblem.ProblemType.AppProblem)
         {
             _containerButtonsApp.setVisibility(View.VISIBLE);
-            _containerButtonsSystem.setVisibility(View.INVISIBLE);
+            _containerButtonsSystem.setVisibility(View.GONE);
 
             final AppProblem appProblem=(AppProblem) _problem;
 
@@ -161,7 +161,7 @@ public class InfoAppFragment extends Fragment
         }
         else
         {
-            _containerButtonsApp.setVisibility(View.INVISIBLE);
+            _containerButtonsApp.setVisibility(View.GONE);
             _containerButtonsSystem.setVisibility(View.VISIBLE);
 
             final SystemProblem systemProblem=(SystemProblem) _problem;
