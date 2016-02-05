@@ -156,7 +156,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/buttonLayout"
-                android:visibility="visible">
+                android:visibility="invisible">
 
                 <Button
                     android:id="@+id/runAntivirusNow"
@@ -188,7 +188,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:id="@+id/animationProgressPanel"
-                android:visibility="invisible">
+                android:visibility="visible">
 
                 <TextView
                     android:id="@+id/animationProgressPanelTextView"
@@ -207,36 +207,60 @@
                     android:layout_width="@dimen/icon_size"
                     android:layout_height="@dimen/icon_size"
                     android:layout_centerHorizontal="true"
-                    android:layout_above="@id/animationProgressPanelTextView"/>
+                    android:layout_above="@id/animationProgressPanelTextView"
+                    android:visibility="invisible"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:layout_below="@id/animationProgressPanelTextView"
+                    android:visibility="visible">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="Scaneadas: 203"
-                    android:id="@+id/bottomScannedApp"
-                    android:layout_marginBottom="27dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginLeft="33dp"
-                    android:layout_marginStart="33dp"
-                    android:textColor="@color/ProtectedRiskColor"
-                    android:textSize="@dimen/counters_font_size"/>
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="#FF0000">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="Amenazas: 20"
-                    android:id="@+id/bottomFoundMenacesCount"
-                    android:layout_alignTop="@+id/bottomScannedApp"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginRight="32dp"
-                    android:layout_marginEnd="32dp"
-                    android:textColor="@color/HighRiskColor"
-                    android:textSize="@dimen/counters_font_size"/>
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="#00FF00">
+
+                    </RelativeLayout>
+
+                    <!--
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="Scaneadas: 203"
+                        android:id="@+id/bottomScannedApp"
+                        android:layout_marginBottom="27dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginLeft="33dp"
+                        android:layout_marginStart="33dp"
+                        android:textColor="@color/ProtectedRiskColor"
+                        android:textSize="@dimen/counters_font_size"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="Amenazas: 20"
+                        android:id="@+id/bottomFoundMenacesCount"
+                        android:layout_alignTop="@+id/bottomScannedApp"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginRight="32dp"
+                        android:layout_marginEnd="32dp"
+                        android:textColor="@color/HighRiskColor"
+                        android:textSize="@dimen/counters_font_size"/> -->
+                </LinearLayout>
 
             </RelativeLayout>
 

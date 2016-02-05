@@ -105,9 +105,9 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
 
     public boolean canShowAd()
     {
+        AppData appData=getAppData();
 
-        return true;
-
+        if(appData.getLastScanDate().days)
     }
 
 
