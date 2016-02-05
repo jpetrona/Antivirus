@@ -53,7 +53,7 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
     public static final String kIgnoredFragmentTag="IgnoredFragmentTag";
 
     public static final String kBannerAdUnit="ca-app-pub-3912218987594825/9095635994";
-
+    public static final String kInterstitialAdUnit="ca-app-pub-3912218987594825/4525835590";
     Menu _menu=null;
     public Menu getMenu() {return _menu;}
 
@@ -101,6 +101,16 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
             return f;
     }
 
+
+    public boolean canShowAd()
+    {
+
+        return true;
+
+    }
+
+
+
     public UserWhiteList getUserWhiteList()
     {
         return _serviceInstance.getUserWhiteList();
@@ -108,8 +118,7 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
     public Set<IProblem> getProblemsFromMenaceSet() { return _serviceInstance.getMenacesCacheSet().getSet(); }
     public MenacesCacheSet getMenacesCacheSet() { return _serviceInstance.getMenacesCacheSet(); }
 
-    final String bannerAdUnit="";
-	final String interstitialAdUnit="";
+
 
 	String _logTag=AntivirusActivity.class.getSimpleName();
 
@@ -256,7 +265,7 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
 	    }
 
 	    AdsCore ac=getAdsCore();
-	 	ac.initAdMob(interstitialAdUnit);
+	 	ac.initAdMob(kInterstitialAdUnit);
 
 	 	AdView adView= new AdView(AntivirusActivity.this);
     	adView.setAdSize(AdSize.SMART_BANNER);
@@ -290,9 +299,7 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
                 _showVoteUs();
                 Log.d("ign", "RATE US BUTTON MENU");
             return true;
-            case R.id.information:
-                Log.d("ign", "INFORMATION BUTTON MENU");
-            return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
