@@ -60,6 +60,7 @@
     <string name="open_setting">Open settings</string>
     <string name="ignored_setting">Ignored settings</string>
     <string name="system_app_usb_menace_title">USB Debugging Enabled</string>
+    <string name="system_app_unknown_app_menace_title">Unknown Sources Enabled</string>
     <string name="usb_add_whitelist_message">Do you want to add USB Notification to white list?</string>
     <string name="usb_remove_whitelist_message">Do you want to remove USB Notification from white list?</string>
     <string name="unknownApp_add_whitelist_message">Do you want to add Unknown Sources Notification to white list?</string>
