@@ -466,6 +466,7 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
 
 	}
 
+
 	public Fragment slideInFragment(String fragmentId)
 	{
 		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -496,7 +497,8 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
 		transaction.replace(R.id.container, f, fragmentId);
 		transaction.addToBackStack(null);
 
-		// Commit the transaction
+		// Commit the transaction (Si no lo hago con commitAllowingStateLoss se peta la app
+        // https://www.google.es/search?q=android+create+list+inplace&ie=utf-8&oe=utf-8&gws_rd=cr&ei=1J20VrXjFIScUYuXt6gI
 		transaction.commitAllowingStateLoss();
 
         return f;
