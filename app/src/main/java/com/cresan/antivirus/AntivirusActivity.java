@@ -54,6 +54,9 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
 
     public static final String kBannerAdUnit="ca-app-pub-3912218987594825/9095635994";
     public static final String kInterstitialAdUnit="ca-app-pub-3912218987594825/4525835590";
+    private List<String> _testDevices = null;
+
+
     Menu _menu=null;
     public Menu getMenu() {return _menu;}
 
@@ -265,7 +268,9 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
 	    }
 
 	    AdsCore ac=getAdsCore();
-	 	ac.initAdMob(kInterstitialAdUnit);
+        _testDevices.add("4DDC4FAE98222F010D35E8EA7A6E4E34");
+        _testDevices.add("4F5A2126D375B24EB67CF38C123A0CAF");
+	 	ac.initAdMob(kInterstitialAdUnit,_testDevices);
 
 	 	AdView adView= new AdView(AntivirusActivity.this);
     	adView.setAdSize(AdSize.SMART_BANNER);
