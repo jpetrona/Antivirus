@@ -7,7 +7,5 @@
     <item android:id="@+id/RateUs"
           android:title="@string/vote"
         />
-    <item android:id="@+id/information"
-          android:title="@string/information"
-        />
+
 </menu>

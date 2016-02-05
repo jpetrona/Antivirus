@@ -3,6 +3,8 @@ package com.cresan.antivirus;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.pm.PackageInfo;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,6 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.cresan.androidprotector.R;
+import com.tech.applications.advertising.adnetworks.AdvertListener;
 import com.tech.applications.coretools.NetworkTools;
 import com.tech.applications.coretools.StringTools;
 import com.tech.applications.coretools.ViewTools;
@@ -31,6 +34,7 @@ import org.joda.time.format.DateTimeFormatter;
 import at.grabner.circleprogress.CircleProgressView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -108,14 +112,19 @@ public class MainFragment extends Fragment
             @Override
             public void onClick(View v)
             {
-                Set<IProblem> foundMenaces=getMainActivity().getProblemsFromMenaceSet();
+              if(getMainActivity().canShowAd())
+              {
 
-                if (foundMenaces !=null && foundMenaces.size() !=0)
-                {
+                  _requestDialogForAd(null,true);
 
-                    showResultFragment(new ArrayList<IProblem>(foundMenaces));
+              }else
+              {
 
-                }
+                  _doActionResolveProblemsButton();
+              }
+
+
+
             }
         });
 
@@ -305,23 +314,16 @@ public class MainFragment extends Fragment
                         appData.setLastScanDate(new DateTime());
                         appData.serialize(getContext());
 
-                        if (tempBadResults.size() > 0)
+                        if (getMainActivity().canShowAd())
                         {
-                            showResultFragment(new ArrayList<IProblem>(tempBadResults));
+                            _requestDialogForAd(tempBadResults,false);
 
-                            Handler handler = new Handler();
-                            handler.postDelayed(new Runnable()
-                            {
-                                @Override
-                                public void run()
-                                {
-                                    _configureNonScanningUI();
-                                }
-                            }, 400);
                         } else
                         {
-                            _playNoMenacesAnimationFound();
+
+                            _doAfterScanWork(tempBadResults);
                         }
+                        
 
                     }
                 });
@@ -340,6 +342,125 @@ public class MainFragment extends Fragment
             }
         });
         oa1.start();
+    }
+
+    void _doAfterScanWork(final Set<IProblem> tempBadResults)
+    {
+
+        _currentScanTask = null;
+        if (tempBadResults.size() > 0)
+        {
+            showResultFragment(new ArrayList<IProblem>(tempBadResults));
+
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    _configureNonScanningUI();
+                }
+            }, 400);
+        } else
+        {
+            _playNoMenacesAnimationFound();
+        }
+
+
+    }
+
+    void _doActionResolveProblemsButton()
+    {
+
+        Set<IProblem> foundMenaces=getMainActivity().getProblemsFromMenaceSet();
+
+        if (foundMenaces !=null && foundMenaces.size() !=0)
+        {
+
+            showResultFragment(new ArrayList<IProblem>(foundMenaces));
+
+        }
+
+
+    }
+
+    void _showInterstitial(final Set<IProblem> tempBadResults, final boolean isResolveButtonPressed)
+    {
+
+
+            getMainActivity().getAdsCore().setAdvertListener(new AdvertListener()
+            {
+                @Override
+                public void adFailed(HashMap<String, Object> appData)
+                {
+                    if(!isResolveButtonPressed)
+                    _doAfterScanWork(tempBadResults);
+                    else
+                        _doActionResolveProblemsButton();
+                }
+
+                @Override
+                public void adShown(HashMap<String, Object> appData)
+                {
+
+                }
+
+                @Override
+                public void adHidden(HashMap<String, Object> appData)
+                {
+
+                    if(!isResolveButtonPressed)
+                        _doAfterScanWork(tempBadResults);
+                    else
+                        _doActionResolveProblemsButton();
+                }
+
+                @Override
+                public void adClicked(HashMap<String, Object> appData)
+                {
+
+                }
+
+                @Override
+                public void returnedToAppAfterShoingAd(HashMap<String, Object> appData)
+                {
+
+                }
+            });
+
+            getMainActivity().getAdsCore().showAdMobInterstitial(null);
+
+
+    }
+
+    void _requestDialogForAd(final Set<IProblem> tempBadResults, final boolean isResolveProblem)
+    {
+
+
+        new AlertDialog.Builder(getContext())
+                .setTitle(this.getString(R.string.warning))
+                .setMessage(this.getString(R.string.install_application))
+                .setPositiveButton(this.getString(R.string.accept_eula), new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                            _showInterstitial(tempBadResults,isResolveProblem);
+                    }
+                }).setNegativeButton(this.getString(R.string.cancel), new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                    if(!isResolveProblem)
+                    _doAfterScanWork(tempBadResults);
+                    else
+                        _doActionResolveProblemsButton();
+            }
+        }).show();
+
+
+
     }
 
     void _playNoMenacesAnimationFound()

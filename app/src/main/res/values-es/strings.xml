@@ -49,4 +49,5 @@
     <string name="system_app_usb_menace_title">Depuración por USB activada</string>
     <string name="last_scanned">Último scan: #1</string>
     <string name="never">Nunca</string>
+    <string name="install_application">Estás a solo un paso de mejorar el tiempo de vida de tu batería. Hemos invertido mucho tiempo y trabajo en crear esta aplicación. Por favor, para poder continuar, instala una de nuestras aplicaciones GRATUITAS y reconoce el duro trabajo realizado.</string>
 </resources>
