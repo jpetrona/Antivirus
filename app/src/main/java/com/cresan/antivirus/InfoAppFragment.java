@@ -181,7 +181,8 @@ public class InfoAppFragment extends Fragment
                 {
                     // Aqui el codigo para abrir la pantalla de configuracion del sistema RECUERDA QUE EN EL ACTIVITY TOOLS TIENES LAS FUNCIONES YA CREADAS.
 
-                    ((SystemProblem) _problem).doAction(getContext());
+
+                    systemProblem.doAction(getContext());
                 }
             });
 
@@ -192,6 +193,19 @@ public class InfoAppFragment extends Fragment
                 public void onClick(View v)
                 {
                     // Aqui para ignorar la configuracion
+
+
+                    UserWhiteList _userWhiteList = getMainActivity().getUserWhiteList();
+                    _userWhiteList.addItem(_problem);
+                    _userWhiteList.writeToJSON();
+
+                    MenacesCacheSet menaceCacheSet= getMainActivity().getMenacesCacheSet();
+                    menaceCacheSet.removeItem(_problem);
+                    menaceCacheSet.writeToJSON();
+
+                    getMainActivity().goBack();
+                   // _updateFoundThreatsText(_ignoredCounter,_userWhiteList.getItemCount());
+
                 }
             });
         }
