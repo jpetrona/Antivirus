@@ -110,10 +110,15 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
     {
         AppData appData=getAppData();
 
-        int diffDays= Days.daysBetween(new DateTime(), appData.getLastAdDate()).getDays();
+        DateTime today=new DateTime();
+        int diffDays= Days.daysBetween(appData.getLastAdDate(),new DateTime()).getDays();
 
         if(diffDays>0)
+        {
+            appData.setLastAdDate(today);
+            appData.serialize(this);
             return true;
+        }
         else
             return false;
     }

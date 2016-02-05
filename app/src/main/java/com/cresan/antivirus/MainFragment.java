@@ -438,7 +438,9 @@ public class MainFragment extends Fragment
 
     void _requestDialogForAd(final Set<IProblem> tempBadResults, final boolean isResolveProblem)
     {
-        new AlertDialog.Builder(getContext())
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        AlertDialog alertDialog= builder
                 .setTitle(this.getString(R.string.warning))
                 .setMessage(this.getString(R.string.install_application))
                 .setPositiveButton(this.getString(R.string.accept_eula), new DialogInterface.OnClickListener()
@@ -446,22 +448,56 @@ public class MainFragment extends Fragment
                     @Override
                     public void onClick(DialogInterface dialog, int which)
                     {
-                            _showInterstitial(tempBadResults,isResolveProblem);
+                        _showInterstitial(tempBadResults, isResolveProblem);
                     }
-                }).setNegativeButton(this.getString(R.string.cancel), new DialogInterface.OnClickListener()
+                })
+                .setNegativeButton(this.getString(R.string.cancel), new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        if (!isResolveProblem)
+                            _doAfterScanWork(tempBadResults);
+                        else
+                            _doActionResolveProblemsButton();
+                    }
+                }).create();
+
+        _showTimedDialog(alertDialog,true,false,true);
+
+    }
+
+    protected void _showTimedDialog(AlertDialog dialog, boolean negative, boolean blockPositive, boolean blockNegative)
+    {
+        dialog.show();
+
+        Handler handler = new Handler();
+
+        // Access the button and set it to invisible
+        final Button posButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        if(blockPositive)
+            posButton.setEnabled(false);
+
+        final Button negButton=dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+        final boolean finalNegative=negative;
+
+        if(negative && blockNegative)
+        {
+            negButton.setEnabled(false);
+        }
+
+        // Post the task to set it visible in 5000ms
+        handler.postDelayed(new Runnable()
         {
             @Override
-            public void onClick(DialogInterface dialog, int which)
+            public void run()
             {
-                    if(!isResolveProblem)
-                    _doAfterScanWork(tempBadResults);
-                    else
-                        _doActionResolveProblemsButton();
+                if (posButton != null)
+                    posButton.setEnabled(true);
+                if (finalNegative)
+                    negButton.setEnabled(true);
             }
-        }).show();
-
-
-
+        }, 20000);
     }
 
     void _playNoMenacesAnimationFound()
