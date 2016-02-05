@@ -21,6 +21,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
+import android.text.method.DateTimeKeyListener;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -44,6 +45,9 @@ import com.tech.applications.coretools.NetworkTools;
 
 import com.cresan.androidprotector.R;
 import com.tech.applications.coretools.ServiceTools;
+
+import org.joda.time.DateTime;
+import org.joda.time.Days;
 
 public class AntivirusActivity extends AdvertFragmentActivity implements MonitorShieldService.IClientInterface
 {
@@ -107,7 +111,12 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
     {
         AppData appData=getAppData();
 
-        if(appData.getLastScanDate().days)
+        int diffDays= Days.daysBetween(new DateTime(), appData.getLastAdDate()).getDays();
+
+        if(diffDays>0)
+            return true;
+        else
+            return false;
     }
 
 

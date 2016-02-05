@@ -44,6 +44,10 @@ public class AppData implements Serializable
 	public DateTime getLastScanDate() { return _lastScanDate;}
 	public void setLastScanDate(DateTime date) {_lastScanDate=date;}
 
+    private DateTime _lastAdDate=new DateTime(1973,1,1,0,0);
+    public DateTime getLastAdDate() { return _lastAdDate;}
+    public void setLastAdDate(DateTime date) {_lastAdDate=date;}
+
 
 	static public boolean isAppDataInited() {return _instance!=null;}
 	static public  synchronized AppData getInstance(Context context)
