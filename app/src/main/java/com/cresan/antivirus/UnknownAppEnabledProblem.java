@@ -18,7 +18,7 @@ public class UnknownAppEnabledProblem extends  SystemProblem
 
     final int kUnknownAppIconResId = R.drawable.information;
     final int kUnknownAppDescriptionId =R.string.unknownApp_message;
-    final int kUnknownAppTitleId =R.string.usb_title;
+    final int kUnknownAppTitleId =R.string.system_app_unknown_app_menace_title;
     final int kWhiteListAddText= R.string.unknownApp_add_whitelist_message;
     final int kWhiteListRemoveText=R.string.unknownApp_remove_whitelist_message;
 
