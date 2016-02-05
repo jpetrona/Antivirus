@@ -40,7 +40,7 @@ public class AppData implements Serializable
 	public void setEulaAccepted(boolean eulaAccepted) { _eulaAccepted=eulaAccepted; }
 
 	transient static public DateTime kNullDate=new DateTime(1973,1,1,0,0);
-    private DateTime _lastScanDate;
+    private DateTime _lastScanDate=new DateTime(1973,1,1,0,0);
 	public DateTime getLastScanDate() { return _lastScanDate;}
 	public void setLastScanDate(DateTime date) {_lastScanDate=date;}
 

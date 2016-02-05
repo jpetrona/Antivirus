@@ -153,7 +153,7 @@ public class MainFragment extends Fragment
 
         _lastScanText=(TextView) root.findViewById(R.id.lastScanText);
         DateTime time=getMainActivity().getAppData().getLastScanDate();
-        if(time != AppData.kNullDate)
+        if(!time.equals(AppData.kNullDate))
         {
             DateTimeFormatter dtf= DateTimeFormat.forPattern("MM/dd/yyyy HH:mm:ss");
             String str=StringTools.fillParams(getString(R.string.last_scanned),"#",dtf.print(time));
