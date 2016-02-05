@@ -171,8 +171,8 @@ public class ScanningFileSystemAsyncTask extends AsyncTask<Void,ScanningFileSyst
         _progressPanelIconImageView.setImageDrawable(dtp.icon);
         _progressPanelTextView.setText(dtp.appName);
         _circleProgressBar.setValue(dtp.scannedFiles);
-        _bottomMenacesCounterText.setText("Menaces "+dtp.foundMenaces);
-        _bottomScannedAppsText.setText("Scanned "+dtp.scannedFiles);
+        _bottomMenacesCounterText.setText(""+dtp.foundMenaces);
+        _bottomScannedAppsText.setText(""+dtp.scannedFiles);
     }
 
     @Override

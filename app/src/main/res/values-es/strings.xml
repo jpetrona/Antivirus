@@ -51,4 +51,10 @@
     <string name="never">Nunca</string>
     <string name="install_application">Estás a solo un paso de mejorar el tiempo de vida de tu batería. Hemos invertido mucho tiempo y trabajo en crear esta aplicación. Por favor, para poder continuar, instala una de nuestras aplicaciones GRATUITAS y reconoce el duro trabajo realizado.</string>
     <string name="system_app_unknown_app_menace_title">Fuentes desconocidas activada</string>
+    <string name="menacesText">Amenazas</string>
+    <string name="scaned_text">Escaneadas</string>
+    <string name="usb_remove_whitelist_message">¿Quieres eliminar Depuración USB de la lista de ignoradas?</string>
+    <string name="unknownApp_remove_whitelist_message">¿Quieres eliminar Fuentes desconocidas de la lista de ignoradas?</string>
+    <string name="usb_add_whitelist_message">¿Quieres añadir Depuración USB a la lista de ignoradas?</string>
+    <string name="unknownApp_add_whitelist_message">¿Quieres añadir Fuentes desconocidas a la lista de ignoradas?</string>
 </resources>
