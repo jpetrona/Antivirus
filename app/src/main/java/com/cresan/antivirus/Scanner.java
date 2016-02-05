@@ -327,6 +327,12 @@ class Scanner
             setToUpdate.add(problem);
         }
 
+        if(ActivityTools.checkIfUnknownAppIsEnabled(context))
+        {
+            UnknownAppEnabledProblem problem=new UnknownAppEnabledProblem();
+            setToUpdate.add(problem);
+        }
+
         return setToUpdate;
     }
 }
