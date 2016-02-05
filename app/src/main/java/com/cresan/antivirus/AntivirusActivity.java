@@ -265,7 +265,7 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
 	    }
 
 	    AdsCore ac=getAdsCore();
-	 	ac.initAdMob(kInterstitialAdUnit);
+	 	ac.initAdMob(kInterstitialAdUnit, new ArrayList<String>());
 
 	 	AdView adView= new AdView(AntivirusActivity.this);
     	adView.setAdSize(AdSize.SMART_BANNER);
@@ -492,7 +492,7 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
 		transaction.addToBackStack(null);
 
 		// Commit the transaction
-		transaction.commit();
+		transaction.commitAllowingStateLoss();
 
         return f;
 	}
