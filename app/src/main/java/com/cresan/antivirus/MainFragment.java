@@ -697,10 +697,11 @@ public class MainFragment extends Fragment
 
     void _configureNonScanningUI()
     {
-        Menu menu=getMainActivity().getMenu();
-
-        if(menu!=null)
+        if(getMainActivity()!=null && getMainActivity().getMenu()!=null)
+        {
+            Menu menu=getMainActivity().getMenu();
             menu.setGroupVisible(0,true);
+        }
 
         _progressContainer.setVisibility(View.INVISIBLE);
         _progressContainer.setTranslationX(0);

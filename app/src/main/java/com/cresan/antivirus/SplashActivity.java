@@ -33,7 +33,6 @@ public class SplashActivity extends Activity
                     if(appData.getEulaAccepted())
                     {
                         Intent intent = new Intent(SplashActivity.this,AntivirusActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                         startActivity(intent);
                     }else
                     {

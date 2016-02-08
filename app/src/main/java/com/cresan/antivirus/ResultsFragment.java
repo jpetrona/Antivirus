@@ -138,7 +138,6 @@ public class ResultsFragment extends Fragment
 
         selectedApps.removeAll(toDelete);*/
 
-
         //Add new existant apps
         _resultAdapter.refreshByProblems(new ArrayList<IProblem>(menacesCache.getSet()));
 

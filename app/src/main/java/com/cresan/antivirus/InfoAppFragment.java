@@ -258,7 +258,21 @@ public class InfoAppFragment extends Fragment
                     menacesCacheSet = antivirusActivity.getMenacesCacheSet();
                     menacesCacheSet.removeItem(appProblem);
                     menacesCacheSet.writeToJSON();
+
+                    antivirusActivity.goBack();
                 }
+            }
+        }
+        else if(_problem.getType()== IProblem.ProblemType.SystemProblem)
+        {
+            MenacesCacheSet menacesCacheSet=antivirusActivity.getMenacesCacheSet();
+            final SystemProblem systemProblem=(SystemProblem) _problem;
+            if(!systemProblem.problemExists(getContext()))
+            {
+                //If it isn't remove it
+                menacesCacheSet = antivirusActivity.getMenacesCacheSet();
+                menacesCacheSet.removeItem(systemProblem);
+                menacesCacheSet.writeToJSON();
 
                 antivirusActivity.goBack();
             }
