@@ -364,12 +364,12 @@ public class MonitorShieldService extends Service
                         }
 
                         NotificationTools.notificatePush(MonitorShieldService.this, 0xFF00, _appIcon,
-                                appName + " " + getString(R.string.has_been_scanned), appName, getString(R.string.enter_to_solve_problems), toExecuteIntent);
+                                appName /*+ " " + getString(R.string.has_been_scanned)*/, appName, getString(R.string.enter_to_solve_problems), toExecuteIntent);
 
                     }
                     else
                         NotificationTools.notificatePush(MonitorShieldService.this, 0xFF00, _appIcon,
-                            appName + " " + getString(R.string.is_secure), appName, getString(R.string.has_no_threats), toExecuteIntent);
+                            appName /*+ " " + getString(R.string.is_secure)*/, appName, getString(R.string.has_no_threats), toExecuteIntent);
                 }
             }
         }

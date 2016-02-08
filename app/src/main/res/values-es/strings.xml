@@ -8,7 +8,7 @@
    <string name="gplay_vote">Hemos trabajado muy duro para poder ofrecerte este software gratuitamente.
  \n\nNos encantaría que nos votaras con 5 estrellas en google play y dejaras un buen comentario.
  \n\nQuieres hacerlo ahora?</string>
-    <string name="threats_found">#1 Amenazas detectadas</string>
+    <string name="threats_found">#1 Amenazas encontradas</string>
     <string name="resolve_problems">Resolver problemas</string>
     <string name="dialog_trust_app">¿Desea confiar en esta aplicación?</string>
     <string name="yes">si</string>
@@ -22,21 +22,21 @@
     <string name="show_ignored_list_menu">Mostrar lista de ignoradas</string>
     <string name="ignored_counter">#1 Apps ignoradas</string>
     <string name="remove_ignored_app_message">Desea eliminar de la lista de ignorados </string>
-    <string name="dialog_message_no_app_selected">Por favor seleccione al menos una aplicación para desinstalar</string>
+    <string name="dialog_message_no_app_selected">Por favor, seleccione al menos una aplicación para desinstalar</string>
     <string name="warning">Aviso</string>
     <string name="dialog_message_exit">¿Desea salir de la aplicación?</string>
     <string name="scanningText">Escaneando...</string>
     <string name="execute_first_analysis">Ejecutar primer análisis para comprobar amenazas</string>
     <string name="are_protected">Estás protegido</string>
-    <string name="high_risk">Riesgo Alto</string>
+    <string name="high_risk">Alto riesgo</string>
     <string name="medium_risk">Riesgo Medio</string>
     <string name="usb_message">No es recomendable que active la depuración por USB a menos que use el dispositivo para desarrollar software. Pulse el botón de abrir ajustes y desactive la depuración por USB para proteger el dispositivo.</string>
     <string name="ignored_setting">Ignorar configuración</string>
-    <string name="enter_to_solve_problems">tiene problemas, click para resolver los problemas.</string>
-    <string name="has_been_scanned">tiene problemas.</string>
-    <string name="has_no_threats">es segura para abrir.</string>
-    <string name="is_secure">es segura para abrir.</string>
-   <string name="open_setting">Abrir ajustes</string>
+    <string name="enter_to_solve_problems">Problemas encontrados, pulsa para resolver...</string>
+    <!-- <string name="has_been_scanned">tiene problemas.</string> -->
+    <string name="has_no_threats">es segura.</string>
+    <!-- <string name="is_secure">es segura para abrir.</string> -->
+    <string name="open_setting">Abrir ajustes</string>
     <string name="title_permission">Comparte información personal</string>
     <string name="title_ads">Muestra anuncios</string>
     <string name="title_installedGPlay">Fuente desconocida</string>
@@ -49,7 +49,7 @@
     <string name="system_app_usb_menace_title">Depuración por USB activada</string>
     <string name="last_scanned">Último scan: #1</string>
     <string name="never">Nunca</string>
-    <string name="install_application">Estás a solo un paso de mejorar el tiempo de vida de tu batería. Hemos invertido mucho tiempo y trabajo en crear esta aplicación. Por favor, para poder continuar, instala una de nuestras aplicaciones GRATUITAS y reconoce el duro trabajo realizado.</string>
+    <string name="install_application">Estás a solo un paso de limpiar las amenazas encontradas en tu dispositivo. Hemos invertido mucho tiempo y trabajo en crear esta aplicación. Por favor, para poder continuar, instala una de nuestras aplicaciones GRATUITAS y reconoce el duro trabajo realizado.</string>
     <string name="system_app_unknown_app_menace_title">Fuentes desconocidas activada</string>
     <string name="menacesText">Amenazas</string>
     <string name="scaned_text">Escaneadas</string>
@@ -57,4 +57,19 @@
     <string name="unknownApp_remove_whitelist_message">¿Quieres eliminar Fuentes desconocidas de la lista de ignoradas?</string>
     <string name="usb_add_whitelist_message">¿Quieres añadir Depuración USB a la lista de ignoradas?</string>
     <string name="unknownApp_add_whitelist_message">¿Quieres añadir Fuentes desconocidas a la lista de ignoradas?</string>
+    <string name="access_fine_message">Esta aplicación puede acceder a su posición exacta y es un riesgo a su privacidad.</string>
+    <string name="ads_message">Muestra anuncios dentro de la aplicación, incluyendo banners, pop-ups, y otros gráficos. Los anuncios son comunes en las aplicaciones gratuitas.</string>
+    <string name="call_phone_message">Esta aplicación puede iniciar una llamada  sin su consentimiento. Puede resultar en cargos no deseados a su factura telefónica y es una amenaza de alto riesgo.</string>
+    <string name="camera_message">Esta aplicación puede acceder a la cámara y es un riesgo para su privacidad.</string>
+    <string name="eula_text">Usamos identificadores de dispositivo para personalizar el contenido de los anuncios, características de social media y para analizar nuestro tráfico. Para llevar a cabo esto, compartimos estos identificadores con nuestros asociados de social media, publicidad and análisis.</string>
+   <string name="installedGPlay_message"><![CDATA[Instalar aplicaciones desde fuentes desconocidas puede introducir malware en tu dispositivo. Ves a Ajustes>Seguridad y desabilita Origenes desconocidos.]]></string>
+   <string name="outgoing_phone_message">Esta aplicación puede acceder al número que está siendo marcado durante una llamada saliente con la opción de redirigir la llamada a un destino diferent o cancelarla. Esto puede añadir cargos a su factura y es una amenaza a su privacidad de alto riesgo.</string>
+   <string name="read_history_message">Esta aplicación puede leer el historial de marcadores y es un riesgo para su privacidad.</string>
+   <string name="read_phone_message">Esta aplicación consulta y envia detalles de su SIM card incluyendo la libreta de direcciones, PIN y el historial de llamadas. También, puede añadir cargos a su factura lo que la convierte en una amenaza a su privacidad de alto riesgo.</string>
+   <string name="read_sms_message">Esta aplicación puede leer sus SMS privados y es un riesgo a su privacidad.</string>
+   <string name="record_audio_message">Esta aplicación puede grabar audio y es un riesgo a su privacidad.</string>
+   <string name="send_sms_message">Esta aplicación puede enviar SMS. Puede añadir cargos a su factura lo que la convierte en una amenaza de alto riesgo.</string>
+    <string name="unknownApp_message">Instalar aplicaciones desde origenes desconocidos puede infectar su dispositivo. Pulsa en abrir ajustes y desactiva Origenes desconocidos.</string>
+    <string name="write_history_message">Esta aplicación puede añadir marcadores a tu historial y es un riesgo a su privacidad.</string>
+    <string name="write_sms_message">Esta aplicación puede escribir SMS. Esto puede añadir cargos a su factura y es un riesgo a su privacidad.</string>
 </resources>
