@@ -209,6 +209,8 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
         @Override
         public void onServiceConnected(ComponentName className, IBinder service)
         {
+            _bound=true;
+
             Log.d(_logTag, "OOOOOOOOOOOOOOOOOO> onServiceConnected called");
 
             MonitorShieldService.MonitorShieldLocalBinder binder = (MonitorShieldService.MonitorShieldLocalBinder) service;
@@ -263,8 +265,25 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
 	
 	public void onCreate(Bundle paramBundle)
     {
-		//Log.i(_logTag, "============= YEAH ACTIVITY RECREATED ============");
-		super.onCreate(paramBundle);
+		Log.i(_logTag, "============= ONCREATE HAS BEEN CALLED============");
+		//Null para que no intente recrear todo lo anterior (hace petar los fragments pq dependen del servicio, etc...)
+        super.onCreate(null);
+
+        //Restart app if someone kill it
+        /*if(paramBundle!=null)
+        {
+            FragmentManager fm=getSupportFragmentManager();
+            fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
+            finish();
+            Intent intent = new Intent(this, SplashActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+
+            return;
+        }*/
+
         makeActionOverflowMenuShown();
 	    setContentView(R.layout.activity_main);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -553,14 +572,13 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
 
                 }
             }).show();
-
-
         }
     }
 
     @Override
     public void onStart()
     {
+        Log.i(_logTag, "============= ONSTART HAS BEEN CALLED============");
         super.onStart();
 
         //Start service
@@ -571,7 +589,7 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
             startService(i);
 
             //Bind to service
-            getApplicationContext().bindService(i, _serviceConnection, Context.BIND_AUTO_CREATE);
+            bindService(i, _serviceConnection, Context.BIND_AUTO_CREATE);
         }
         else
         {
@@ -579,24 +597,40 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
             Intent i = new Intent(this, MonitorShieldService.class);
 
             //Bind to service
-            getApplicationContext().bindService(i,_serviceConnection, Context.BIND_AUTO_CREATE);
+            bindService(i, _serviceConnection, Context.BIND_AUTO_CREATE);
         }
     }
 
     @Override
     public void onStop()
     {
+        Log.i(_logTag, "============= ONSTOP HAS BEEN CALLED============");
         super.onStop();
         // Unbind from the service
-        if (_bound)
+        if (_bound && _serviceConnection!=null)
         {
             unbindService(_serviceConnection);
             _bound = false;
         }
     }
 
+    @Override
+    public void onDestroy()
+    {
+        Log.i(_logTag, "============= ONDESTROY HAS BEEN CALLED============");
+        super.onDestroy();
+
+    }
 
     @Override
+    public void onResume()
+    {
+        Log.i(_logTag, "============= ONRESUME HAS BEEN CALLED============");
+        super.onResume();
+    }
+
+
+        @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
         MenuInflater inflater = getMenuInflater();
@@ -611,7 +645,6 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
         _menu=menu;
         return true;
     }
-
 
     private void makeActionOverflowMenuShown() {
         //devices with hardware menu button (e.g. Samsung Note) don't show action overflow menu
