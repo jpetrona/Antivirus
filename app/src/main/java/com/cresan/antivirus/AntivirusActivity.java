@@ -213,6 +213,10 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
 
             MonitorShieldService.MonitorShieldLocalBinder binder = (MonitorShieldService.MonitorShieldLocalBinder) service;
             _serviceInstance = binder.getServiceInstance(); //Get getInstance of your service!
+
+            if(_serviceInstance!=null)
+                new Exception("Service instance is null. At it can't be!!!!");
+
             _serviceInstance.registerClient(AntivirusActivity.this); //Activity register in the service as client for callabcks!
 
             //Now that service is active run fragment to init it
