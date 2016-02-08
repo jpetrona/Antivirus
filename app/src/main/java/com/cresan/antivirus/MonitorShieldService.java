@@ -58,6 +58,7 @@ public class MonitorShieldService extends Service
     IClientInterface _clientInterface=null;
     public void registerClient(IClientInterface clientInterface) { _clientInterface=clientInterface;}
 
+    static int _currentNotificationId=0;
     @Override
     public void onCreate()
     {
@@ -318,7 +319,7 @@ public class MonitorShieldService extends Service
 
         if(whiteListed)
         {
-            NotificationTools.notificatePush(MonitorShieldService.this, 0xFF00, _appIcon,
+            NotificationTools.notificatePush(MonitorShieldService.this,_currentNotificationId++, _appIcon,
                     appName + " " + getString(R.string.trusted_message), appName, "App " + appName + " " + getString(R.string.trusted_by_app), openAppIntent);
         }
         else
@@ -326,7 +327,7 @@ public class MonitorShieldService extends Service
             //We have it in our white package list
             if(ProblemsDataSetTools.checkIfPackageInCollection(packageName, _userWhiteList.getSet()))
             {
-                NotificationTools.notificatePush(MonitorShieldService.this, 0xFF00, _appIcon,
+                NotificationTools.notificatePush(MonitorShieldService.this, _currentNotificationId++, _appIcon,
                         appName + " " + getString(R.string.trusted_message), appName, "App " + appName + " " + getString(R.string.trusted_by_user), openAppIntent);
             }
             else
@@ -363,12 +364,12 @@ public class MonitorShieldService extends Service
                             _clientInterface.onMonitorFoundMenace(bpbr);
                         }
 
-                        NotificationTools.notificatePush(MonitorShieldService.this, 0xFF00, _appIcon,
+                        NotificationTools.notificatePush(MonitorShieldService.this, _currentNotificationId++, _appIcon,
                                 appName /*+ " " + getString(R.string.has_been_scanned)*/, appName, getString(R.string.enter_to_solve_problems), toExecuteIntent);
 
                     }
                     else
-                        NotificationTools.notificatePush(MonitorShieldService.this, 0xFF00, _appIcon,
+                        NotificationTools.notificatePush(MonitorShieldService.this, _currentNotificationId++, _appIcon,
                             appName /*+ " " + getString(R.string.is_secure)*/, appName, getString(R.string.has_no_threats), toExecuteIntent);
                 }
             }
