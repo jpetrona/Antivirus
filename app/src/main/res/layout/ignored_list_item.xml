@@ -43,7 +43,8 @@
                 android:textColor="@color/info_icon_bottom_text"
                 android:textSize="@dimen/title_app_font_size"
                 android:textStyle="bold"
-                android:text="dfgdfgdfgdfg"/>
+                android:text="dfgdfgdfgdfg"
+                android:layout_marginLeft="5dp"/>
 
         </LinearLayout>
 

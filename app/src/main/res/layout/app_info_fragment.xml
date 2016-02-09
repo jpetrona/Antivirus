@@ -55,8 +55,8 @@
                 android:textColor="#e21616"
                 android:textSize="@dimen/riskType_app_info"
                 android:textStyle="bold"
-                android:text="RIESGO ALTO"
-                android:layout_weight="0.5"/>
+                android:text="Riesgo ALTO"
+                android:layout_weight="0.1"/>
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -130,6 +130,8 @@
         android:id="@+id/listView"
         android:layout_weight="1"
         tools:listitem = "@layout/results_list_item"
-        android:padding="@dimen/padding_app_info"/>
+        android:padding="@dimen/padding_app_info"
+        android:nestedScrollingEnabled="false"
+        android:scrollbars="none"/>
 
 </LinearLayout>

@@ -37,6 +37,7 @@
         android:drawSelectorOnTop="true"
         android:background="@color/SecondaryColor"
         tools:listitem = "@layout/ignored_list_item"
+        android:scrollbars="none"
         />
 
 
