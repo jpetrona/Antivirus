@@ -8,7 +8,7 @@
    <string name="gplay_vote">Hemos trabajado muy duro para poder ofrecerte este software gratuitamente.
  \n\nNos encantaría que nos votaras con 5 estrellas en google play y dejaras un buen comentario.
  \n\nQuieres hacerlo ahora?</string>
-    <string name="threats_found">#1 Amenazas encontradas</string>
+    <string name="threats_found">#1 Problemas encontradas</string>
     <string name="resolve_problems">Resolver problemas</string>
     <string name="dialog_trust_app">¿Desea confiar en esta aplicación?</string>
     <string name="yes">si</string>

@@ -8,7 +8,7 @@
    <string name="gplay_vote">We have worked really hard to bring this free software to you.
 \n\nWe would be really happy if you could rate us 5 stars and add a nice comment at google play.
 \n\nWould you like to do it now?</string>
-    <string name="threats_found">#1 Threats found</string>
+    <string name="threats_found">#1 Problems found</string>
     <string name="menaces_unresolved">#1 Problems</string>
     <string name="title_ads">Ads Displayed</string>
     <string name="ads_message">Displays ads while in use, including banners, pop-ups, and other graphics. The ads are common in free apps.</string>
