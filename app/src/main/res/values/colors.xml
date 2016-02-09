@@ -30,7 +30,7 @@
 	<color name="SecondaryTextColor">#ffffff</color>
 	<color name="PrimaryColor">#22242B</color>
 	<color name="SecondaryColor">#D3D2D1</color>
-	<color name="DividerColor">#3B3F4D</color>
+	<color name="DividerColor">#4B4F5E</color>
 	<color name="colorBackgroundScanInProgress">#3B3F4D</color>
 	<color name="color_BackgroundAnimationProgress">#4B4F5E</color>
 

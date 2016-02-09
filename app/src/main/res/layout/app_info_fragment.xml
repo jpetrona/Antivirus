@@ -12,9 +12,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="@color/SecondaryColor"
+        android:background="@color/color_BackgroundAnimationProgress"
         android:layout_weight="0.15"
-        android:padding="@dimen/padding_app_info">
+        android:padding="@dimen/padding_app_info"
+        >
 
         <ImageView
             android:id="@+id/iconGeneral"
@@ -40,7 +41,7 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:textColor="@color/info_icon_bottom_text"
+                android:textColor="#ffffff"
                 android:textSize="@dimen/title_app_info"
                 android:textStyle="bold"
                 android:text="NAME APP"
@@ -73,7 +74,7 @@
                     android:id="@+id/buttonTrust"
                     android:layout_gravity="right"
                     android:background="#00ffffff"
-                    android:textColor="@color/PrimaryColor"
+                    android:textColor="#8C9398"
                     android:layout_marginRight="10dp"
                     android:textSize="@dimen/button_trust_font_size"/>
 
@@ -84,7 +85,7 @@
                     android:id="@+id/buttonUninstall"
                     android:layout_gravity="right"
                     android:background="#00ffffff"
-                    android:textColor="@color/PrimaryColor"
+                    android:textColor="#8C9398"
                     android:textSize="@dimen/button_trust_font_size"/>
             </LinearLayout>
 
