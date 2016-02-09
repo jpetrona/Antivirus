@@ -1,3 +1,4 @@
+//Comentar este bloque para compilar sin dexguard
 buildscript {
     repositories {
         mavenCentral()
@@ -11,6 +12,8 @@ buildscript {
 
 
 apply plugin: 'com.android.application'
+
+//Comentar esto para compilar sin dexguard
 apply plugin: 'dexguard'
 
 android {
@@ -44,6 +47,8 @@ android {
             {
                 release
                         {
+                            //Comentar para usar con dexguard
+
                             //Use command line to compile in release
                             //minifyEnabled false
                             proguardFile getDefaultDexGuardFile('dexguard-release.pro')
