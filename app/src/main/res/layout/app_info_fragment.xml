@@ -129,6 +129,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/listView"
         android:layout_weight="1"
-        tools:listitem = "@layout/results_list_item"/>
+        tools:listitem = "@layout/results_list_item"
+        android:padding="@dimen/padding_app_info"/>
 
 </LinearLayout>
