@@ -57,7 +57,7 @@ public class IgnoredListFragment extends Fragment
                 menaceCacheSet.addItem(item);
                 menaceCacheSet.writeToJSON();
 
-                ProblemsDataSetTools.printProblems(_userWhiteList);
+                //ProblemsDataSetTools.printProblems(_userWhiteList);
 
                 _updateFoundThreatsText(_ignoredCounter, _userWhiteList.getItemCount());
 
@@ -68,7 +68,7 @@ public class IgnoredListFragment extends Fragment
         _listView.setAdapter(_ignoredAdapter);
         _updateFoundThreatsText(_ignoredCounter, _userWhiteList.getItemCount());
 
-        ProblemsDataSetTools.printProblems(_userWhiteList);
+        //ProblemsDataSetTools.printProblems(_userWhiteList);
         return rootView;
     }
 

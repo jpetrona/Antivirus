@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +36,7 @@ public class IgnoredAdapter  extends ArrayAdapter<IProblem>
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent)
+    public View getView(final int position, View convertView, ViewGroup parent)
     {
 
         final View rowView;
@@ -71,6 +72,7 @@ public class IgnoredAdapter  extends ArrayAdapter<IProblem>
                             @Override
                             public void onClick(DialogInterface dialog, int which)
                             {
+
                                 remove(obj);
                                 _adapterListener.onItemRemoved(obj);
                             }
