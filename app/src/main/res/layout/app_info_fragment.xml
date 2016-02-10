@@ -118,7 +118,7 @@
                     android:background="#00ffffff"
                     android:textColor="#8C9398"
                     android:textSize="@dimen/button_trust_font_size"
-                    android:visibility="invisible"/>
+                    />
             </LinearLayout>
 
         </LinearLayout>

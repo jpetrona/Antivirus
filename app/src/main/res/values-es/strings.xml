@@ -72,4 +72,5 @@
     <string name="unknownApp_message">Instalar aplicaciones desde origenes desconocidos puede infectar su dispositivo. Pulsa en abrir ajustes y desactiva Origenes desconocidos.</string>
     <string name="write_history_message">Esta aplicación puede añadir marcadores a tu historial y es un riesgo a su privacidad.</string>
     <string name="write_sms_message">Esta aplicación puede escribir SMS. Esto puede añadir cargos a su factura y es un riesgo a su privacidad.</string>
+    <string name="welcome_text">Bienvenido a AMS Antivirus</string>
 </resources>

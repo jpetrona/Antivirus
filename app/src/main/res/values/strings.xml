@@ -72,4 +72,5 @@
     <string name="install_application">You are one step away from cleaning any malicious threats found in your device. We have put a lot of time to create this application. Please, install one of our FREE applications to let you continue and support us. You will contribute in making this great application even better.</string>
     <string name="scaned_text">Scanned</string>
     <string name="menacesText">Menaces</string>
+    <string name="welcome_text">Welcome to AMS Antivirus</string>
 </resources>
