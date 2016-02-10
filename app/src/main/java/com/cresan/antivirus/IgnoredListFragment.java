@@ -51,19 +51,24 @@ public class IgnoredListFragment extends Fragment
             @Override
             public void onItemRemoved(IProblem item)
             {
-                MenacesCacheSet menaceCacheSet= getMainActivity().getMenacesCacheSet();
+                MenacesCacheSet menaceCacheSet = getMainActivity().getMenacesCacheSet();
                 _userWhiteList.removeItem(item);
                 _userWhiteList.writeToJSON();
                 menaceCacheSet.addItem(item);
                 menaceCacheSet.writeToJSON();
-                _updateFoundThreatsText(_ignoredCounter,_userWhiteList.getItemCount());
 
-                if(_ignoredAdapter.getCount()<=0)
+                ProblemsDataSetTools.printProblems(_userWhiteList);
+
+                _updateFoundThreatsText(_ignoredCounter, _userWhiteList.getItemCount());
+
+                if (_ignoredAdapter.getCount() <= 0)
                     getMainActivity().goBack();
             }
         });
         _listView.setAdapter(_ignoredAdapter);
-        _updateFoundThreatsText(_ignoredCounter,_userWhiteList.getItemCount());
+        _updateFoundThreatsText(_ignoredCounter, _userWhiteList.getItemCount());
+
+        ProblemsDataSetTools.printProblems(_userWhiteList);
         return rootView;
     }
 
@@ -120,6 +125,8 @@ public class IgnoredListFragment extends Fragment
         _ignoredAdapter.refresh(new ArrayList<IProblem>(_userWhiteList.getSet()));
 
         _updateFoundThreatsText(_ignoredCounter, _userWhiteList.getItemCount());
+
+        ProblemsDataSetTools.printProblems(_userWhiteList);
 
         if(_userWhiteList.getItemCount()<=0)
         {

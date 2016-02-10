@@ -597,6 +597,8 @@ public class MainFragment extends Fragment
             _currentScanTask.resume();
         else
             setUIRiskState();
+
+
     }
 
     void setUIRiskState()

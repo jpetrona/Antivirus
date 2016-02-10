@@ -335,4 +335,5 @@ class Scanner
 
         return setToUpdate;
     }
+
 }

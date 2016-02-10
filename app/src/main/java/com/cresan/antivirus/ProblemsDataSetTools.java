@@ -1,6 +1,7 @@
 package com.cresan.antivirus;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -135,6 +136,27 @@ public class ProblemsDataSetTools
 
         return false;
     }
+
+    public static void printProblems(IDataSet<IProblem> dataSet)
+    {
+        Log.d("Lista","================== LISTA DE PROBLEMAS =============");
+
+        for (IProblem p : dataSet.getSet())
+        {
+            if(p.getType()== IProblem.ProblemType.AppProblem)
+            {
+                AppProblem appProblem=(AppProblem) p;
+                Log.d("PACKAGE","  "+appProblem.getPackageName());
+            }
+            else
+            {
+                SystemProblem appProblem=(SystemProblem) p;
+                Log.d("SYSTEM SETTING","  "+appProblem.getClass().getSimpleName());
+            }
+        }
+    }
+
+
 /*
     static boolean isSystemProblemInCollection(Class<? extends SystemProblem> problem, Collection<IProblem> problems)
     {
