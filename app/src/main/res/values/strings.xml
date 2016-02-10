@@ -73,4 +73,15 @@
     <string name="scaned_text">Scanned</string>
     <string name="menacesText">Problems</string>
     <string name="welcome_text">Welcome to AMS Antivirus</string>
+    <string name="phone_data_shared">Phone data shared</string>
+    <string name="location_shared">Location shared</string>
+    <string name="read_your_sms">Read your SMS</string>
+    <string name="write_sms_title">Write SMS</string>
+    <string name="send_sms_title">Send SMS</string>
+    <string name="read_history_bookmark_title">Read your history bookmarks</string>
+    <string name="write_history_bookmark_title">Write on your history bookmarks</string>
+    <string name="can_make_call_title">Can make calls</string>
+    <string name="outgoing_calls_title">Outgoing calls</string>
+    <string name="record_audio_title">Record audio</string>
+    <string name="access_camera_title">Access camera</string>
 </resources>

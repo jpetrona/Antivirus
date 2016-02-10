@@ -197,53 +197,53 @@ public class WarningsAdapter extends ArrayAdapter<WarningData>
         if(permissionName.contains("READ_PHONE_STATE"))
         {
 
-            message = "Phone data shared";
+            message = resources.getString(R.string.phone_data_shared);
 
         }else if (permissionName.contains("ACCESS_FINE_LOCATION"))
         {
 
-            message = "Location shared";
+            message = resources.getString(R.string.location_shared);
 
         }else if (permissionName.contains("READ_SMS"))
         {
 
-            message = "Read your SMS";
+            message = resources.getString(R.string.read_your_sms);
 
         }else if (permissionName.contains("WRITE_SMS"))
         {
 
-            message = "Write SMS";
+            message = resources.getString(R.string.write_sms_title);
 
         }else if (permissionName.contains("SEND_SMS"))
         {
 
-            message = "Send SMS";
+            message = resources.getString(R.string.send_sms_title);
 
         }else if (permissionName.contains("READ_HISTORY_BOOKMARKS"))
         {
 
-            message = "Read your history bookmarks";
+            message = resources.getString(R.string.read_history_bookmark_title);
 
         }else if (permissionName.contains("WRITE_HISTORY_BOOKMARKS"))
         {
 
-            message = "Write on your history bookmarks";
+            message = resources.getString(R.string.write_history_bookmark_title);
         }else if (permissionName.contains("CALL_PHONE"))
         {
 
-            message = "Can make calls";
+            message = resources.getString(R.string.can_make_call_title);
         }else if (permissionName.contains("PROCESS_OUTGOING_CALLS"))
         {
 
-            message = "Outgoing calls";
+            message = resources.getString(R.string.outgoing_calls_title);
         }else if (permissionName.contains("RECORD_AUDIO"))
         {
 
-            message = "Record audio";
+            message = resources.getString(R.string.record_audio_title);
         }else if (permissionName.contains("CAMERA"))
         {
 
-            message = "Access camera";
+            message = resources.getString(R.string.access_camera_title);
         }
 
         return message;
