@@ -99,7 +99,8 @@
                     android:layout_weight="0.5"
                     android:gravity="end"
                     android:id="@+id/buttonsConfigContainer"
-                    android:visibility="gone">
+                    android:visibility="gone"
+                    android:layout_below="@id/warningLevel">
 
                     <Button
                         android:layout_width="0dp"
