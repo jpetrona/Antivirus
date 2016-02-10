@@ -593,13 +593,16 @@ public class MainFragment extends Fragment
     public void onResume()
     {
         super.onResume();
+
+        if(getMainActivity().getAppData().getFirstScanDone())
+            getMainActivity().updateMenacesAndWhiteUserList();
+        
         if(_currentScanTask!=null)
             _currentScanTask.resume();
         else
             setUIRiskState();
 
 
-        getMainActivity().updateMenacesAndWhiteUserList();
     }
 
     void setUIRiskState()
