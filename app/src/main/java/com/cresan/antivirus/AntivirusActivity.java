@@ -312,7 +312,7 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
         testDevices.add("4F5A2126D375B24EB67CF38C123A0CAF");
         ac.initAdMob(kInterstitialAdUnit,testDevices);
 
-	 	/*AdView adView= new AdView(AntivirusActivity.this);
+	 	AdView adView= new AdView(AntivirusActivity.this);
     	adView.setAdSize(AdSize.SMART_BANNER);
     	adView.setAdUnitId(kBannerAdUnit);
 
@@ -323,7 +323,7 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
         builder.addTestDevice("4DDC4FAE98222F010D35E8EA7A6E4E34");
         builder.addTestDevice("4F5A2126D375B24EB67CF38C123A0CAF");
         AdRequest adRequest = builder.build();
-        adView.loadAd(adRequest);*/
+        adView.loadAd(adRequest);
     }
 
     @Override
