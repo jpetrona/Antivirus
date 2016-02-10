@@ -133,8 +133,12 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
     public MenacesCacheSet getMenacesCacheSet() { return _serviceInstance.getMenacesCacheSet(); }
     public void updateMenacesAndWhiteUserList()
     {
-        ProblemsDataSetTools.removeNotExistingProblems(this,getUserWhiteList());
-        ProblemsDataSetTools.removeNotExistingProblems(this,getMenacesCacheSet());
+        //Remove not existent problems
+        ProblemsDataSetTools.removeNotExistingProblems(this, getUserWhiteList());
+        ProblemsDataSetTools.removeNotExistingProblems(this, getMenacesCacheSet());
+
+        //Add existent system problems
+        Scanner.scanSystemProblems(this, getUserWhiteList(), getMenacesCacheSet().getSet());
     }
 
 
@@ -639,6 +643,8 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
     {
         Log.i(_logTag, "============= ONRESUME HAS BEEN CALLED============");
         super.onResume();
+
+        updateMenacesAndWhiteUserList();
     }
 
 
