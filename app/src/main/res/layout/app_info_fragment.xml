@@ -42,7 +42,7 @@
                 android:textColor="#ffffff"
                 android:textSize="@dimen/title_app_info"
                 android:textStyle="bold"
-                android:text="NAME APP"
+                android:text="Reparar bateria"
                 android:layout_weight="0.5"/>
 
             <TextView
