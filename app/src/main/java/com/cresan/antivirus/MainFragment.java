@@ -599,6 +599,7 @@ public class MainFragment extends Fragment
             setUIRiskState();
 
 
+        getMainActivity().updateMenacesAndWhiteUserList();
     }
 
     void setUIRiskState()

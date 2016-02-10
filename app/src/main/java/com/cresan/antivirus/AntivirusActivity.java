@@ -643,8 +643,6 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
     {
         Log.i(_logTag, "============= ONRESUME HAS BEEN CALLED============");
         super.onResume();
-
-        updateMenacesAndWhiteUserList();
     }
 
 
