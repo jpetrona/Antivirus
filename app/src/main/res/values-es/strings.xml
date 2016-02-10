@@ -73,15 +73,15 @@
     <string name="write_history_message">Esta aplicación puede añadir marcadores a tu historial y es un riesgo a su privacidad.</string>
     <string name="write_sms_message">Esta aplicación puede escribir SMS. Esto puede añadir cargos a su factura y es un riesgo a su privacidad.</string>
     <string name="welcome_text">Bienvenido a AMS Antivirus</string>
-    <string name="access_camera_title">Accede a la camara</string>
+    <string name="access_camera_title">Puede acceder a la cámara</string>
     <string name="can_make_call_title">Puede realizar llamadas</string>
-    <string name="location_shared">Accede a tu localización</string>
-    <string name="outgoing_calls_title">Gestiona tus llamadas</string>
-    <string name="phone_data_shared">Datos del teléfono</string>
-    <string name="read_history_bookmark_title">Lee tu historial</string>
-    <string name="read_your_sms">Lee tus SMS</string>
-    <string name="record_audio_title">Graba audio</string>
+    <string name="location_shared">Accede a localización</string>
+    <string name="outgoing_calls_title">Puede controlar llamadas</string>
+    <string name="phone_data_shared">Accede a datos del teléfono</string>
+    <string name="read_history_bookmark_title">Puede leer tu historial</string>
+    <string name="read_your_sms">Puede leer tus SMS</string>
+    <string name="record_audio_title">Puede Grabar audio</string>
     <string name="send_sms_title">Puede enviar SMS</string>
-    <string name="write_history_bookmark_title">Escribe en tu historial</string>
+    <string name="write_history_bookmark_title">Puede escribir en tu historial</string>
     <string name="write_sms_title">Puede escribir SMS</string>
 </resources>
