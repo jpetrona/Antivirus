@@ -140,8 +140,4 @@
         android:nestedScrollingEnabled="false"
         android:scrollbars="none"/>
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="60dp"></FrameLayout>
-
 </LinearLayout>
