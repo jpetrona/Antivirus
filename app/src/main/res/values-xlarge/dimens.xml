@@ -30,5 +30,6 @@
     <dimen name="padding_app_info">20dp</dimen>
     <dimen name="test">10dp</dimen>
     <dimen name="last_scan_font_size">24dp</dimen>
+    <dimen name="text_scan_button_font_size">40dp</dimen>
 
 </resources>

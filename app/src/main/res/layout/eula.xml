@@ -14,7 +14,8 @@
         android:id="@+id/textView"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="10dp"
-        android:textColor="#ffffff"/>
+        android:textColor="#ffffff"
+        android:textSize="@dimen/eula_font_size"/>
 
     <TextView
         android:layout_width="wrap_content"

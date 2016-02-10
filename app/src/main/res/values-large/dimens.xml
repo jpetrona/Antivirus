@@ -24,7 +24,7 @@
     <dimen name="riskType_font_size">21dp</dimen>
     <dimen name="title_app_font_size">27dp</dimen>
     <dimen name="title_app_info">33dp</dimen>
-    <dimen name="riskType_app_info">27dp</dimen>
+    <dimen name="riskType_app_info">36dp</dimen>
     <dimen name="button_trust_widht">180dp</dimen>
     <dimen name="button_trust_height">60dp</dimen>
     <dimen name="button_trust_font_size">21dp</dimen>
