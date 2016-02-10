@@ -58,7 +58,7 @@
     <string name="unknownApp_message">Installing apps from unknown sources can lead to malware. Tap Open Settings and then disable Unknown Sources.</string>
     <string name="usb_title">Unsecure Setting</string>
     <string name="open_setting">Open settings</string>
-    <string name="ignored_setting">Ignored settings</string>
+    <string name="ignored_setting">Ignore setting</string>
     <string name="system_app_usb_menace_title">USB Debugging Enabled</string>
     <string name="system_app_unknown_app_menace_title">Unknown Sources Enabled</string>
     <string name="usb_add_whitelist_message">Do you want to add USB Debugging to white list?</string>
@@ -71,6 +71,6 @@
     <string name="never">Never</string>
     <string name="install_application">You are one step away from cleaning any malicious threats found in your device. We have put a lot of time to create this application. Please, install one of our FREE applications to let you continue and support us. You will contribute in making this great application even better.</string>
     <string name="scaned_text">Scanned</string>
-    <string name="menacesText">Menaces</string>
+    <string name="menacesText">Problems</string>
     <string name="welcome_text">Welcome to AMS Antivirus</string>
 </resources>
