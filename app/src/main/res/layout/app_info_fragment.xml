@@ -12,8 +12,9 @@
         android:layout_height="0dp"
         android:orientation="horizontal"
         android:background="@color/color_BackgroundAnimationProgress"
-        android:layout_weight="0.25"
-        android:padding="@dimen/padding_app_info">
+        android:layout_weight="0.30"
+        android:padding="@dimen/padding_app_info"
+        android:layout_gravity="center_vertical">
 
         <ImageView
             android:id="@+id/iconGeneral"
@@ -29,97 +30,102 @@
             android:layout_height="match_parent"
             android:layout_weight="0.75"
             android:orientation="vertical"
-            android:layout_gravity="center_vertical">
+            android:gravity="center_vertical">
 
-            <TextView
-                android:id="@+id/titleApp"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:textColor="#ffffff"
-                android:textSize="@dimen/title_app_info"
-                android:textStyle="bold"
-                android:text="Reparar bateria"
-                android:layout_weight="0.33"/>
-
-            <TextView
-                android:id="@+id/warningLevel"
+            <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:singleLine="true"
-                android:textColor="#e21616"
-                android:textSize="@dimen/riskType_app_info"
-                android:textStyle="bold"
-                android:text="Riesgo ALTO"
-                android:layout_weight="0.25"/>
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/titleApp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:textColor="#ffffff"
+                    android:textSize="@dimen/title_app_info"
+                    android:textStyle="bold"
+                    android:text="Reparar bateria"
+                    android:layout_alignParentLeft="true"/>
 
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="0.33"
-                android:gravity="end"
-                android:id ="@+id/buttonsAppContainer"
-                android:visibility="visible">
+                <TextView
+                    android:id="@+id/warningLevel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:textColor="#e21616"
+                    android:textSize="@dimen/riskType_app_info"
+                    android:textStyle="bold"
+                    android:text="Riesgo ALTO"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@id/titleApp"/>
 
-                <Button
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/button_trust_height"
-                    android:layout_weight="1"
-                    android:text="@string/trust"
-                    android:id="@+id/buttonTrust"
-                    android:layout_gravity="right"
-                    android:background="#00ffffff"
-                    android:textColor="#8C9398"
-                    android:textSize="@dimen/button_trust_font_size"/>
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:id ="@+id/buttonsAppContainer"
+                    android:visibility="visible"
+                    android:layout_below="@id/warningLevel">
 
-                <Button
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/button_trust_height"
-                    android:layout_weight="1"
-                    android:text="@string/uninstall"
-                    android:id="@+id/buttonUninstall"
-                    android:layout_gravity="right"
-                    android:background="#00ffffff"
-                    android:textColor="#8C9398"
-                    android:textSize="@dimen/button_trust_font_size"/>
-            </LinearLayout>
+                    <Button
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/trust"
+                        android:id="@+id/buttonTrust"
+                        android:layout_gravity="right"
+                        android:background="#00ffffff"
+                        android:textColor="#8C9398"
+                        android:textSize="@dimen/button_trust_font_size"/>
 
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="0.5"
-                android:gravity="end"
-                android:id="@+id/buttonsConfigContainer"
-                android:visibility="gone">
+                    <Button
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/uninstall"
+                        android:id="@+id/buttonUninstall"
+                        android:layout_gravity="right"
+                        android:background="#00ffffff"
+                        android:textColor="#8C9398"
+                        android:textSize="@dimen/button_trust_font_size"/>
+                </LinearLayout>
 
-                <Button
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/button_trust_height"
-                    android:layout_weight="1"
-                    android:text="@string/ignored_setting"
-                    android:id="@+id/buttonIgnoreConfig"
-                    android:layout_gravity="right"
-                    android:background="#00ffffff"
-                    android:textColor="#8C9398"
-                    android:textSize="@dimen/button_trust_font_size"/>
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:gravity="end"
+                    android:id="@+id/buttonsConfigContainer"
+                    android:visibility="gone">
 
-                <Button
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/button_trust_height"
-                    android:layout_weight="1"
-                    android:text="@string/open_setting"
-                    android:id="@+id/buuttonOpenSettings"
-                    android:layout_gravity="right"
-                    android:background="#00ffffff"
-                    android:textColor="#8C9398"
-                    android:textSize="@dimen/button_trust_font_size"
-                    />
-            </LinearLayout>
+                    <Button
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/ignored_setting"
+                        android:id="@+id/buttonIgnoreConfig"
+                        android:layout_gravity="right"
+                        android:background="#00ffffff"
+                        android:textColor="#8C9398"
+                        android:textSize="@dimen/button_trust_font_size"/>
 
+                    <Button
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/open_setting"
+                        android:id="@+id/buuttonOpenSettings"
+                        android:layout_gravity="right"
+                        android:background="#00ffffff"
+                        android:textColor="#8C9398"
+                        android:textSize="@dimen/button_trust_font_size"
+                        />
+                </LinearLayout>
+
+            </RelativeLayout>
         </LinearLayout>
 
     </LinearLayout>
@@ -133,5 +139,9 @@
         android:padding="@dimen/padding_app_info"
         android:nestedScrollingEnabled="false"
         android:scrollbars="none"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"></FrameLayout>
 
 </LinearLayout>
