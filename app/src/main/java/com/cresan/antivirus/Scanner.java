@@ -205,8 +205,10 @@ class Scanner
             {
                 temp=(AppProblem)p;
                 if(temp.getPackageName().equals(packageName))
-                    result=temp;
-                break;
+                {
+                    result = temp;
+                    break;
+                }
             }
         }
 

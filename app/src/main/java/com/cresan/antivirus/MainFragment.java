@@ -596,7 +596,7 @@ public class MainFragment extends Fragment
 
         if(getMainActivity().getAppData().getFirstScanDone())
             getMainActivity().updateMenacesAndWhiteUserList();
-        
+
         if(_currentScanTask!=null)
             _currentScanTask.resume();
         else

@@ -26,16 +26,15 @@
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="0.75"
             android:orientation="vertical"
             android:layout_gravity="center_vertical">
 
             <TextView
                 android:id="@+id/titleApp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="2dp"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:singleLine="true"
@@ -43,24 +42,24 @@
                 android:textSize="@dimen/title_app_info"
                 android:textStyle="bold"
                 android:text="Reparar bateria"
-                android:layout_weight="0.5"/>
+                android:layout_weight="0.33"/>
 
             <TextView
                 android:id="@+id/warningLevel"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:singleLine="true"
                 android:textColor="#e21616"
                 android:textSize="@dimen/riskType_app_info"
                 android:textStyle="bold"
                 android:text="Riesgo ALTO"
-                android:layout_weight="0.1"/>
+                android:layout_weight="0.25"/>
 
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="0.5"
+                android:layout_height="0dp"
+                android:layout_weight="0.33"
                 android:gravity="end"
                 android:id ="@+id/buttonsAppContainer"
                 android:visibility="visible">
