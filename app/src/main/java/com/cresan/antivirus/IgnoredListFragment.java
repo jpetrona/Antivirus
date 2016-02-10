@@ -1,5 +1,6 @@
 package com.cresan.antivirus;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -26,7 +27,7 @@ public class IgnoredListFragment extends Fragment
     AntivirusActivity getMainActivity() {return (AntivirusActivity) getActivity();}
     IgnoredAdapter _ignoredAdapter =null;
     UserWhiteList _userWhiteList =null;
-    List<IProblem> _workingList=null;
+    //List<IProblem> _workingList=null;
 
     private ListView _listView;
     private TextView _ignoredCounter;
@@ -34,7 +35,6 @@ public class IgnoredListFragment extends Fragment
     public void setData(Context context,UserWhiteList userWhiteList)
     {
         _userWhiteList = userWhiteList;
-        _workingList=getExistingProblems(context, _userWhiteList.getSet());
     }
 
 
@@ -43,7 +43,7 @@ public class IgnoredListFragment extends Fragment
     {
         View rootView = inflater.inflate(R.layout.ignored_list_fragment, container, false);
         _listView = (ListView)rootView.findViewById(R.id.ignoredList);
-        _ignoredAdapter=new IgnoredAdapter(getMainActivity(), _workingList);
+        _ignoredAdapter=new IgnoredAdapter(getMainActivity(),new ArrayList<IProblem>(_userWhiteList.getSet()));
         _ignoredCounter = (TextView) rootView.findViewById(R.id.ignoredCounterText);
 
         _ignoredAdapter.setOnAdapterItemRemovedListener(new IOnAdapterItemRemoved<IProblem>()
@@ -89,7 +89,7 @@ public class IgnoredListFragment extends Fragment
                 if(ActivityTools.isPackageInstalled(context, appProblem.getPackageName()))
                     existingProblems.add(appProblem);
             }
-            else
+            else if(p.problemExists(context))
                 existingProblems.add(p);
         }
 
@@ -103,12 +103,27 @@ public class IgnoredListFragment extends Fragment
     {
         super.onResume();
 
-        _workingList=getExistingProblems(getMainActivity(), _workingList);
+        /*_workingList=getExistingProblems(getMainActivity(), _workingList);
         _ignoredAdapter.refresh(_workingList);
-        _updateFoundThreatsText(_ignoredCounter, _userWhiteList.getItemCount());
+        _updateFoundThreatsText(_ignoredCounter, _workingList.size());
 
         if(_ignoredAdapter.isEmpty())
+            getMainActivity().goBack();*/
+
+        //Remove not existant menaces and save this as current list if it was modified
+        boolean dirty=ProblemsDataSetTools.removeNotExistingProblems(getActivity(),_userWhiteList);
+        if(dirty)
+            _userWhiteList.writeToJSON();
+
+        //Add new existant apps
+        _ignoredAdapter.refresh(new ArrayList<IProblem>(_userWhiteList.getSet()));
+
+        _updateFoundThreatsText(_ignoredCounter, _userWhiteList.getItemCount());
+
+        if(_userWhiteList.getItemCount()<=0)
+        {
             getMainActivity().goBack();
+        }
 
     }
 }

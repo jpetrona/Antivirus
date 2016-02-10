@@ -5,17 +5,15 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@color/SecondaryColor"
-              android:orientation="vertical"
-    >
+              android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:orientation="horizontal"
         android:background="@color/color_BackgroundAnimationProgress"
-        android:layout_weight="0.15"
-        android:padding="@dimen/padding_app_info"
-        >
+        android:layout_weight="0.25"
+        android:padding="@dimen/padding_app_info">
 
         <ImageView
             android:id="@+id/iconGeneral"
@@ -29,7 +27,7 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="0.75"
             android:orientation="vertical"
             android:layout_gravity="center_vertical">
 
@@ -126,9 +124,9 @@
 
     <ListView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:id="@+id/listView"
-        android:layout_weight="1"
+        android:layout_weight="0.75"
         tools:listitem = "@layout/results_list_item"
         android:padding="@dimen/padding_app_info"
         android:nestedScrollingEnabled="false"

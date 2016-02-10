@@ -34,6 +34,7 @@ import org.joda.time.format.DateTimeFormatter;
 import at.grabner.circleprogress.CircleProgressView;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -284,7 +285,7 @@ public class MainFragment extends Fragment
         oa1.start();
     }
 
-    private void _startScanningAnimation(final List<PackageInfo> allPackages, final Set<IProblem> tempBadResults)
+    private void _startScanningAnimation(final List<PackageInfo> allPackages, final Collection<? extends IProblem> tempBadResults)
     {
         //Animate the button exit
         ObjectAnimator oa1 = ObjectAnimator.ofFloat(_buttonContainer, "translationX",
@@ -304,7 +305,8 @@ public class MainFragment extends Fragment
             {
                 _configureScanningUI();
 
-                List<IProblem> appProblems = ProblemsDataSetTools.getAppProblems(tempBadResults);
+                Collection<IProblem> appProblems=new ArrayList<IProblem>();
+                ProblemsDataSetTools.getAppProblems(tempBadResults,appProblems);
 
                 _currentScanTask = new ScanningFileSystemAsyncTask(getMainActivity(), allPackages, appProblems);
                 _currentScanTask.setAsyncTaskCallback(new IOnActionFinished()
@@ -348,7 +350,7 @@ public class MainFragment extends Fragment
         oa1.start();
     }
 
-    void _doAfterScanWork(final Set<IProblem> tempBadResults)
+    void _doAfterScanWork(final Collection<? extends IProblem> tempBadResults)
     {
 
         _currentScanTask = null;
@@ -388,7 +390,7 @@ public class MainFragment extends Fragment
 
     }
 
-    void _showInterstitial(final Set<IProblem> tempBadResults, final boolean isResolveButtonPressed)
+    void _showInterstitial(final Collection<? extends IProblem> tempBadResults, final boolean isResolveButtonPressed)
     {
 
 
@@ -436,7 +438,7 @@ public class MainFragment extends Fragment
 
     }
 
-    void _requestDialogForAd(final Set<IProblem> tempBadResults, final boolean isResolveProblem)
+    void _requestDialogForAd(final Collection<? extends IProblem> tempBadResults, final boolean isResolveProblem)
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 

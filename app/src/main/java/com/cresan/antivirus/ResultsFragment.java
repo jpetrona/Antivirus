@@ -119,24 +119,10 @@ public class ResultsFragment extends Fragment
 
         MenacesCacheSet menacesCache = getMainActivity().getMenacesCacheSet();
 
-        /*
-        List<AppProblem> toDelete=new ArrayList<AppProblem>();
-
-        List<AppProblem> selectedApps= _resultAdapter.getSelectedApps();
-
-        for (AppProblem pd : selectedApps )
-        {
-            if(!ActivityTools.isPackageInstalled(getMainActivity(), pd.getPackageName()))
-            {
-                _resultAdapter.removeByPackageData(pd);
-                toDelete.add(pd);
-
-                menacesCache.removePackage(pd);
-                menacesCache.writeData();
-            }
-        }
-
-        selectedApps.removeAll(toDelete);*/
+        //Remove not existant menaces and save this as current list if it was modified
+        boolean dirty=ProblemsDataSetTools.removeNotExistingProblems(getActivity(),menacesCache);
+        if(dirty)
+            menacesCache.writeToJSON();
 
         //Add new existant apps
         _resultAdapter.refreshByProblems(new ArrayList<IProblem>(menacesCache.getSet()));

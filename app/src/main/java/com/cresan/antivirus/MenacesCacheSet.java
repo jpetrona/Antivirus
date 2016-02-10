@@ -14,25 +14,4 @@ public class MenacesCacheSet extends JSONDataSet<IProblem>
     {
         super(context,"menacescache.json",new ProblemFactory());
     }
-
-    public boolean removeAppProblemByPackage(String packageName)
-    {
-        Set<IProblem> set=getSet();
-
-        AppProblem problem=null;
-
-        for(IProblem p: set)
-        {
-            if(p.getType()== IProblem.ProblemType.AppProblem)
-            {
-                problem=(AppProblem) p;
-                if(packageName.equals(((AppProblem) p).getPackageName()))
-                {
-                    return removeItem(p);
-                }
-            }
-        }
-
-        return false;
-    }
 }

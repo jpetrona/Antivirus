@@ -81,8 +81,9 @@ public class MonitorShieldService extends Service
 
             public void OnPackageRemoved(Intent intent)
             {
-                String packageName = intent.getData().getSchemeSpecificPart();
-                boolean removed=_menacesCacheSet.removeAppProblemByPackage(packageName);
+                //TODO: Add code to make ourselves sure that not installed apps will appear in userwhitelist or results fragment
+                /*String packageName = intent.getData().getSchemeSpecificPart();
+                boolean removed= ProblemsDataSetTools.removeAppProblemByPackage(_menacesCacheSet,packageName);
                 if(removed)
                     Log.e(_logTag,">>>>>>>>>>>>>>>>>>>  The application "+packageName+" was removed from menace list because it was uninstalled.");
                 else
@@ -90,6 +91,13 @@ public class MonitorShieldService extends Service
 
                 _menacesCacheSet.writeToJSON();
 
+                removed=ProblemsDataSetTools.removeAppProblemByPackage(_userWhiteList,packageName);
+                if(removed)
+                    Log.e(_logTag,">>>>>>>>>>>>>>>>>>>  The application "+packageName+" was removed from white list because it was uninstalled.");
+                else
+                    Log.e(_logTag,">>>>>>>>>>>>>>>>>>>  The application "+packageName+" could no be removed from white while being uninstalled. ERRRRRORRRRRRRR!!!!!!");
+
+                _userWhiteList.writeToJSON();*/
             }
         });
 
@@ -254,12 +262,12 @@ public class MonitorShieldService extends Service
 
         //Filter white listed apps
         List<PackageInfo> potentialBadApps=_removeWhiteListPackagesFromPackageList(nonSystemApps, _whiteListPackages);
-        potentialBadApps=_removeWhiteListPackagesFromPackageList(potentialBadApps, _userWhiteList.getAppProblemSet());
+        potentialBadApps=_removeWhiteListPackagesFromPackageList(potentialBadApps, ProblemsDataSetTools.getAppProblemsAsPackageDataList(_userWhiteList));
 
         Scanner.scanForBlackListedActivityApps(potentialBadApps, _blackListActivities, tempBadResults);
         Scanner.scanForSuspiciousPermissionsApps(potentialBadApps, _suspiciousPermissions, tempBadResults);
         Scanner.scanInstalledAppsFromGooglePlay(this, potentialBadApps, tempBadResults);
-        Scanner.scanSystemProblems(this, tempBadResults);
+        Scanner.scanSystemProblems(this, _userWhiteList, tempBadResults);
         /*for (AppProblem p : tempBadResults)
         {
             Log.d(_logTag, "======PACKAGE "+p.getPackageName()+" GPlay install: "+p.getInstalledThroughGooglePlay());

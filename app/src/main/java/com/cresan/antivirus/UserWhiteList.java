@@ -29,37 +29,22 @@ public class UserWhiteList extends JSONDataSet<IProblem>
         super(context,"userwhitelist.json",new ProblemFactory());
     }
 
-    public Set<AppProblem> getAppProblemSet()
-    {
-        Set<AppProblem> problemSet=new HashSet<AppProblem>();
-
-        Set<IProblem> problems=getSet();
-
-        for(IProblem p : problems)
-        {
-            if(p.getType()== IProblem.ProblemType.AppProblem)
-                problemSet.add((AppProblem)p);
-        }
-
-        return problemSet;
-    }
-
-    /*boolean checkIfPackageInList(String packageName)
+    boolean checkIfSystemPackageInList(Class<?> type)
     {
         Set<IProblem> problems=getSet();
 
-        AppProblem problem=null;
+        SystemProblem problem=null;
 
         for(IProblem p : problems)
         {
-            if(p.getType()== IProblem.ProblemType.AppProblem)
+            if(p.getType()== IProblem.ProblemType.SystemProblem)
             {
-                problem=(AppProblem) p;
-                if(((AppProblem) p).getPackageName().equals(packageName))
+                problem=(SystemProblem) p;
+                if(problem.getClass()==type)
                     return true;
             }
         }
 
         return false;
-    }*/
+    }
 }

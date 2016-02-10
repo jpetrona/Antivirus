@@ -319,15 +319,15 @@ class Scanner
         return bprd;
     }
 
-    public static Set<IProblem> scanSystemProblems(Context context,Set<IProblem> setToUpdate)
+    public static Set<IProblem> scanSystemProblems(Context context,UserWhiteList whiteList, Set<IProblem> setToUpdate)
     {
-        if(ActivityTools.checkIfUSBDebugIsEnabled(context))
+        if(ActivityTools.checkIfUSBDebugIsEnabled(context) && !whiteList.checkIfSystemPackageInList(DebugUSBEnabledProblem.class))
         {
             DebugUSBEnabledProblem problem=new DebugUSBEnabledProblem();
             setToUpdate.add(problem);
         }
 
-        if(ActivityTools.checkIfUnknownAppIsEnabled(context))
+        if(ActivityTools.checkIfUnknownAppIsEnabled(context) && !whiteList.checkIfSystemPackageInList(UnknownAppEnabledProblem.class))
         {
             UnknownAppEnabledProblem problem=new UnknownAppEnabledProblem();
             setToUpdate.add(problem);

@@ -202,7 +202,6 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
 		}
 	};
 
-
     boolean _bound=false;
     private ServiceConnection _serviceConnection = new ServiceConnection()
     {
@@ -222,7 +221,9 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
             _serviceInstance.registerClient(AntivirusActivity.this); //Activity register in the service as client for callabcks!
 
             //Now that service is active run fragment to init it
-            slideInFragment(AntivirusActivity.kMainFragmentTag);
+            FragmentManager fm=getSupportFragmentManager();
+            if(fm.getBackStackEntryCount()<=0)
+                slideInFragment(AntivirusActivity.kMainFragmentTag);
         }
 
         @Override
@@ -266,14 +267,17 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
 	public void onCreate(Bundle paramBundle)
     {
 		Log.i(_logTag, "============= ONCREATE HAS BEEN CALLED============");
-		//Null para que no intente recrear todo lo anterior (hace petar los fragments pq dependen del servicio, etc...)
-        super.onCreate(null);
+
+        super.onCreate(/*paramBundle*/null);
 
         //Restart app if someone kill it
         /*if(paramBundle!=null)
         {
             FragmentManager fm=getSupportFragmentManager();
             fm.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
+            Intent i = new Intent(this, MonitorShieldService.class);
+            stopService(i);
 
             finish();
             Intent intent = new Intent(this, SplashActivity.class);
@@ -308,7 +312,7 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
         testDevices.add("4F5A2126D375B24EB67CF38C123A0CAF");
         ac.initAdMob(kInterstitialAdUnit,testDevices);
 
-	 	AdView adView= new AdView(AntivirusActivity.this);
+	 	/*AdView adView= new AdView(AntivirusActivity.this);
     	adView.setAdSize(AdSize.SMART_BANNER);
     	adView.setAdUnitId(kBannerAdUnit);
 
@@ -319,7 +323,7 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
         builder.addTestDevice("4DDC4FAE98222F010D35E8EA7A6E4E34");
         builder.addTestDevice("4F5A2126D375B24EB67CF38C123A0CAF");
         AdRequest adRequest = builder.build();
-        adView.loadAd(adRequest);
+        adView.loadAd(adRequest);*/
     }
 
     @Override

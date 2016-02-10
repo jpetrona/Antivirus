@@ -16,6 +16,7 @@ import com.cresan.androidprotector.R;
 import com.tech.applications.coretools.ActivityTools;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 
@@ -50,7 +51,8 @@ public class ResultsAdapter extends ArrayAdapter<IResultsAdapterItem>
     {
         clear();
 
-        List<IProblem> appProblems=ProblemsDataSetTools.getAppProblems(bpdl);
+        Collection<IProblem> appProblems=new ArrayList<IProblem>();
+        ProblemsDataSetTools.getAppProblems(bpdl, appProblems);
 
         if(appProblems.size()>0)
         {
@@ -62,7 +64,8 @@ public class ResultsAdapter extends ArrayAdapter<IResultsAdapterItem>
         else
             _appHeaderIndex=-1;
 
-        List<IProblem> systemProblems=ProblemsDataSetTools.getSystemProblems(bpdl);
+        Collection<IProblem> systemProblems=new ArrayList<IProblem>();
+        ProblemsDataSetTools.getSystemProblems(bpdl,systemProblems);
 
         if(systemProblems.size()>0)
         {
@@ -83,7 +86,7 @@ public class ResultsAdapter extends ArrayAdapter<IResultsAdapterItem>
 
 
 
-    public void _addProblems(List<IProblem> problems)
+    public void _addProblems(Collection<IProblem> problems)
     {
         ResultsAdapterProblemItem rapi=null;
         for(IProblem p : problems)
