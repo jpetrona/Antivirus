@@ -42,7 +42,7 @@
                 android:textColor="#ffffff"
                 android:textSize="@dimen/title_app_info"
                 android:textStyle="bold"
-                android:text="NAME APP"
+                android:text="Reparar bateria"
                 android:layout_weight="0.5"/>
 
             <TextView
@@ -66,19 +66,20 @@
                 android:visibility="visible">
 
                 <Button
-                    android:layout_width="@dimen/button_trust_widht"
+                    android:layout_width="0dp"
                     android:layout_height="@dimen/button_trust_height"
+                    android:layout_weight="1"
                     android:text="@string/trust"
                     android:id="@+id/buttonTrust"
                     android:layout_gravity="right"
                     android:background="#00ffffff"
                     android:textColor="#8C9398"
-                    android:layout_marginRight="10dp"
                     android:textSize="@dimen/button_trust_font_size"/>
 
                 <Button
-                    android:layout_width="@dimen/button_trust_widht"
+                    android:layout_width="0dp"
                     android:layout_height="@dimen/button_trust_height"
+                    android:layout_weight="1"
                     android:text="@string/uninstall"
                     android:id="@+id/buttonUninstall"
                     android:layout_gravity="right"
@@ -97,25 +98,27 @@
                 android:visibility="gone">
 
                 <Button
-                    android:layout_width="@dimen/button_trust_widht"
+                    android:layout_width="0dp"
                     android:layout_height="@dimen/button_trust_height"
+                    android:layout_weight="1"
                     android:text="@string/ignored_setting"
                     android:id="@+id/buttonIgnoreConfig"
                     android:layout_gravity="right"
                     android:background="#00ffffff"
                     android:textColor="#8C9398"
-                    android:layout_marginRight="10dp"
                     android:textSize="@dimen/button_trust_font_size"/>
 
                 <Button
-                    android:layout_width="@dimen/button_trust_widht"
+                    android:layout_width="0dp"
                     android:layout_height="@dimen/button_trust_height"
+                    android:layout_weight="1"
                     android:text="@string/open_setting"
                     android:id="@+id/buuttonOpenSettings"
                     android:layout_gravity="right"
                     android:background="#00ffffff"
                     android:textColor="#8C9398"
-                    android:textSize="@dimen/button_trust_font_size"/>
+                    android:textSize="@dimen/button_trust_font_size"
+                    android:visibility="invisible"/>
             </LinearLayout>
 
         </LinearLayout>
