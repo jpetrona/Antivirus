@@ -131,7 +131,11 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
     }
     public Set<IProblem> getProblemsFromMenaceSet() { return _serviceInstance.getMenacesCacheSet().getSet(); }
     public MenacesCacheSet getMenacesCacheSet() { return _serviceInstance.getMenacesCacheSet(); }
-
+    public void updateMenacesAndWhiteUserList()
+    {
+        ProblemsDataSetTools.removeNotExistingProblems(this,getUserWhiteList());
+        ProblemsDataSetTools.removeNotExistingProblems(this,getMenacesCacheSet());
+    }
 
 
 	String _logTag=AntivirusActivity.class.getSimpleName();

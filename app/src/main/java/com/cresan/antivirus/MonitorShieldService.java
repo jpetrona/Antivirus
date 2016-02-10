@@ -333,13 +333,13 @@ public class MonitorShieldService extends Service
         else
         {
             //We have it in our white package list
-            if(ProblemsDataSetTools.checkIfPackageInCollection(packageName, _userWhiteList.getSet()))
+            /*if(ProblemsDataSetTools.checkIfPackageInCollection(packageName, _userWhiteList.getSet()))
             {
                 NotificationTools.notificatePush(MonitorShieldService.this, _currentNotificationId++, _appIcon,
                         appName + " " + getString(R.string.trusted_message), appName, "App " + appName + " " + getString(R.string.trusted_by_user), openAppIntent);
             }
             else
-            {
+            {*/
                 PackageInfo pi=null;
                 try
                 {
@@ -380,7 +380,7 @@ public class MonitorShieldService extends Service
                         NotificationTools.notificatePush(MonitorShieldService.this, _currentNotificationId++, _appIcon,
                             appName + " " + getString(R.string.is_secure), appName, getString(R.string.has_no_threats), toExecuteIntent);
                 }
-            }
+            //}
         }
     }
 
