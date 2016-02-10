@@ -339,7 +339,6 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
                 _handleBackButton();
                 return true;
             case R.id.ignoredListButton:
-
                 UserWhiteList userWhiteList=getUserWhiteList();
                 showIgnoredFragment(userWhiteList);
                 Log.d("ign", "IGNORED BUTTON MENU");
@@ -363,7 +362,8 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
         if(ignoredAppsInstalledOnSystem.size() > 0)
         {
             IgnoredListFragment newFragment= (IgnoredListFragment) this.slideInFragment(AntivirusActivity.kIgnoredFragmentTag);
-            newFragment.setData(this, userWhiteList);
+            if(newFragment!=null)
+                newFragment.setData(this, userWhiteList);
         }
         else
         {
@@ -513,7 +513,11 @@ public class AntivirusActivity extends AdvertFragmentActivity implements Monitor
 
 	public Fragment slideInFragment(String fragmentId)
 	{
-		FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+		Fragment fmt= getSupportFragmentManager().findFragmentByTag(fragmentId);
+        if(fmt!=null && fmt.isVisible())
+            return null;
+
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 		transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,R.anim.slide_in_left,R.anim.slide_out_right);
 
 

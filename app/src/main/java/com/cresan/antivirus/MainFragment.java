@@ -354,7 +354,7 @@ public class MainFragment extends Fragment
     {
 
         _currentScanTask = null;
-        if (tempBadResults.size() > 0)
+        if (getMainActivity().getMenacesCacheSet().getItemCount() > 0)
         {
             showResultFragment(new ArrayList<IProblem>(tempBadResults));
 
