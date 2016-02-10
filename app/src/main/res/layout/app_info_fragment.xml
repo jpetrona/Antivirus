@@ -103,7 +103,7 @@
                     android:id="@+id/buttonIgnoreConfig"
                     android:layout_gravity="right"
                     android:background="#00ffffff"
-                    android:textColor="@color/PrimaryColor"
+                    android:textColor="#8C9398"
                     android:layout_marginRight="10dp"
                     android:textSize="@dimen/button_trust_font_size"/>
 
@@ -114,7 +114,7 @@
                     android:id="@+id/buuttonOpenSettings"
                     android:layout_gravity="right"
                     android:background="#00ffffff"
-                    android:textColor="@color/PrimaryColor"
+                    android:textColor="#8C9398"
                     android:textSize="@dimen/button_trust_font_size"/>
             </LinearLayout>
 

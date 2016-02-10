@@ -65,7 +65,7 @@ public class WarningsAdapter extends ArrayAdapter<WarningData>
             {
                 WarningData wd=new WarningData();
                 wd.icon=ContextCompat.getDrawable(_context, setPermissionIcon(ad.getPermissionName()));
-                wd.title=getContext().getResources().getString(R.string.title_permission);
+                wd.title=setPermissionTitle(ad.getPermissionName());
                 wd.text=setPermissionMessage(ad.getPermissionName());
                 wdl.add(wd);
             }
@@ -189,6 +189,68 @@ public class WarningsAdapter extends ArrayAdapter<WarningData>
 
     }
 
+    public String setPermissionTitle (String permissionName)
+    {
+        String message = "";
+        Resources resources = getContext().getResources();
+
+        if(permissionName.contains("READ_PHONE_STATE"))
+        {
+
+            message = "Phone data shared";
+
+        }else if (permissionName.contains("ACCESS_FINE_LOCATION"))
+        {
+
+            message = "Location shared";
+
+        }else if (permissionName.contains("READ_SMS"))
+        {
+
+            message = "Read your SMS";
+
+        }else if (permissionName.contains("WRITE_SMS"))
+        {
+
+            message = "Write SMS";
+
+        }else if (permissionName.contains("SEND_SMS"))
+        {
+
+            message = "Send SMS";
+
+        }else if (permissionName.contains("READ_HISTORY_BOOKMARKS"))
+        {
+
+            message = "Read your history bookmarks";
+
+        }else if (permissionName.contains("WRITE_HISTORY_BOOKMARKS"))
+        {
+
+            message = "Write on your history bookmarks";
+        }else if (permissionName.contains("CALL_PHONE"))
+        {
+
+            message = "Can make calls";
+        }else if (permissionName.contains("PROCESS_OUTGOING_CALLS"))
+        {
+
+            message = "Outgoing calls";
+        }else if (permissionName.contains("RECORD_AUDIO"))
+        {
+
+            message = "Record audio";
+        }else if (permissionName.contains("CAMERA"))
+        {
+
+            message = "Access camera";
+        }
+
+        return message;
+
+
+
+    }
 
     public int setPermissionIcon (String permissionName)
     {
