@@ -38,7 +38,7 @@ public class PackageData
 
     public boolean equals(Object o)
     {
-        if(o == null)
+        if(o == null || o.getClass()!=this.getClass())
             return false;
 
         PackageData other = (PackageData) o;
