@@ -69,6 +69,7 @@ public class AppProblem extends PackageData implements IProblem
 
         jsonObj.put("type",kSerializationType);
         jsonObj.put("packageName",getPackageName());
+        jsonObj.put("gplayinstalled",getInstalledThroughGooglePlay());
 
         //Add activities
         JSONArray activitiesArray=new JSONArray();
@@ -91,6 +92,7 @@ public class AppProblem extends PackageData implements IProblem
         }
         jsonObj.put("permissions",permissionsArray);
 
+
         return jsonObj;
     }
 
@@ -100,6 +102,9 @@ public class AppProblem extends PackageData implements IProblem
         {
             String appPackageName = appObject.getString("packageName");
             setPackageName(appPackageName);
+            boolean gplayInstalled= appObject.getBoolean("gplayinstalled");
+            setInstalledThroughGooglePlay(gplayInstalled);
+
             _loadActivitesFromJSON(appObject);
             _loadPermissionsFromJSON(appObject);
         }
