@@ -111,9 +111,10 @@ public class IgnoredListFragment extends Fragment
             getMainActivity().goBack();*/
 
         //Remove not existant menaces and save this as current list if it was modified
-        boolean dirty=ProblemsDataSetTools.removeNotExistingProblems(getActivity(),_userWhiteList);
+        /*boolean dirty=ProblemsDataSetTools.removeNotExistingProblems(getActivity(),_userWhiteList);
         if(dirty)
-            _userWhiteList.writeToJSON();
+            _userWhiteList.writeToJSON();*/
+        getMainActivity().updateMenacesAndWhiteUserList();
 
         //Add new existant apps
         _ignoredAdapter.refresh(new ArrayList<IProblem>(_userWhiteList.getSet()));

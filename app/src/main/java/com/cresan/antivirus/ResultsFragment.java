@@ -72,7 +72,7 @@ public class ResultsFragment extends Fragment
         }else
 
         {
-            Log.i("usb","USB NOT ENABLEEEE");
+            Log.i("usb", "USB NOT ENABLEEEE");
         }
 
 
@@ -120,9 +120,11 @@ public class ResultsFragment extends Fragment
         MenacesCacheSet menacesCache = getMainActivity().getMenacesCacheSet();
 
         //Remove not existant menaces and save this as current list if it was modified
-        boolean dirty=ProblemsDataSetTools.removeNotExistingProblems(getActivity(),menacesCache);
+        /*boolean dirty=ProblemsDataSetTools.removeNotExistingProblems(getActivity(),menacesCache);
         if(dirty)
             menacesCache.writeToJSON();
+        ç*/
+        getMainActivity().updateMenacesAndWhiteUserList();
 
         //Add new existant apps
         _resultAdapter.refreshByProblems(new ArrayList<IProblem>(menacesCache.getSet()));
