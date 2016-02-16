@@ -1,20 +1,20 @@
-//Comentar este bloque para compilar sin dexguard
+apply plugin: 'com.android.application'
+apply plugin: 'dexguard'
+
 buildscript {
     repositories {
         mavenCentral()
         flatDir { dirs '/Users/hexdump/Developing/Android/Tools/Dexguard/lib/' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.0.0'
+        classpath 'com.android.tools.build:gradle:1.5.0'
         classpath ':dexguard:'
     }
 }
 
-
 apply plugin: 'com.android.application'
-
-//Comentar esto para compilar sin dexguard
 apply plugin: 'dexguard'
+
 
 android {
     compileSdkVersion 23
